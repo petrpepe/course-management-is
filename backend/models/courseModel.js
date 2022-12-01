@@ -2,9 +2,14 @@ const mongoose = require('mongoose');
 
 const courseSchema = mongoose.Schema(
     {
-        text: {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "User",
+        },
+        name: {
             type: String,
-            required: [true, "Please add a text value"],
+            required: [true, "Please add course name"],
         }
     }, {
         timestamps: true,
