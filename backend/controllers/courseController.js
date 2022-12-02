@@ -47,7 +47,7 @@ const updateCourse = asyncHandler(async (req, res) => {
     }
 
     if(course.user.toString() != user.id) {
-        res.status(401)
+        res.status(403)
         throw new Error("User not authorized")
     }
 
@@ -77,7 +77,7 @@ const deleteCourse = asyncHandler(async (req, res) => {
     }
 
     if(course.user.toString() != user.id) {
-        res.status(401)
+        res.status(403)
         throw new Error("User not authorized")
     }
 
