@@ -1,11 +1,10 @@
 const asyncHandler = require('express-async-handler')
 const Course = require('../models/courseModel');
-const User = require('../models/userModel');
 
 // @desc Get courses
 // @route GET /api/courses
 // @access Private
-const getCourse = asyncHandler(async (req, res) => {
+const getCourses = asyncHandler(async (req, res) => {
     const courses = await Course.find({ user: req.user.id })
 
     res.status(200).json(courses)
@@ -39,14 +38,12 @@ const updateCourse = asyncHandler(async (req, res) => {
         throw new Error("Course not find")
     }
 
-    const user = await User.findById(req.user.id)
-
-    if(!user) {
+    if(!req.user) {
         res.status(401)
         throw new Error("User not found")
     }
 
-    if(course.user.toString() != user.id) {
+    if(course.user.toString() != req.user.id) {
         res.status(403)
         throw new Error("User not authorized")
     }
@@ -69,14 +66,12 @@ const deleteCourse = asyncHandler(async (req, res) => {
         throw new Error("Course not find")
     }
 
-    const user = await User.findById(req.user.id)
-
-    if(!user) {
+    if(!req.user) {
         res.status(401)
         throw new Error("User not found")
     }
 
-    if(course.user.toString() != user.id) {
+    if(course.user.toString() != req.user.id) {
         res.status(403)
         throw new Error("User not authorized")
     }
@@ -87,7 +82,7 @@ const deleteCourse = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    getCourse,
+    getCourses,
     setCourse,
     updateCourse,
     deleteCourse
