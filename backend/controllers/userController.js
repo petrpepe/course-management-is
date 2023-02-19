@@ -4,6 +4,15 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel');
 const e = require("express");
 
+// @desc Get users
+// @route GET /api/users
+// @access Private
+const getUsers = asyncHandler(async (req, res) => {
+    const users = await User.find()
+
+    res.status(200).json(users)
+})
+
 // @desc Register new user
 // @route POST /api/users
 // @access Private?
@@ -62,6 +71,7 @@ const loginUser = asyncHandler(async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
+            roles: user.roles,
             token: generateToken(user._id),
         })
     } else {
@@ -84,8 +94,36 @@ const generateToken = (id) => {
     })
 }
 
+// @desc Update user
+// @route PUT /api/users/:id
+// @access Private
+const updateUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+    const {password} = req.body
+
+    if(!user) {
+        res.status(400)
+        throw new Error("User not find")
+    }
+
+    if(password) {
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
+
+        req.body.password = hashedPassword
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+    }).select("-password", )
+
+    res.status(200).json(updatedUser)
+})
+
 module.exports = {
+    getUsers,
     registerUser,
     loginUser,
     getMe,
+    updateUser,
 }

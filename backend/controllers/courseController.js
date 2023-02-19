@@ -43,7 +43,7 @@ const updateCourse = asyncHandler(async (req, res) => {
         throw new Error("User not found")
     }
 
-    if(course.user.toString() != req.user.id) {
+    if(!course.users.includes(req.user.id)) {
         res.status(403)
         throw new Error("User not authorized")
     }

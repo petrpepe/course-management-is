@@ -6,6 +6,9 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true, "User needs to have first name"],
         },
+        otherNames: [{
+            type: String,
+        }],
         lastName: {
             type: String,
             required: [true, "User needs to have last name"],
@@ -18,9 +21,25 @@ const userSchema = mongoose.Schema(
         password: {
             type: String,
             required: [true, "User needs to have some password"],
-        }
-    },
-    {
+        },
+        phone: [{
+            number: { type: String },
+            type: { type: String },
+        }],
+        courses: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
+        }],
+        roles: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Role",
+            required: [true, "User needs at least guest role"],
+        }],
+        extraPerms: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Permission",
+        }],
+    }, {
         timestamps: true
     }
 )
