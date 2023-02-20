@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getRoles, setRole, updateRole, deleteRole } = require('../controllers/RoleController')
+const { getRoles, setRole, updateRole, deleteRole } = require('../controllers/roleController')
 
 const { authenticate } = require("../middleware/authMiddleware")
 

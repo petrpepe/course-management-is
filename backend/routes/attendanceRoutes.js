@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getAttendances, setAttendance, updateAttendance, deleteAttendance } = require('../controllers/AttendanceController')
+const { getAttendances, setAttendance, updateAttendance, deleteAttendance } = require('../controllers/attendanceController')
 
 const { authenticate } = require("../middleware/authMiddleware")
 

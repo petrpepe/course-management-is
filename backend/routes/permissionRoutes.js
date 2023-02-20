@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getPermissons, setPermisson, updatePermisson, deletePermisson } = require('../controllers/PermissionController')
+const { getPermissons, setPermisson, updatePermisson, deletePermisson } = require('../controllers/permissionController')
 
 const { authenticate } = require("../middleware/authMiddleware")
 
