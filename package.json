@@ -9,7 +9,7 @@
     "client": "npm start --prefix frontend",
     "buildClient": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\" ",
-    "devBuild": "concurrently \"npm run server\" \"npm run buildClient\" "
+    "devBuild": "concurrently \"npm run buildClient\" "
   },
   "repository": {
     "type": "git",
