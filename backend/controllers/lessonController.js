@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler')
-const Lesson = require('../models/LessonModel');
+const Lesson = require('../models/lessonModel');
 
 // @desc Get Lessons
 // @route GET /api/Lessons
@@ -69,11 +69,6 @@ const deleteLesson = asyncHandler(async (req, res) => {
     if(!req.user) {
         res.status(401)
         throw new Error("User not found")
-    }
-
-    if(Lesson.user.toString() != req.user.id) {
-        res.status(403)
-        throw new Error("User not authorized")
     }
 
     await Lesson.remove()

@@ -18,6 +18,7 @@ app.use("/api/users", require("./routes/userRoutes"))
 app.use("/api/lessons", require("./routes/lessonRoutes"))
 app.use("/api/roles", require("./routes/roleRoutes"))
 app.use("/api/attendances", require("./routes/attendanceRoutes"))
+app.use("/api/permissions", require("./routes/permissionRoutes"))
 
 if(process.env.NODE_ENV == "production") {
     app.use(express.static(path.join(__dirname, "../frontend/build")))

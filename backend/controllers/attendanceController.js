@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler')
-const Attendance = require('../models/AttendanceModel');
+const Attendance = require('../models/attendanceModel');
 
 // @desc Get Attendances
 // @route GET /api/Attendances

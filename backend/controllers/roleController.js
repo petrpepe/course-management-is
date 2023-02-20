@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler')
-const Role = require('../models/RoleModel');
+const Role = require('../models/roleModel');
 
 // @desc Get Roles
 // @route GET /api/Roles
@@ -41,9 +41,9 @@ const setRole = asyncHandler(async (req, res) => {
 // @route PUT /api/roles/:id
 // @access Private
 const updateRole = asyncHandler(async (req, res) => {
-    const Role = await Role.findById(req.params.id)
+    const role = await Role.findById(req.params.id)
 
-    if(!Role) {
+    if(!role) {
         res.status(400)
         throw new Error("Role not find")
     }
@@ -51,11 +51,6 @@ const updateRole = asyncHandler(async (req, res) => {
     if(!req.user) {
         res.status(401)
         throw new Error("User not found")
-    }
-
-    if(Role.user.toString() != req.user.id) {
-        res.status(403)
-        throw new Error("User not authorized")
     }
 
     const updatedRole = await Role.findByIdAndUpdate(req.params.id, req.body, {

@@ -1,20 +1,11 @@
 const asyncHandler = require('express-async-handler')
-const Permisson = require('../models/PermissonModel');
+const Permisson = require('../models/permissionModel');
 
 // @desc Get Permissons
 // @route GET /api/Permissons
 // @access Private
 const getPermissons = asyncHandler(async (req, res) => {
     const Permissons = await Permisson.find()
-
-    res.status(200).json(Permissons)
-})
-
-// @desc Get Permissons
-// @route GET /api/Permissons
-// @access Private
-const getPermissonsByIds = asyncHandler(async (req, res) => {
-    const Permissons = await Permisson.find({_id: {$in: req.params.id}})
 
     res.status(200).json(Permissons)
 })
@@ -64,11 +55,6 @@ const updatePermisson = asyncHandler(async (req, res) => {
         throw new Error("User not found")
     }
 
-    if(Permisson.user.toString() != req.user.id) {
-        res.status(403)
-        throw new Error("User not authorized")
-    }
-
     const updatedPermisson = await Permisson.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
     })
@@ -106,7 +92,6 @@ const deletePermisson = asyncHandler(async (req, res) => {
 
 module.exports = {
     getPermissons,
-    getPermissonsByIds,
     getPermissonById,
     setPermisson,
     updatePermisson,

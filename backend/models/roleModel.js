@@ -10,7 +10,7 @@ const roleSchema = mongoose.Schema(
         description: {
             type: String,
         },
-        permissons: [{
+        permissions: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Permission",
         }]
