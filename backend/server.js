@@ -19,14 +19,14 @@ app.use("/api/lessons", require("./routes/lessonRoutes"))
 app.use("/api/roles", require("./routes/roleRoutes"))
 app.use("/api/attendances", require("./routes/attendanceRoutes"))
 app.use("/api/permissions", require("./routes/permissionRoutes"))
-
+/*
 if(process.env.NODE_ENV == "production") {
     app.use(express.static(path.join(__dirname, "../")))
 
     app.get("*", (req, res) => res.sendFile(path.resolve(__dirname, "../", "index.html")))
 } else {
     app.get("/", (req, res) => res.send("Please set to production"))
-}
+}*/
 
 app.use(errorHandler)
 
