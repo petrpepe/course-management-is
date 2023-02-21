@@ -1,4 +1,4 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa"
+import { FaBookOpen, FaChalkboardTeacher, FaClock, FaLock, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle, FaUserFriends, FaUsers } from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import { logout, reset } from "../features/auth/authSlice"
@@ -20,13 +20,57 @@ function Header() {
             <Link to="/">CourseSetter</Link>
         </div>
         <ul>
+            <li>
+                <Link to="/courses">
+                    <FaBookOpen />
+                    Courses
+                </Link>
+            </li>
+            <li>
+                <Link to="/lessons">
+                    <FaChalkboardTeacher />
+                    Lessons
+                </Link>
+            </li>
+            <li>
+                <Link to="/attendances">
+                    <FaClock />
+                    Attendances
+                </Link>
+            </li>
+            <li>
+                <Link to="/users">
+                    <FaUsers />
+                    Users
+                </Link>
+            </li>
+            <li>
+                <Link to="/roles">
+                    <FaUserFriends />
+                    Roles
+                </Link>
+            </li>
+            <li>
+                <Link to="/permissions">
+                    <FaLock />
+                    Permissions
+                </Link>
+            </li>
             {user ? (
-                <li>
-                    <button className="btn" onClick={onLogout}>
-                        <FaSignOutAlt />
-                        Logout
-                    </button>
-                </li>
+                <>
+                    <li>
+                        <Link to="/me">
+                            <FaUserCircle />
+                            Profile
+                        </Link>
+                    </li>
+                    <li>
+                        <button className="btn" onClick={onLogout}>
+                            <FaSignOutAlt />
+                            Logout
+                        </button>
+                    </li>
+                </>
             ) : (
                 <>
                     <li>

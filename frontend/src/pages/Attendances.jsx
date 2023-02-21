@@ -2,14 +2,14 @@ import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import Spinner from "../components/Spinner"
-import {getUsers, reset} from "../features/users/userSlice"
+import {getAttendances, reset} from "../features/attendances/attendanceSlice"
 
-function Users() {
+function Attendances() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { users, isLoading, isError, message } = useSelector((state) => state.users)
+  const { attendances, isLoading, isError, message } = useSelector((state) => state.attendances)
 
   useEffect(() => {
     if(isError) {
@@ -21,7 +21,7 @@ function Users() {
       return
     }
 
-    dispatch(getUsers())
+    dispatch(getAttendances())
 
     return () => {
       dispatch(reset())
@@ -36,25 +36,25 @@ function Users() {
     <>
       <section className="heading">
         <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Users Dashboard</p>
+        <p>Attendances Dashboard</p>
       </section>
 
       <section className="content">
-        {users.length > 0 ? (
+        {attendances.length > 0 ? (
           <div className="goals">
-            {users.map((user) => (
+            {attendances.map((attendance) => (
                 <div>
-                    {JSON.stringify(user)}
+                    {JSON.stringify(attendance)}
                     <hr />
                 </div>
             ))}
           </div>
         ) : ( 
-          <h3>You haven't set any user</h3> 
+          <h3>You haven't set any attendance</h3> 
           )}
       </section>
     </>
   )
 }
 
-export default Users
+export default Attendances

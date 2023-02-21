@@ -2,14 +2,14 @@ import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import Spinner from "../components/Spinner"
-import {getUsers, reset} from "../features/users/userSlice"
+import {getPermissions, reset} from "../features/permissions/permissionSlice"
 
-function Users() {
+function Permissions() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { users, isLoading, isError, message } = useSelector((state) => state.users)
+  const { permissions, isLoading, isError, message } = useSelector((state) => state.permissions)
 
   useEffect(() => {
     if(isError) {
@@ -21,7 +21,7 @@ function Users() {
       return
     }
 
-    dispatch(getUsers())
+    dispatch(getPermissions())
 
     return () => {
       dispatch(reset())
@@ -36,25 +36,25 @@ function Users() {
     <>
       <section className="heading">
         <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Users Dashboard</p>
+        <p>Permissions Dashboard</p>
       </section>
 
       <section className="content">
-        {users.length > 0 ? (
+        {permissions.length > 0 ? (
           <div className="goals">
-            {users.map((user) => (
+            {permissions.map((permission) => (
                 <div>
-                    {JSON.stringify(user)}
+                    {JSON.stringify(permission)}
                     <hr />
                 </div>
             ))}
           </div>
         ) : ( 
-          <h3>You haven't set any user</h3> 
+          <h3>You haven't set any permission</h3> 
           )}
       </section>
     </>
   )
 }
 
-export default Users
+export default Permissions

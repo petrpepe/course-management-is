@@ -1,7 +1,7 @@
 import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import CourseForm from "../components/CourseForm"
+//import CourseForm from "../components/CourseForm"
 import CourseItem from "../components/CourseItem"
 import Spinner from "../components/Spinner"
 import {getCourses, reset} from "../features/courses/courseSlice"
@@ -40,8 +40,6 @@ function Dashboard() {
         <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
         <p>Courses Dashboard</p>
       </section>
-
-      <CourseForm />
 
       <section className="content">
         {courses.length > 0 ? (
