@@ -32,7 +32,7 @@ function Header() {
                     Lessons
                 </Link>
             </li>
-            {!user ? "" :
+            {!user || !user.permsRoles ? "" :
             <>
                 <li>
                     <Link to="/attendances">
