@@ -7,6 +7,7 @@ const attendaceSchema = mongoose.Schema(
         },
         datetime: {
             type: Date,
+            required: [true, "Attendance record need to happen (datetime)"],
         },
         lesson: {
             type: mongoose.Schema.Types.ObjectId,

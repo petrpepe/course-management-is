@@ -1,26 +1,39 @@
 import {useState} from "react"
 import {useDispatch} from "react-redux"
 import {createCourse} from "../features/courses/courseSlice"
+import Input from "./Input"
 
 function CourseForm() {
-  const [name, setText] = useState("")
+  const [course, setState] = useState({title: "", description: ""})
 
   const dispatch = useDispatch()
 
   const onSubmit = e => {
     e.preventDefault()
 
-    dispatch(createCourse({name}))
-    setText("")
+    console.log(course);
+
+    dispatch(createCourse(course))
+    setState({})
+  }
+
+  const onChange = e => {
+    const inputName = e.target.name
+
+    setState({
+      ...course,
+      [inputName]: e.target.value,
+    })
   }
 
   return (
     <section className="form">
         <form onSubmit={onSubmit}>
             <div className="form-group">
-                <label htmlFor="text">Course</label>
-                <input type="text" name="name" id="name" value={name} onChange={(e) => setText(e.target.value)} />
+                <label htmlFor="text">Title</label>
+                <input type="text" name="title" id="title" value={course.title} onChange={onChange} />
             </div>
+            <Input id="description" value="" label="Description" placeholder="Short description of course" onChange={onChange} />
             <div className="form-group">
                 <button className="btn btn-block" type="submit">Add course</button>
             </div>

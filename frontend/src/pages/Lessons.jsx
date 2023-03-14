@@ -41,7 +41,7 @@ function Lessons() {
 
       <section className="content">
         {lessons.length > 0 ? (
-          <div className="goals">
+          <div className="cards">
             {lessons.map((lesson) => (
                 <div>
                     {JSON.stringify(lesson)}

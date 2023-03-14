@@ -10,26 +10,28 @@ import Attendances from "./pages/Attendances";
 import User from "./pages/User";
 import Permissions from "./pages/Permissions";
 import Roles from "./pages/Roles";
+import CourseDetail from './pages/CourseDetail'
 
 function App() {
   return (
     <>
       <Router>
-        <div className="container">
+        <main className="container">
           <Header />
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/me" element={<Register />} />
+            <Route path="/me" element={<User />} />
             <Route path="/courses" element={<Dashboard />} />
+            <Route path="/courses/:id" element={<CourseDetail />} />
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/attendances" element={<Attendances />} />
             <Route path="/users" element={<User />} />
             <Route path="/permissions" element={<Permissions />} />
             <Route path="/roles" element={<Roles />} />
           </Routes>
-        </div>
+        </main>
       </Router>
       <ToastContainer />
     </>

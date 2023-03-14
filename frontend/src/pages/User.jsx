@@ -2,7 +2,7 @@ import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import Spinner from "../components/Spinner"
-import {getUsers, reset} from "../features/users/userSlice"
+import {getMe, reset} from "../features/users/userSlice"
 
 function Users() {
   const navigate = useNavigate()
@@ -14,14 +14,17 @@ function Users() {
   useEffect(() => {
     if(isError) {
       console.log(message);
+      return (<>
+        <div>{message}</div>
+      </>)
     }
-    
+
     if(!user) {
       navigate("/login")
       return
     }
 
-    dispatch(getUsers())
+    dispatch(getMe())
 
     return () => {
       dispatch(reset())
@@ -41,7 +44,7 @@ function Users() {
 
       <section className="content">
         {users.length > 0 ? (
-          <div className="goals">
+          <div className="cards">
             {users.map((user) => (
                 <div>
                     {JSON.stringify(user)}

@@ -30,7 +30,6 @@ const authenticate = asyncHandler(async (req, res, next) => {
     }
 })
 
-//TODO: Role only?
 const authorize = (permissions) => {
     return asyncHandler( async (req, res, next) => {
         const { user } = req

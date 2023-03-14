@@ -14,15 +14,12 @@ const getAttendances = asyncHandler(async (req, res) => {
 // @route POST /api/Attendances
 // @access Private
 const setAttendance = asyncHandler(async (req, res) => {
-    if(!req.body.name){
+    if(!req.body.datetime){
         res.status(400)
-        throw new Error("Please add text")
+        throw new Error("Please add datetime")
     }
 
-    const Attendance = await Attendance.create({
-        name: req.body.name,
-        user: req.user.id,
-    })
+    const Attendance = await Attendance.create(req.body)
 
     res.status(200).json(Attendance)
 })
@@ -41,11 +38,6 @@ const updateAttendance = asyncHandler(async (req, res) => {
     if(!req.user) {
         res.status(401)
         throw new Error("User not found")
-    }
-
-    if(Attendance.user.toString() != req.user.id) {
-        res.status(403)
-        throw new Error("User not authorized")
     }
 
     const updatedAttendance = await Attendance.findByIdAndUpdate(req.params.id, req.body, {
@@ -69,11 +61,6 @@ const deleteAttendance = asyncHandler(async (req, res) => {
     if(!req.user) {
         res.status(401)
         throw new Error("User not found")
-    }
-
-    if(Attendance.user.toString() != req.user.id) {
-        res.status(403)
-        throw new Error("User not authorized")
     }
 
     await Attendance.remove()

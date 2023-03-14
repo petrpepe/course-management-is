@@ -26,6 +26,18 @@ const getUsers = async (token) => {
     return response.data
 }
 
+const getMe = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    const response = await axios.get(API_URL + "me", config)
+
+    return response.data
+}
+
 const deleteUser = async (userId, token) => {
     const config = {
         headers: {
@@ -41,6 +53,7 @@ const deleteUser = async (userId, token) => {
 const userService = {
     createUser,
     getUsers,
+    getMe,
     deleteUser,
 }
 

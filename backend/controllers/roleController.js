@@ -28,11 +28,7 @@ const setRole = asyncHandler(async (req, res) => {
         throw new Error("Please add text")
     }
 
-    const role = await Role.create({
-        name: req.body.name,
-        description: req.body.description,
-        permissions: req.body.permissions,
-    })
+    const role = await Role.create(req.body)
 
     res.status(200).json(role)
 })
@@ -76,11 +72,6 @@ const deleteRole = asyncHandler(async (req, res) => {
     if(!req.user) {
         res.status(401)
         throw new Error("User not found")
-    }
-
-    if(Role.user.toString() != req.user.id) {
-        res.status(403)
-        throw new Error("User not authorized")
     }
 
     await Role.remove()

@@ -5,6 +5,7 @@ import {useSelector, useDispatch} from "react-redux"
 import CourseItem from "../components/CourseItem"
 import Spinner from "../components/Spinner"
 import {getCourses, reset} from "../features/courses/courseSlice"
+import CourseForm from "../components/CourseForm"
 
 function Dashboard() {
   const navigate = useNavigate()
@@ -16,6 +17,7 @@ function Dashboard() {
   useEffect(() => {
     if(isError) {
       console.log(message);
+      return
     }
     
     if(!user) {
@@ -41,9 +43,11 @@ function Dashboard() {
         <p>Courses Dashboard</p>
       </section>
 
+      <CourseForm />
+
       <section className="content">
         {courses.length > 0 ? (
-          <div className="goals">
+          <div className="cards">
             {courses.map((course) => (
               <CourseItem key={course._id} course={course} />
             ))}

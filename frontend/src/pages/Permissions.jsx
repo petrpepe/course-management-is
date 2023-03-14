@@ -41,7 +41,7 @@ function Permissions() {
 
       <section className="content">
         {permissions.length > 0 ? (
-          <div className="goals">
+          <div className="cards">
             {permissions.map((permission) => (
                 <div>
                     {JSON.stringify(permission)}

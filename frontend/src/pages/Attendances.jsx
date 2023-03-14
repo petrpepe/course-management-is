@@ -41,7 +41,7 @@ function Attendances() {
 
       <section className="content">
         {attendances.length > 0 ? (
-          <div className="goals">
+          <div className="cards">
             {attendances.map((attendance) => (
                 <div>
                     {JSON.stringify(attendance)}

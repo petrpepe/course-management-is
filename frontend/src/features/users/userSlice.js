@@ -31,6 +31,17 @@ export const getUsers = createAsyncThunk("users/getAll", async (_, thunkAPI) => 
     }
 })
 
+export const getMe = createAsyncThunk("users/getMe", async (_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await userService.getMe(token)
+    } catch (error) {
+        const message = (error.response && error.response.data && 
+            error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const deleteUser = createAsyncThunk("users/delete", async (id, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
@@ -72,6 +83,20 @@ export const userSlice = createSlice({
             state.users = action.payload
         })
         .addCase(getUsers.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+        })
+        .addCase(getMe.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(getMe.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.user.rolesNames = action.payload.roles
+            state.user.permissionsNames = action.payload.permissions
+        })
+        .addCase(getMe.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

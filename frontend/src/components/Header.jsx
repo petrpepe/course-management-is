@@ -32,30 +32,39 @@ function Header() {
                     Lessons
                 </Link>
             </li>
-            <li>
-                <Link to="/attendances">
-                    <FaClock />
-                    Attendances
-                </Link>
-            </li>
-            <li>
-                <Link to="/users">
-                    <FaUsers />
-                    Users
-                </Link>
-            </li>
-            <li>
-                <Link to="/roles">
-                    <FaUserFriends />
-                    Roles
-                </Link>
-            </li>
-            <li>
-                <Link to="/permissions">
-                    <FaLock />
-                    Permissions
-                </Link>
-            </li>
+            {!user ? "" :
+            <>
+                <li>
+                    <Link to="/attendances">
+                        <FaClock />
+                        Attendances
+                    </Link>
+                </li>
+                {!user.permsRoles.userRoles.includes("admin") ? "" : (
+                        <>
+                        <li>
+                            <Link to="/users">
+                                <FaUsers />
+                                Users
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/roles">
+                                <FaUserFriends />
+                                Roles
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/permissions">
+                                <FaLock />
+                                Permissions
+                            </Link>
+                        </li>
+                        </>
+                    )}
+                </>
+            }
+            
             {user ? (
                 <>
                     <li>

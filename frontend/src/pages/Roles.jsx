@@ -41,7 +41,7 @@ function Roles() {
 
       <section className="content">
         {roles.length > 0 ? (
-          <div className="goals">
+          <div className="cards">
             {roles.map((role) => (
                 <div>
                     {JSON.stringify(role)}

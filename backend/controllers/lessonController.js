@@ -14,15 +14,12 @@ const getLessons = asyncHandler(async (req, res) => {
 // @route POST /api/Lessons
 // @access Private
 const setLesson = asyncHandler(async (req, res) => {
-    if(!req.body.name){
+    if(!req.body.title){
         res.status(400)
-        throw new Error("Please add text")
+        throw new Error("Please add lesson title")
     }
 
-    const Lesson = await Lesson.create({
-        name: req.body.name,
-        user: req.user.id,
-    })
+    const Lesson = await Lesson.create(req.body)
 
     res.status(200).json(Lesson)
 })
@@ -41,11 +38,6 @@ const updateLesson = asyncHandler(async (req, res) => {
     if(!req.user) {
         res.status(401)
         throw new Error("User not found")
-    }
-
-    if(Lesson.user.toString() != req.user.id) {
-        res.status(403)
-        throw new Error("User not authorized")
     }
 
     const updatedLesson = await Lesson.findByIdAndUpdate(req.params.id, req.body, {

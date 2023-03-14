@@ -25,14 +25,10 @@ const getPermissonById = asyncHandler(async (req, res) => {
 const setPermisson = asyncHandler(async (req, res) => {
     if(!req.body.name){
         res.status(400)
-        throw new Error("Please add text")
+        throw new Error("Please add some name")
     }
 
-    const permisson = await Permisson.create({
-        name: req.body.name,
-        description: req.body.description,
-        permissions: req.body.permissions,
-    })
+    const permisson = await Permisson.create(req.body)
 
     res.status(200).json(permisson)
 })
@@ -78,11 +74,6 @@ const deletePermisson = asyncHandler(async (req, res) => {
     if(!req.user) {
         res.status(401)
         throw new Error("User not found")
-    }
-
-    if(Permisson.user.toString() != req.user.id) {
-        res.status(403)
-        throw new Error("User not authorized")
     }
 
     await Permisson.remove()
