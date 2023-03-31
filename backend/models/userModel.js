@@ -26,10 +26,6 @@ const userSchema = mongoose.Schema(
             number: { type: String },
             type: { type: String },
         }],
-        courses: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Course",
-        }],
         roles: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",

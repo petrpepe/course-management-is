@@ -12,13 +12,6 @@ const lessonSchema = mongoose.Schema(
         description: {
             type: String,
         },
-        dates: {
-            start: {type: Date},
-            end: {type: Date},
-        },
-        times: [{
-            type: Date,
-        }],
         duration: {
             type: Number
         },

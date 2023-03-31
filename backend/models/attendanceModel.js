@@ -2,18 +2,19 @@ const mongoose = require('mongoose');
 
 const attendaceSchema = mongoose.Schema(
     {
-        orderNum: {
-            type: Number,
-        },
         datetime: {
             type: Date,
             required: [true, "Attendance record need to happen (datetime)"],
+        },
+        class: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Class",
         },
         lesson: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Lesson",
         },
-        users: [{
+        attendees: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         }]
