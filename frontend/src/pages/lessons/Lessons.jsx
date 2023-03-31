@@ -1,8 +1,9 @@
 import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../components/Spinner"
-import {getLessons, reset} from "../features/lessons/lessonSlice"
+import {toast} from "react-toastify"
+import Spinner from "../../components/Spinner"
+import {getLessons, reset} from "../../features/lessons/lessonSlice"
 
 function Lessons() {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ function Lessons() {
 
   useEffect(() => {
     if(isError) {
-      console.log(message);
+      toast.error(message)
     }
     
     if(!user) {

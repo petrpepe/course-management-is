@@ -14,6 +14,18 @@ const createRole = async (roleData, token) => {
     return response.data
 }
 
+const updateRole = async (roleId, roleData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    const response = await axios.put(API_URL + roleId, roleData, config)
+
+    return response.data
+}
+
 const getRoles = async (token) => {
     const config = {
         headers: {
@@ -40,6 +52,7 @@ const deleteRole = async (roleId, token) => {
 
 const roleService = {
     createRole,
+    updateRole,
     getRoles,
     deleteRole,
 }

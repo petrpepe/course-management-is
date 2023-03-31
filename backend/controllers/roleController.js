@@ -62,9 +62,9 @@ const updateRole = asyncHandler(async (req, res) => {
  * @access Private
  */
 const deleteRole = asyncHandler(async (req, res) => {
-    const Role = await Role.findById(req.params.id)
+    const role = await Role.findById(req.params.id)
 
-    if(!Role) {
+    if(!role) {
         res.status(400)
         throw new Error("Role not find")
     }
@@ -74,7 +74,7 @@ const deleteRole = asyncHandler(async (req, res) => {
         throw new Error("User not found")
     }
 
-    await Role.remove()
+    await role.remove()
 
     res.status(200).json({id: req.params.id})
 })

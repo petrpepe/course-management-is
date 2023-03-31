@@ -1,8 +1,10 @@
 import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../components/Spinner"
+import {toast} from "react-toastify"
 import {getRoles, reset} from "../features/roles/roleSlice"
+import Spinner from "../components/Spinner"
+import Table from "../components/table/Table"
 
 function Roles() {
   const navigate = useNavigate()
@@ -13,7 +15,7 @@ function Roles() {
 
   useEffect(() => {
     if(isError) {
-      console.log(message);
+      toast.error(message)
     }
     
     if(!user) {
@@ -35,23 +37,11 @@ function Roles() {
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Roles Dashboard</p>
+        <h1>Roles</h1>
       </section>
 
       <section className="content">
-        {roles.length > 0 ? (
-          <div className="cards">
-            {roles.map((role) => (
-                <div>
-                    {JSON.stringify(role)}
-                    <hr />
-                </div>
-            ))}
-          </div>
-        ) : ( 
-          <h3>You haven't set any role</h3> 
-          )}
+        <Table roles={roles} />
       </section>
     </>
   )

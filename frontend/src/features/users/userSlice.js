@@ -20,10 +20,10 @@ export const createUser = createAsyncThunk("users/create", async (userData, thun
     }
 })
 
-export const getUsers = createAsyncThunk("users/getAll", async (_, thunkAPI) => {
+export const updateUser = createAsyncThunk("users/update", async (userData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await userService.getUsers(token)
+        return await userService.updateUser(userData._id, userData, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -31,10 +31,10 @@ export const getUsers = createAsyncThunk("users/getAll", async (_, thunkAPI) => 
     }
 })
 
-export const getMe = createAsyncThunk("users/getMe", async (_, thunkAPI) => {
+export const getUsers = createAsyncThunk("users/getAll", async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await userService.getMe(token)
+        return await userService.getUsers(data.ids, data.detail, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -74,6 +74,19 @@ export const userSlice = createSlice({
             state.isError = true
             state.message = action.payload
         })
+        .addCase(updateUser.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateUser.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.users[state.users.findIndex((obj => obj._id === action.payload._id))] = action.payload
+        })
+        .addCase(updateUser.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+        })
         .addCase(getUsers.pending, (state) => {
             state.isLoading = true;
         })
@@ -83,20 +96,6 @@ export const userSlice = createSlice({
             state.users = action.payload
         })
         .addCase(getUsers.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
-            state.message = action.payload
-        })
-        .addCase(getMe.pending, (state) => {
-            state.isLoading = true;
-        })
-        .addCase(getMe.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
-            state.user.rolesNames = action.payload.roles
-            state.user.permissionsNames = action.payload.permissions
-        })
-        .addCase(getMe.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

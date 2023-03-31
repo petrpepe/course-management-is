@@ -1,6 +1,7 @@
 import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
+import {toast} from "react-toastify"
 import Spinner from "../components/Spinner"
 import {getPermissions, reset} from "../features/permissions/permissionSlice"
 
@@ -13,7 +14,7 @@ function Permissions() {
 
   useEffect(() => {
     if(isError) {
-      console.log(message);
+      toast.error(message)
     }
     
     if(!user) {
@@ -43,7 +44,7 @@ function Permissions() {
         {permissions.length > 0 ? (
           <div className="cards">
             {permissions.map((permission) => (
-                <div>
+                <div key={permission._id}>
                     {JSON.stringify(permission)}
                     <hr />
                 </div>

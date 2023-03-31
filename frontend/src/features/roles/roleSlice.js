@@ -20,6 +20,17 @@ export const createRole = createAsyncThunk("roles/create", async (roleData, thun
     }
 })
 
+export const updateRole = createAsyncThunk("roles/update", async (roleData, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await roleService.updateRole(roleData._id, roleData, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && 
+            error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const getRoles = createAsyncThunk("roles/getAll", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
@@ -63,6 +74,19 @@ export const roleSlice = createSlice({
             state.isError = true
             state.message = action.payload
         })
+        .addCase(updateRole.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateRole.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.roles[state.roles.findIndex((obj => obj._id === action.payload._id))] = action.payload
+        })
+        .addCase(updateRole.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+        })
         .addCase(getRoles.pending, (state) => {
             state.isLoading = true;
         })
@@ -77,12 +101,13 @@ export const roleSlice = createSlice({
             state.message = action.payload
         })
         .addCase(deleteRole.pending, (state) => {
-            state.isLoading = true;
+            state.isLoading = false;
         })
         .addCase(deleteRole.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
             state.roles = state.roles.filter((role) => role._id !== action.payload.id)
+            console.log(action.payload);
         })
         .addCase(deleteRole.rejected, (state, action) => {
             state.isLoading = false

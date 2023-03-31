@@ -1,6 +1,6 @@
 import {useState} from "react"
 import {useDispatch} from "react-redux"
-import {createCourse} from "../features/courses/courseSlice"
+import {createCourse} from "../../features/courses/courseSlice"
 import Input from "./Input"
 
 function CourseForm() {
@@ -10,8 +10,6 @@ function CourseForm() {
 
   const onSubmit = e => {
     e.preventDefault()
-
-    console.log(course);
 
     dispatch(createCourse(course))
     setState({})
@@ -29,11 +27,8 @@ function CourseForm() {
   return (
     <section className="form">
         <form onSubmit={onSubmit}>
-            <div className="form-group">
-                <label htmlFor="text">Title</label>
-                <input type="text" name="title" id="title" value={course.title} onChange={onChange} />
-            </div>
-            <Input id="description" value="" label="Description" placeholder="Short description of course" onChange={onChange} />
+            <Input id="title" value={course.title} label="Title" placeholder="Title of course" onChange={onChange} required={true} />
+            <Input id="description" value={course.description} label="Description" placeholder="Short description of course" onChange={onChange} />
             <div className="form-group">
                 <button className="btn btn-block" type="submit">Add course</button>
             </div>

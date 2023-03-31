@@ -1,16 +1,29 @@
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
 const asyncHandler = require('express-async-handler')
-const User = require('../models/userModel');
+const User = require('../models/userModel')
 const Role = require('../models/roleModel')
 const Permission = require('../models/permissionModel')
-const e = require("express");
+const e = require("express")
+const mongoose = require("mongoose")
 
 // @desc Get users
 // @route GET /api/users
 // @access Private
 const getUsers = asyncHandler(async (req, res) => {
-    const users = await User.find()
+    let arg = {}
+    if(req.query.id && req.query.id != null) {
+        const ids = typeof req.query.id == "string" ? mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => mongoose.Types.ObjectId(id))
+        arg = {_id: {$in: ids}}
+    }
+    
+    let select = "firstName lastName email phone";
+    if(req.query.detail == "true") {
+        select = ""
+    }
+
+    const users = await User.find(arg).select(select)
 
     res.status(200).json(users)
 })
@@ -23,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     if(!firstName || !lastName || !email || !password || !roles.length) {
         res.status(400)
-        throw new Error("Please fill all fields")
+        throw new Error("Please fill all required fields")
     }
 
     const userExists = await User.findOne({email})
@@ -88,11 +101,9 @@ const loginUser = asyncHandler(async (req, res) => {
             lastName: user.lastName,
             email: user.email,
             phone: user.phone,
-            courses: user.courses,
-            roles: user.roles,
-            estraPerms: user.extraPerms,
-            token: generateToken(user._id),
-            permsRoles: permsRoles
+            roles: permsRoles.userRoles,
+            perms: permsRoles.userPermissions,
+            token: generateToken(user._id)
         })
     } else {
         res.status(400)

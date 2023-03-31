@@ -1,6 +1,7 @@
 import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
+import {toast} from "react-toastify"
 import Spinner from "../components/Spinner"
 import {getAttendances, reset} from "../features/attendances/attendanceSlice"
 
@@ -13,7 +14,7 @@ function Attendances() {
 
   useEffect(() => {
     if(isError) {
-      console.log(message);
+      toast.error(message)
     }
     
     if(!user) {

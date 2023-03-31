@@ -14,26 +14,30 @@ const createUser = async (userData, token) => {
     return response.data
 }
 
-const getUsers = async (token) => {
+const updateUser = async (userId, userData, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }
 
-    const response = await axios.get(API_URL + "all", config)
+    const response = await axios.put(API_URL + userId, userData, config)
 
     return response.data
 }
 
-const getMe = async (token) => {
+const getUsers = async (ids, detail, token) => {
+    let params = new URLSearchParams();
+    ids.map((id) => params.append("id", id))
+    params.append("detail", detail ? detail : false)
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
-        }
+        },
+        params: params
     }
 
-    const response = await axios.get(API_URL + "me", config)
+    const response = await axios.get(API_URL + "all", config)
 
     return response.data
 }
@@ -52,8 +56,8 @@ const deleteUser = async (userId, token) => {
 
 const userService = {
     createUser,
+    updateUser,
     getUsers,
-    getMe,
     deleteUser,
 }
 

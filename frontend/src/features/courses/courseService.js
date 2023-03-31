@@ -45,7 +45,7 @@ const updateCourse = async (courseId, courseData, token) => {
         }
     }
 
-    const response = await axios.post(API_URL + courseId, courseData, config)
+    const response = await axios.put(API_URL + courseId, courseData, config)
 
     return response.data
 }
