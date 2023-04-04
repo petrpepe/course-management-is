@@ -117,7 +117,7 @@ export const courseSlice = createSlice({
         .addCase(updateCourse.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.courses[action.payload.id] = action.payload.courseData
+            state.courses[state.courses.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateCourse.rejected, (state, action) => {
             state.isLoading = false
@@ -125,7 +125,7 @@ export const courseSlice = createSlice({
             state.message = action.payload
         })
         .addCase(deleteCourse.pending, (state) => {
-            state.isLoading = false; // kdyz true tak se nacita a vypada to jako ze se vsechny smazou a pridaj, asi ne uplne ok
+            state.isLoading = true;
         })
         .addCase(deleteCourse.fulfilled, (state, action) => {
             state.isLoading = false

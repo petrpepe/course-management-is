@@ -9,7 +9,7 @@ const classSchema = mongoose.Schema(
         description: {
             type: String,
         },
-        startDatetime: {
+        startDateTime: {
             type: Date
         },
         repeatDay: {
@@ -20,6 +20,10 @@ const classSchema = mongoose.Schema(
         course: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Course",
+        },
+        currentLesson: {
+            lessonNumber: { type: Number },
+            lesson: { type: mongoose.Schema.Types.ObjectId },
         },
         teachers: [{
             type: mongoose.Schema.Types.ObjectId,

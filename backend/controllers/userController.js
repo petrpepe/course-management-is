@@ -28,6 +28,52 @@ const getUsers = asyncHandler(async (req, res) => {
     res.status(200).json(users)
 })
 
+const createUser = asyncHandler(async (req, res) => {
+    const { firstName, lastName, email, password, roles } = req.body
+
+    if(!firstName || !lastName || !email || !password || !roles || !roles.length) {
+        res.status(400)
+        throw new Error("Please fill all required fields")
+    }
+
+    const userExists = await User.findOne({email})
+
+    if (userExists) {
+        res.status(400)
+        throw new Error("User already exists")
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    const user = await User.create({
+        firstName,
+        otherNames: req.body.otherNames,
+        lastName,
+        email,
+        phone: req.body.phone,
+        roles: req.body.roles,
+        estraPerms: req.body.extraPerms,
+        password: hashedPassword,
+    })
+
+    if (user) {
+        res.status(201).json({
+            _id: user.id,
+            firstName: user.firstName,
+            otherNames: user.otherNames,
+            lastName: user.lastName,
+            email: user.email,
+            phone: user.phone,
+            roles: user.roles,
+            estraPerms: user.extraPerms,
+        })
+    } else {
+        res.status(400)
+        throw new Error("Invalid user data")
+    }
+})
+
 // @desc Register new user
 // @route POST /api/users
 // @access Private?
@@ -57,7 +103,6 @@ const registerUser = asyncHandler(async (req, res) => {
         lastName,
         email,
         phone: user.phone,
-        courses: user.courses,
         roles: user.roles,
         estraPerms: user.extraPerms,
         password: hashedPassword,
@@ -71,7 +116,6 @@ const registerUser = asyncHandler(async (req, res) => {
             lastName: user.lastName,
             email: user.email,
             phone: user.phone,
-            courses: user.courses,
             roles: user.roles,
             estraPerms: user.extraPerms,
             token: generateToken(user._id),
@@ -102,7 +146,8 @@ const loginUser = asyncHandler(async (req, res) => {
             email: user.email,
             phone: user.phone,
             roles: permsRoles.userRoles,
-            perms: permsRoles.userPermissions,
+            rolePermissions: permsRoles.rolePermissions,
+            extraPerms: permsRoles.userPermissions,
             token: generateToken(user._id)
         })
     } else {
@@ -162,21 +207,23 @@ async function getRolesAndPermsNames(user) {
         cache.permissions = permissions;
     }).catch((e) => {throw new Error(e)})
 
-    const permsRoles = {userRoles: [], userPermissions: []}
+    const permsRoles = {userRoles: [], rolePermissions: [], userPermissions: []}
 
     for(const roleId of user.roles) {
-        permsRoles.userRoles += getValue(cache.roles, roleId).name
+        permsRoles.userRoles.push(getValue(cache.roles, roleId).name)
         for (const permId of getValue(cache.roles, roleId).permissions) {
-            permsRoles.userPermissions += getValue(cache.permissions, permId).name
+            permsRoles.rolePermissions.push(getValue(cache.permissions, permId).name)
         }
     }
 
     for (const extraPermId of user.extraPerms) {
         let permName = getValue(cache.permissions, extraPermId).name
-        if (!permsRoles.userPermissions.includes(permName)) {
-            permsRoles.userPermissions += permName
+        if (!permsRoles.rolePermissions.includes(permName)) {
+            permsRoles.userPermissions.push(permName)
         }
     }
+
+    permsRoles.userPermissions = [...permsRoles.userPermissions, ...permsRoles.rolePermissions]
 
     return permsRoles
 }
@@ -191,4 +238,5 @@ module.exports = {
     loginUser,
     getMe,
     updateUser,
+    createUser,
 }

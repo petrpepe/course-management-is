@@ -1,32 +1,32 @@
 import axios from "axios"
 
-const API_URL = "/api/lessons/"
+const API_URL = "/api/classes/"
 
-const createLesson = async (lessonData, token) => {
+const createClass = async (classData, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }
 
-    const response = await axios.post(API_URL, lessonData, config)
+    const response = await axios.post(API_URL, classData, config)
 
     return response.data
 }
 
-const updateLesson = async (lessonId, lessonData, token) => {
+const updateClass = async (classId, classData, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }
 
-    const response = await axios.put(API_URL + lessonId, lessonData, config)
+    const response = await axios.put(API_URL + classId, classData, config)
 
     return response.data
 }
 
-const getLessons = async (token) => {
+const getClasses = async (token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
@@ -38,23 +38,23 @@ const getLessons = async (token) => {
     return response.data
 }
 
-const deleteLesson = async (lessonId, token) => {
+const deleteClass = async (classId, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }
 
-    const response = await axios.delete(API_URL + lessonId, config)
+    const response = await axios.delete(API_URL + classId, config)
 
     return response.data
 }
 
-const lessonService = {
-    createLesson,
-    updateLesson,
-    getLessons,
-    deleteLesson,
+const classService = {
+    createClass,
+    updateClass,
+    getClasses,
+    deleteClass,
 }
 
-export default lessonService
+export default classService

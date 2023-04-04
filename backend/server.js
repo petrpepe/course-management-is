@@ -15,6 +15,7 @@ app.use(express.urlencoded({extended: false}))
 
 app.use("/api/courses", require("./routes/courseRoutes"))
 app.use("/api/users", require("./routes/userRoutes"))
+app.use("/api/classes", require("./routes/classRoutes"))
 app.use("/api/lessons", require("./routes/lessonRoutes"))
 app.use("/api/roles", require("./routes/roleRoutes"))
 app.use("/api/attendances", require("./routes/attendanceRoutes"))

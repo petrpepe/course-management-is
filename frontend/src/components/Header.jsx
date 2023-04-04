@@ -31,6 +31,12 @@ function Header() {
                     </Link>
                 </li>
                 <li>
+                    <Link to="/classes">
+                        <FaChalkboardTeacher />
+                        Classes
+                    </Link>
+                </li>
+                <li>
                     <Link to="/attendances">
                         <FaClock />
                         Attendances

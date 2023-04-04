@@ -1,18 +1,18 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
-import permissionService from "./permissionService"
+import classService from "./classService"
 
 const initialState = {
-    permissions: [],
+    classes: [],
     isError: false,
     isSuccess: false,
     isLoading: false,
     message: "",
 }
 
-export const createPermission = createAsyncThunk("permissions/create", async (permissionData, thunkAPI) => {
+export const createClass = createAsyncThunk("classes/create", async (classData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await permissionService.createPermission(permissionData, token)
+        return await classService.createClass(classData, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -20,10 +20,10 @@ export const createPermission = createAsyncThunk("permissions/create", async (pe
     }
 })
 
-export const updatePermission = createAsyncThunk("permissions/update", async (id, permissionData, thunkAPI) => {
+export const updateClass = createAsyncThunk("classes/update", async (id, classData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await permissionService.updatePermission(id, permissionData, token)
+        return await classService.updateClass(id, classData, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -31,10 +31,10 @@ export const updatePermission = createAsyncThunk("permissions/update", async (id
     }
 })
 
-export const getPermissions = createAsyncThunk("permissions/getAll", async (_, thunkAPI) => {
+export const getClasses = createAsyncThunk("classes/getAll", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await permissionService.getPermissions(token)
+        return await classService.getClasses(token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -42,10 +42,10 @@ export const getPermissions = createAsyncThunk("permissions/getAll", async (_, t
     }
 })
 
-export const deletePermission = createAsyncThunk("permissions/delete", async (id, thunkAPI) => {
+export const deleteClass = createAsyncThunk("classes/delete", async (id, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await permissionService.deletePermission(id, token)
+        return await classService.deleteClass(id, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -53,62 +53,62 @@ export const deletePermission = createAsyncThunk("permissions/delete", async (id
     }
 })
 
-export const permissionSlice = createSlice({
-    name: "permission",
+export const classSlice = createSlice({
+    name: "class",
     initialState,
     reducers: {
         reset: (state) => initialState
     },
     extraReducers: (builder) => {
         builder
-        .addCase(createPermission.pending, (state) => {
+        .addCase(createClass.pending, (state) => {
             state.isLoading = true;
         })
-        .addCase(createPermission.fulfilled, (state, action) => {
+        .addCase(createClass.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.permissions.push(action.payload)
+            state.classes.push(action.payload)
         })
-        .addCase(createPermission.rejected, (state, action) => {
+        .addCase(createClass.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload
         })
-        .addCase(updatePermission.pending, (state) => {
+        .addCase(updateClass.pending, (state) => {
             state.isLoading = true;
         })
-        .addCase(updatePermission.fulfilled, (state, action) => {
+        .addCase(updateClass.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.permissions[state.permissions.findIndex((obj => obj._id === action.payload._id))] = action.payload
+            state.classes[state.classes.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
-        .addCase(updatePermission.rejected, (state, action) => {
+        .addCase(updateClass.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload
         })
-        .addCase(getPermissions.pending, (state) => {
+        .addCase(getClasses.pending, (state) => {
             state.isLoading = true;
         })
-        .addCase(getPermissions.fulfilled, (state, action) => {
+        .addCase(getClasses.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.permissions = action.payload
+            state.classes = action.payload
         })
-        .addCase(getPermissions.rejected, (state, action) => {
+        .addCase(getClasses.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload
         })
-        .addCase(deletePermission.pending, (state) => {
-            state.isLoading = true;
+        .addCase(deleteClass.pending, (state) => {
+            state.isLoading = true
         })
-        .addCase(deletePermission.fulfilled, (state, action) => {
+        .addCase(deleteClass.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.permissions = state.permissions.filter((permission) => permission._id !== action.payload.id)
+            state.classes = state.classes.filter((classVar) => classVar._id !== action.payload.id)
         })
-        .addCase(deletePermission.rejected, (state, action) => {
+        .addCase(deleteClass.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload
@@ -116,5 +116,5 @@ export const permissionSlice = createSlice({
     }
 })
 
-export const {reset} = permissionSlice.actions
-export default permissionSlice.reducer
+export const {reset} = classSlice.actions
+export default classSlice.reducer

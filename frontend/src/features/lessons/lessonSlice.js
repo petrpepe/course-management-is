@@ -20,6 +20,17 @@ export const createLesson = createAsyncThunk("lessons/create", async (lessonData
     }
 })
 
+export const updateLesson = createAsyncThunk("lessons/update", async (id, lessonData, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await lessonService.updateLesson(id, lessonData, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && 
+            error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const getLessons = createAsyncThunk("lessons/getAll", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
@@ -59,6 +70,19 @@ export const lessonSlice = createSlice({
             state.lessons.push(action.payload)
         })
         .addCase(createLesson.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+        })
+        .addCase(updateLesson.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateLesson.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.lessons[state.lessons.findIndex((obj => obj._id === action.payload._id))] = action.payload
+        })
+        .addCase(updateLesson.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

@@ -6,6 +6,7 @@ import attendanceReducer from "../features/attendances/attendanceSlice"
 import userReducer from "../features/users/userSlice"
 import permissionReducer from "../features/permissions/permissionSlice"
 import roleReducer from "../features/roles/roleSlice"
+import classReducer from "../features/classes/classSlice"
 
 export const store = configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
     users: userReducer,
     permissions: permissionReducer,
     roles: roleReducer,
+    classes: classReducer,
   },
 })

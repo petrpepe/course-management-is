@@ -14,6 +14,19 @@ const createPermission = async (permissionData, token) => {
     return response.data
 }
 
+const updatePermission = async (permissionId, permissionData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    const response = await axios.put(API_URL + permissionId, permissionData, config)
+
+    return response.data
+}
+
+
 const getPermissions = async (token) => {
     const config = {
         headers: {
@@ -40,6 +53,7 @@ const deletePermission = async (permissionId, token) => {
 
 const permissionService = {
     createPermission,
+    updatePermission,
     getPermissions,
     deletePermission,
 }
