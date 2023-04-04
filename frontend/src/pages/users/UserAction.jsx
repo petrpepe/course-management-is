@@ -132,9 +132,9 @@ function UserAction() {
   }
 
   const roleOptions = roles.roles.map((role) => ({value: role._id, label: role.name}))
-  const roleDefaultOptions = roleOptions.filter((role) => Object.values(role).indexOf(currentUser.roles) > -1)
+  const roleDefaultOptions = roleOptions.filter((role) => currentUser.roles.indexOf(role.label) >= 0)
   const permsOptions = permissions.permissions.map((perm) => ({value: perm._id, label: perm.name}))
-  const permsDefaultOptions = permsOptions.filter((perm) => Object.values(perm).indexOf(currentUser.extraPerms) > -1)
+  const permsDefaultOptions = permsOptions.filter((perm) => currentUser.extraPerms.indexOf(perm.label) >= 0)
   if (location.state && location.state.currentUser && !formData.email) {
     formData.roles = roleDefaultOptions.map((role) => role.value)
     formData.extraPerms = permsDefaultOptions.map((perm) => perm.value)
@@ -166,7 +166,7 @@ function UserAction() {
                 <Select id="roles" name="roles" options={roleOptions} defaultValue={roleDefaultOptions} onChange={onSelectChange} isMulti isSearchable />
               </div>
               <div className="form-group ">
-                <label htmlFor="roles">Select extra permissions:</label>
+                <label htmlFor="extraPerms">Select extra permissions:</label>
                 <Select id="extraPerms" name="extraPerms" options={permsOptions} defaultValue={permsDefaultOptions} onChange={onSelectChange} isMulti isSearchable />
               </div>
             </>

@@ -20,7 +20,7 @@ const getUsers = asyncHandler(async (req, res) => {
     
     let select = "firstName lastName email phone";
     if(req.query.detail == "true") {
-        select = ""
+        select = "-password"
     }
 
     const users = await User.find(arg).select(select)
@@ -196,6 +196,29 @@ const updateUser = asyncHandler(async (req, res) => {
     res.status(200).json(updatedUser)
 })
 
+/**
+ * @desc Delete user by id
+ * @route DELETE /api/users/:id
+ * @access Private
+ */
+const deleteUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+
+    if(!user) {
+        res.status(400)
+        throw new Error("Role not find")
+    }
+
+    if(!req.user) {
+        res.status(401)
+        throw new Error("User not found")
+    }
+
+    await user.remove()
+
+    res.status(200).json({id: req.params.id})
+})
+
 async function getRolesAndPermsNames(user) {
     let cache = {roles: [], permissions: []}
 
@@ -239,4 +262,5 @@ module.exports = {
     getMe,
     updateUser,
     createUser,
+    deleteUser,
 }
