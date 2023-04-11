@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
-import {getUsers, reset} from "../../features/users/userSlice"
+import {deleteUser, getUsers, reset} from "../../features/users/userSlice"
 
 function Users() {
   const navigate = useNavigate()
@@ -22,16 +22,12 @@ function Users() {
       return
     }
 
-    dispatch(getUsers())
+    dispatch(getUsers({ids: []}))
 
     return () => {
       dispatch(reset())
     }
   }, [user, navigate, isError, message, dispatch])
-
-  if (isLoading) {
-    return <Spinner />
-  }
 
   return (
     <>
@@ -41,11 +37,12 @@ function Users() {
       </section>
 
       <section className="content">
-        {users.length > 0 ? (
+        {isLoading ? <Spinner /> : users.length > 0 ? (
           <div className="cards">
             {users.map((user) => (
-                <div>
-                    {JSON.stringify(user)}
+                <div key={user._id}>
+                    <p>{user.email}</p>
+                    <button onClick={() => dispatch(deleteUser(user._id))} >Delete</button>
                     <hr />
                 </div>
             ))}

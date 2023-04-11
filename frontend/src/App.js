@@ -16,6 +16,8 @@ import AuthVerify from "./app/auth-verify"
 import ClassAction from "./pages/classes/ClassAction"
 import ClassDetail from "./pages/classes/ClassDetail"
 import Classes from "./pages/classes/Classes"
+import Courses from "./pages/courses/Courses"
+import Users from "./pages/users/Users"
 
 function App() {
 //me route profile pridat param do Users/Userdetail? easy edit
@@ -29,7 +31,7 @@ function App() {
             <Route path="/login" element={<Login isLogout={false}/>} />
             <Route path="/logout" element={<Logout/>} />
             <Route path="/me" element={<UserDetail />} />
-            <Route path="/users" element={<Dashboard />} />
+            <Route path="/users" element={<Users />} />
             <Route path="/users/create" element={<UserAction />} />
             <Route path="/users/:id" element={<UserDetail />} />
             <Route path="/users/:id/edit" element={<UserAction />} />
@@ -37,7 +39,7 @@ function App() {
             <Route path="/classes/create" element={<ClassAction />} />
             <Route path="/classes/:id" element={<ClassDetail />} />
             <Route path="/classes/:id/edit" element={<ClassAction />} />
-            <Route path="/courses" element={<Dashboard />} />
+            <Route path="/courses" element={<Courses />} />
             <Route path="/courses/create" element={<CourseDetail />} />
             <Route path="/courses/:id" element={<CourseDetail />} />
             <Route path="/courses/:id/edit" element={<CourseDetail />} />

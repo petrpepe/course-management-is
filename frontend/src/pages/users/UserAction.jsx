@@ -9,6 +9,12 @@ import { getPermissions, reset as permReset} from "../../features/permissions/pe
 import Input from "../../components/form/Input"
 import Select from 'react-select'
 import Spinner from "../../components/Spinner"
+import { updateAuth } from "../../features/auth/authSlice"
+
+function useForceUpdate(){
+  const [value, setValue] = useState(0)
+  return () => setValue(value => value + 1)
+}
 
 function UserAction() {
   const [formData, setFormData] = useState({
@@ -33,9 +39,11 @@ function UserAction() {
   const roles = useSelector((state) => state.roles)
   const permissions = useSelector((state) => state.permissions)
 
+  const forceUpdate = useForceUpdate();
+
   useEffect(() => {
-    if(roles.isError || permissions.isError) {
-      toast.error("roles: " + roles.message + "\n permissions: " + permissions.message)
+    if(roles.isError || permissions.isError || users.isError) {
+      toast.error("roles: " + roles.message + " permissions: " + permissions.message + " users: " + users.message)
     }
 
     if(!user) {
@@ -52,17 +60,38 @@ function UserAction() {
       dispatch(roleReset())
       dispatch(permReset())
     }
-  }, [user, id, navigate, roles.isError, roles.message, permissions.isError, permissions.message, dispatch])
+  }, [user, id, navigate, roles.isError, roles.message, permissions.isError, permissions.message, users.isError, users.message, dispatch])
 
   const currentUser = location.state ? location.state.currentUser : formData
   if(id !== currentUser._id) return <p>Ids are not equal</p>
 
-  if (location.state && location.state.currentUser && !formData.email) {
-    for (const key in location.state.currentUser) {
-      if (Object.hasOwnProperty.call(location.state.currentUser, key)) {
-        formData[key] = location.state.currentUser[key];
+  if (location.state && formData.email === "") {
+    for (const key in currentUser) {
+      if (Object.hasOwnProperty.call(currentUser, key)) {
+        formData[key] = currentUser[key];
       }
     }
+  }
+
+  const roleOptions = roles.roles.map((role) => {
+    if (formData.roles && (formData.roles.includes(role._id) || formData.roles.includes(role.name))) {
+      return {value: role._id, label: role.name, permissions: role.permissions, isSelected: true}
+    } else return {value: role._id, label: role.name, permissions: role.permissions, isSelected: false}
+  }).filter(role => role != null)
+
+  const rolesPermissions = roleOptions.filter(roleOpt => roleOpt.isSelected).map(role => role.permissions).flat()
+  
+  const permsOptions = permissions.permissions.map((perm) => {
+    if (rolesPermissions.length > 0 && (rolesPermissions.includes(perm._id) || rolesPermissions.includes(perm.name))) {
+      if (formData.extraPerms && (formData.extraPerms.includes(perm._id) || formData.extraPerms.includes(perm.name))) {
+        return {value: perm._id, label: perm.name, isSelected: true, isFixed: false}
+      } else return {value: perm._id, label: perm.name, isSelected: false, isFixed: false}
+    } else return null
+  }).filter(permOpt => permOpt != null)
+
+  if (location.state && roleOptions.length > 0) {
+    formData.roles = roleOptions.filter(role => role.isSelected).map(role => role.value)
+    formData.extraPerms = permsOptions.filter(perm => perm.isSelected).map(perm => perm.value)
   }
 
   const onSubmit = (e) => {
@@ -71,7 +100,6 @@ function UserAction() {
     if(formData.password !== formData.password2) {
       toast.error("Passwords do not match")
     } else {
-      console.log(formData);
       const userData = {
         firstName: formData.firstName,
         otherNames: formData.otherNames,
@@ -87,24 +115,19 @@ function UserAction() {
       }
 
       if(id){
-        userData._id = currentUser._id
+        userData._id = id
         dispatch(updateUser(userData))
         if(user._id === id) {
+          userData.roles = roleOptions.filter(roleOpt => roleOpt.isSelected).map(roleOpt => roleOpt.label)
+          dispatch(updateAuth(userData))
           navigate("/me")
-          delete userData._id
-          delete userData.password
-          delete userData.password2
-          let updatedUser = JSON.parse(localStorage.getItem("user"))
-          updatedUser = {...userData}
-          localStorage.setItem("user", JSON.stringify(updatedUser))
         }
         else navigate("/users/" + id)
       } else {
         dispatch(createUser(userData))
-        console.log(users);
-        if(!users.isError && !users.isLoading) navigate("/users/" + users.users[0]._id)
+        forceUpdate()
+        if(users.isSuccess) navigate("/users/" + users.users[0]._id)
       }
-
       setFormData({})
     }
   }
@@ -119,7 +142,7 @@ function UserAction() {
 
   const onSelectChange = (e, a) => {
     const selectName = a.name
-    let selectedOptionsValues = e.map((e) => (e.value))
+    let selectedOptionsValues = e.map((opt) => (opt.value))
 
     setFormData({
       ...formData,
@@ -129,15 +152,6 @@ function UserAction() {
 
   if (roles.isLoading || permissions.isLoading) {
     return <Spinner />
-  }
-
-  const roleOptions = roles.roles.map((role) => ({value: role._id, label: role.name}))
-  const roleDefaultOptions = roleOptions.filter((role) => currentUser.roles.indexOf(role.label) >= 0)
-  const permsOptions = permissions.permissions.map((perm) => ({value: perm._id, label: perm.name}))
-  const permsDefaultOptions = permsOptions.filter((perm) => currentUser.extraPerms.indexOf(perm.label) >= 0)
-  if (location.state && location.state.currentUser && !formData.email) {
-    formData.roles = roleDefaultOptions.map((role) => role.value)
-    formData.extraPerms = permsDefaultOptions.map((perm) => perm.value)
   }
 
   return <>
@@ -159,20 +173,20 @@ function UserAction() {
           placeholder="Enter password" onChange={onChange} required={true} />
           <Input  id="password2" label="Confirm password:" value={currentUser.password2} type="password" 
           placeholder="Confirm password" onChange={onChange} required={true} />
-          { (user._id !== currentUser._id || user.roles.includes("admin")) && roles.roles && permissions.permissions ?
+          { ((user._id !== currentUser._id || user.roles.includes("admin"))) && roles.roles && permissions.permissions ?
             <>
               <div className="form-group ">
                 <label htmlFor="roles">Select roles:</label>
-                <Select id="roles" name="roles" options={roleOptions} defaultValue={roleDefaultOptions} onChange={onSelectChange} isMulti isSearchable />
+                <Select id="roles" name="roles" options={roleOptions} defaultValue={roleOptions.filter((role) => role.isSelected)} onChange={onSelectChange} isMulti isSearchable />
               </div>
               <div className="form-group ">
                 <label htmlFor="extraPerms">Select extra permissions:</label>
-                <Select id="extraPerms" name="extraPerms" options={permsOptions} defaultValue={permsDefaultOptions} onChange={onSelectChange} isMulti isSearchable />
+                <Select id="extraPerms" name="extraPerms" options={permsOptions} defaultValue={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable />
               </div>
             </>
           : <></> }
           <div className="form-group">
-              <button type="submit" className="btn btn-block">{location.pathname.includes("create") ? "Create" : "Submit"}</button>
+            <button type="submit" className="btn btn-block">{location.pathname.includes("create") ? "Create" : "Submit"}</button>
           </div>
         </form>
       </section>

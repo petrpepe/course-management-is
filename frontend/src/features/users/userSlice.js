@@ -31,10 +31,10 @@ export const updateUser = createAsyncThunk("users/update", async (userData, thun
     }
 })
 
-export const getUsers = createAsyncThunk("users/getAll", async (data, thunkAPI) => {
+export const getUsers = createAsyncThunk("users/getAll", async (data = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await userService.getUsers(data.ids, data.detail, token)
+        return await userService.getUsers(data.ids ? data.ids : [], data.detail, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()

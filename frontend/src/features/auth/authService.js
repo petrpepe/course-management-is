@@ -5,6 +5,7 @@ axios.interceptors.response.use((response) => {return response}, (error) => {
         console.log("401 error");
         window.location.href = "/logout"
     }
+    return Promise.reject(error)
 })
 
 const API_URL = "/api/users/"

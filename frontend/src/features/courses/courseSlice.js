@@ -109,7 +109,7 @@ export const courseSlice = createSlice({
         .addCase(createCourse.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
-            state.message = action
+            state.message = action.payload
         })        
         .addCase(updateCourse.pending, (state) => {
             state.isLoading = true;

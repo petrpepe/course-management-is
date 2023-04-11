@@ -27,7 +27,7 @@ function Table({roles}) {
 
     console.log(editRole);
 
-    dispatch(updateRole({_id: editRole.id, name: editRole.name, description: editRole.description, permissions: editRole.permissions}))
+    dispatch(updateRole({_id: editRole.id, name: editRole.name, description: editRole.description, permissions: editRole.permissions ? editRole.permissions : []}))
     setEdit({id: "", isEdited: false, role: {}})
     setState({})
   }
@@ -101,12 +101,17 @@ function Table({roles}) {
                       role={role}
                       setEdit={setEdit}
                       handleCancelClick={handleCancelClick}
-                      permissions={permissions}
+                      options={options}
                     />
                   ) : (
                     <ReadOnlyRow
                       role={role}
                       handleEditClick={handleEditClick}
+                      permissions={role.permissions.map(perm => {
+                        const permName = options.filter(opt => perm === opt.value)
+                        if(permName.length > 0) return permName[0].label
+                        else return ""
+                      })}
                     />
                   )}
                 </tr>

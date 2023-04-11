@@ -1,8 +1,11 @@
 import { useState } from "react";
+import Select from 'react-select'
 
-function EditableRow({ role, setEdit, handleCancelClick, }) {
+function EditableRow({ role, setEdit, handleCancelClick, options }) {
   const [rowState, setRow] = useState({...role})
-  
+
+  const defaultOptions = options.filter(opt => role.permissions.includes(opt.value))
+
   const onChange = e => {
     const inputName = e.target.name
 
@@ -18,6 +21,25 @@ function EditableRow({ role, setEdit, handleCancelClick, }) {
       description: rowState.description,
       permissions: rowState.permissions,
       [inputName]: e.target.value
+    })
+  }
+
+  const onSelectChange = (e, a) => {
+    const selectName = a.name
+    let selectedOptionsValues = e.map((opt) => (opt.value))
+
+    setRow({
+      ...rowState,
+      [selectName]: selectedOptionsValues,
+    })
+
+    setEdit({
+      id: rowState._id,
+      isEdited: true,
+      name: rowState.name,
+      description: rowState.description,
+      permissions: rowState.permissions,
+      [selectName]: selectedOptionsValues
     })
   }
 
@@ -44,12 +66,13 @@ function EditableRow({ role, setEdit, handleCancelClick, }) {
         />
       </td>
       <td>
-        <input
-          type="text"
-          placeholder="Select permissions..."
+        <Select
+          id="permissions"
           name="permissions"
-          value={rowState.permissions}
-          onChange={onChange}
+          options={options}
+          defaultValue={defaultOptions}
+          onChange={onSelectChange}
+          isMulti isSearchable
         />
       </td>
       <td>

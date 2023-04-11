@@ -57,11 +57,37 @@ function ClassAction() {
     }
   }, [user, navigate, users.isError, users.message, courses.isError, courses.message, dispatch])
 
+  const teachersOptions = users.users.map((user) => {
+    if (user.role.includes("teacher") && (formData.teachers.includes(user._id) || formData.teachers.includes(user.email))) {
+      return {value: user._id, label: user.name, permissions: user.permissions, isSelected: true}
+    } else return {value: user._id, label: user.name, permissions: user.permissions, isSelected: false}
+  })
+  const studentsOptions = users.users.map((user) => {
+    if (user.role.includes("student") && (formData.students.includes(user._id) || formData.students.includes(user.email))) {
+      return {value: user._id, label: user.name, permissions: user.permissions, isSelected: true}
+    } else return {value: user._id, label: user.name, permissions: user.permissions, isSelected: false}
+  })
+  const coursesOptions = courses.courses.map((course) => {
+    if (formData.courses.includes(course._id) || formData.courses.includes(course.title)) {
+      return {value: course._id, label: course.title, isSelected: false, isFixed: false}
+    } else return {value: course._id, label: course.title, isSelected: true, isFixed: false}
+  })
+
   const onChange = (e) => {
-    setFormData((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value,
-    }))
+    if (e.target.name.includes(".")) {
+      const keys = e.target.name.split(".")
+        setFormData((prevState) => ({
+          ...prevState,
+          [keys[0]]: {
+            [keys[1]]: e.target.value
+          },
+        }))
+    } else {
+      setFormData((prevState) => ({
+          ...prevState,
+          [e.target.name]: e.target.value,
+      }))
+    }
   }
 
   const currentClass = location.state ? location.state.currentClass : formData
@@ -94,7 +120,7 @@ function ClassAction() {
     }
   }
 
-  const onSelectChange = e => {
+  const onSelectChange = (e, a) => {
     let selectedOptionsValues = [];
 
     for (let index = 0; index < e.length; index++) {
@@ -103,7 +129,7 @@ function ClassAction() {
 
     setFormData((prevState) => ({
       ...prevState,
-      [e.name]: selectedOptionsValues,
+      [a.name]: selectedOptionsValues,
     }))
   }
 
@@ -127,14 +153,18 @@ function ClassAction() {
           placeholder="Enter startDateTime" type="datetime-local" onChange={onChange} />
           <div className="form-group ">
             <label htmlFor="teachers">Select teachers:</label>
-            <Select id="teachers" name="teachers" options={users.users.map((teacher) => ({value: teacher._id, label: teacher.name}))} onChange={onSelectChange} isMulti isSearchable />
+            <Select id="teachers" name="teachers" options={teachersOptions} onChange={onSelectChange} isMulti isSearchable />
           </div>
           <div className="form-group ">
             <label htmlFor="students">Select students:</label>
-            <Select id="students" name="students" options={users.users.map((student) => ({value: student._id, label: student.name}))} onChange={onSelectChange} isMulti isSearchable />
+            <Select id="students" name="students" options={studentsOptions} onChange={onSelectChange} isMulti isSearchable />
+          </div>
+          <div className="form-group ">
+            <label htmlFor="course">Select course:</label>
+            <Select id="course" name="course" options={coursesOptions} onChange={onSelectChange} isSearchable />
           </div>
           <div className="form-group">
-              <button type="submit" className="btn btn-block">Submit</button>
+            <button type="submit" className="btn btn-block">Submit</button>
           </div>
         </form>
       </section>

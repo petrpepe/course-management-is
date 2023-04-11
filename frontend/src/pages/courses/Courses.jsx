@@ -2,10 +2,10 @@ import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
-import {getCourses, reset} from "../features/courses/courseSlice"
-import CourseItem from "../components/CourseItem"
-import Spinner from "../components/Spinner"
-import CourseForm from "../components/form/CourseForm"
+import {getCourses, reset} from "../../features/courses/courseSlice"
+import Card from "../../components/Card"
+import Spinner from "../../components/Spinner"
+import CourseForm from "../../components/form/CourseForm"
 
 function Courses() {
   const navigate = useNavigate()
@@ -46,7 +46,7 @@ function Courses() {
           {courses.length > 0 ? (
             <div className="cards">
               {courses.map((course) => (
-                <CourseItem key={course._id} course={course} />
+                <Card key={course._id} data={course} />
               ))}
             </div>
           ) : ( 

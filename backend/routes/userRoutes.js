@@ -4,11 +4,10 @@ const { getUsers, registerUser, createUser, loginUser, updateUser, getMe, delete
 const { authenticate, authorize } = require('../middleware/authMiddleware')
 
 router.post("/register", registerUser)
-router.post("/", createUser)
+router.post("/", authenticate, createUser)
 router.post("/login", loginUser)
 router.get("/me", [authenticate, authorize(["userGet"])], getMe)
 router.get("/all", authenticate, getUsers)
-router.put("/:id", authenticate, updateUser)
-router.delete("/:id", authenticate, deleteUser)
+router.put("/:id", authenticate, updateUser).delete("/:id", authenticate, deleteUser)
 
 module.exports = router

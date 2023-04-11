@@ -2,17 +2,16 @@ import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
-import {getCourses, reset} from "../features/courses/courseSlice"
-import CourseItem from "../components/CourseItem"
+import {getClasses, reset} from "../features/classes/classSlice"
 import Spinner from "../components/Spinner"
-import CourseForm from "../components/form/CourseForm"
+import Card from "../components/Card"
 
 function Dashboard() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { courses, isLoading, isError, message } = useSelector((state) => state.courses)
+  const { classes, isLoading, isError, message } = useSelector((state) => state.classes)
 
   useEffect(() => {
     if(isError) {
@@ -24,7 +23,7 @@ function Dashboard() {
       return
     }
 
-    dispatch(getCourses())
+    dispatch(getClasses())
 
     return () => {
       dispatch(reset())
@@ -36,21 +35,19 @@ function Dashboard() {
     <>
       <section className="heading">
         <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Courses Dashboard</p>
+        <p>Main Dashboard</p>
       </section>
-
-      <CourseForm />
 
       {isLoading ? <Spinner /> :
         <section className="content">
-          {courses.length > 0 ? (
+          {classes.length > 0 ? (
             <div className="cards">
-              {courses.map((course) => (
-                <CourseItem key={course._id} course={course} />
+              {classes.map((classVar) => (
+                <Card key={classVar._id} data={classVar} />
               ))}
             </div>
           ) : ( 
-            <h3>You haven't set any course</h3> 
+            <h3>You haven't set any class</h3> 
             )}
         </section>
       }

@@ -30,10 +30,6 @@ function Roles() {
     }
   }, [user, navigate, isError, message, dispatch])
 
-  if (isLoading) {
-    return <Spinner />
-  }
-
   return (
     <>
       <section className="heading">
@@ -41,7 +37,7 @@ function Roles() {
       </section>
 
       <section className="content">
-        <Table roles={roles} />
+        {isLoading ? <Spinner /> : <Table roles={roles} />}
       </section>
     </>
   )
