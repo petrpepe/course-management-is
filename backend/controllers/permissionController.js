@@ -5,18 +5,9 @@ const Permisson = require('../models/permissionModel');
 // @route GET /api/Permissons
 // @access Private
 const getPermissons = asyncHandler(async (req, res) => {
-    const Permissons = await Permisson.find()
+    const permissons = await Permisson.find()
 
-    res.status(200).json(Permissons)
-})
-
-// @desc Get Permisson by id
-// @route GET /api/Permissons
-// @access Private
-const getPermissonById = asyncHandler(async (req, res) => {
-    const Permissons = await Permisson.findById(req.params.id)
-
-    res.status(200).json(Permissons)
+    res.status(200).json(permissons)
 })
 
 // @desc Create permisson
@@ -39,9 +30,9 @@ const setPermisson = asyncHandler(async (req, res) => {
  * @access Private
  */
 const updatePermisson = asyncHandler(async (req, res) => {
-    const Permisson = await Permisson.findById(req.params.id)
+    const permisson = await Permisson.findById(req.params.id)
 
-    if(!Permisson) {
+    if(!permisson) {
         res.status(400)
         throw new Error("Permisson not find")
     }
@@ -64,9 +55,9 @@ const updatePermisson = asyncHandler(async (req, res) => {
  * @access Private
  */
 const deletePermisson = asyncHandler(async (req, res) => {
-    const Permisson = await Permisson.findById(req.params.id)
+    const permisson = await Permisson.findById(req.params.id)
 
-    if(!Permisson) {
+    if(!permisson) {
         res.status(400)
         throw new Error("Permisson not find")
     }
@@ -76,14 +67,13 @@ const deletePermisson = asyncHandler(async (req, res) => {
         throw new Error("User not found")
     }
 
-    await Permisson.remove()
+    await permisson.remove()
 
     res.status(200).json({id: req.params.id})
 })
 
 module.exports = {
     getPermissons,
-    getPermissonById,
     setPermisson,
     updatePermisson,
     deletePermisson

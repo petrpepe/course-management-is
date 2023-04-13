@@ -42,15 +42,15 @@ function Users() {
     {currentUser != null ?
       <>
         <section className="heading">
-          <h1>Profil {currentUser.firstName + " " + currentUser.lastName}</h1>
+          <h1>{id ? "Profile: " + currentUser.firstName + " " + currentUser.lastName : "Your profile"}</h1>
         </section>
 
         <section className="content">
-          <div><p>Ahojj</p></div>
+          <div>{Object.values(currentUser).map(v => <p>{v}</p>)}</div>
           <Link to={"/users/" + currentUser._id + "/edit"} state={{currentUser: currentUser}}>Edit</Link>
         </section>
       </>
-    : "No user"}
+    : "No such an user"}
     </>
   )
 }

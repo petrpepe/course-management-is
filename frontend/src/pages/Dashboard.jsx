@@ -2,7 +2,7 @@ import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
-import {getClasses, reset} from "../features/classes/classSlice"
+import {deleteClass, getClasses, reset} from "../features/classes/classSlice"
 import Spinner from "../components/Spinner"
 import Card from "../components/Card"
 
@@ -43,11 +43,11 @@ function Dashboard() {
           {classes.length > 0 ? (
             <div className="cards">
               {classes.map((classVar) => (
-                <Card key={classVar._id} data={classVar} />
+                <Card key={classVar._id} data={classVar} currentData={{currentClass: classVar}} link="/classes/" deleteAction={deleteClass} />
               ))}
             </div>
           ) : ( 
-            <h3>You haven't set any class</h3> 
+            <h3>You don't have any class today</h3> 
             )}
         </section>
       }

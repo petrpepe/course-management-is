@@ -5,12 +5,12 @@ const Lesson = require('../models/lessonModel');
 // @route GET /api/Lessons
 // @access Private
 const getLessons = asyncHandler(async (req, res) => {
-    const Lessons = await Lesson.find({ user: req.user.id })
+    const lessons = await Lesson.find({ user: req.user.id })
 
-    res.status(200).json(Lessons)
+    res.status(200).json(lessons)
 })
 
-// @desc Create Lessons
+// @desc Create Lesson
 // @route POST /api/Lessons
 // @access Private
 const setLesson = asyncHandler(async (req, res) => {
@@ -19,18 +19,18 @@ const setLesson = asyncHandler(async (req, res) => {
         throw new Error("Please add lesson title")
     }
 
-    const Lesson = await Lesson.create(req.body)
+    const lesson = await Lesson.create(req.body)
 
-    res.status(200).json(Lesson)
+    res.status(200).json(lesson)
 })
 
 // @desc Update Lessons
 // @route PUT /api/Lessons/:id
 // @access Private
 const updateLesson = asyncHandler(async (req, res) => {
-    const Lesson = await Lesson.findById(req.params.id)
+    const lesson = await Lesson.findById(req.params.id)
 
-    if(!Lesson) {
+    if(!lesson) {
         res.status(400)
         throw new Error("Lesson not find")
     }
@@ -38,6 +38,11 @@ const updateLesson = asyncHandler(async (req, res) => {
     if(!req.user) {
         res.status(401)
         throw new Error("User not found")
+    }
+
+    console.log(currentLesson);
+    if (req.body.currentLesson.lesson === "") {
+        req.body.currentLesson.lesson = null
     }
 
     const updatedLesson = await Lesson.findByIdAndUpdate(req.params.id, req.body, {
@@ -51,9 +56,9 @@ const updateLesson = asyncHandler(async (req, res) => {
 // @route DELETE /api/Lessons/:id
 // @access Private
 const deleteLesson = asyncHandler(async (req, res) => {
-    const Lesson = await Lesson.findById(req.params.id)
+    const lesson = await Lesson.findById(req.params.id)
 
-    if(!Lesson) {
+    if(!lesson) {
         res.status(400)
         throw new Error("Lesson not find")
     }
@@ -63,7 +68,7 @@ const deleteLesson = asyncHandler(async (req, res) => {
         throw new Error("User not found")
     }
 
-    await Lesson.remove()
+    await lesson.remove()
 
     res.status(200).json({id: req.params.id})
 })

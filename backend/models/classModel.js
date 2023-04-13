@@ -12,10 +12,8 @@ const classSchema = mongoose.Schema(
         startDateTime: {
             type: Date
         },
-        repeatDay: {
-            day: { type: Number },
-            time: { type: Date },
-            count: { type: Number },
+        repeatCount: {
+            type: Number,
         },
         course: {
             type: mongoose.Schema.Types.ObjectId,

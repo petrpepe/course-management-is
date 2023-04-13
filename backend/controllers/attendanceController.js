@@ -5,9 +5,9 @@ const Attendance = require('../models/attendanceModel');
 // @route GET /api/Attendances
 // @access Private
 const getAttendances = asyncHandler(async (req, res) => {
-    const Attendances = await Attendance.find({ user: req.user.id })
+    const attendances = await Attendance.find({ user: req.user.id })
 
-    res.status(200).json(Attendances)
+    res.status(200).json(attendances)
 })
 
 // @desc Create Attendances
@@ -19,18 +19,18 @@ const setAttendance = asyncHandler(async (req, res) => {
         throw new Error("Please add datetime")
     }
 
-    const Attendance = await Attendance.create(req.body)
+    const attendance = await Attendance.create(req.body)
 
-    res.status(200).json(Attendance)
+    res.status(200).json(attendance)
 })
 
 // @desc Update Attendances
 // @route PUT /api/Attendances/:id
 // @access Private
 const updateAttendance = asyncHandler(async (req, res) => {
-    const Attendance = await Attendance.findById(req.params.id)
+    const attendance = await Attendance.findById(req.params.id)
 
-    if(!Attendance) {
+    if(!attendance) {
         res.status(400)
         throw new Error("Attendance not find")
     }
@@ -51,9 +51,9 @@ const updateAttendance = asyncHandler(async (req, res) => {
 // @route DELETE /api/Attendances/:id
 // @access Private
 const deleteAttendance = asyncHandler(async (req, res) => {
-    const Attendance = await Attendance.findById(req.params.id)
+    const attendance = await Attendance.findById(req.params.id)
 
-    if(!Attendance) {
+    if(!attendance) {
         res.status(400)
         throw new Error("Attendance not find")
     }
@@ -63,7 +63,7 @@ const deleteAttendance = asyncHandler(async (req, res) => {
         throw new Error("User not found")
     }
 
-    await Attendance.remove()
+    await attendance.remove()
 
     res.status(200).json({id: req.params.id})
 })

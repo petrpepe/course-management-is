@@ -20,10 +20,10 @@ export const createLesson = createAsyncThunk("lessons/create", async (lessonData
     }
 })
 
-export const updateLesson = createAsyncThunk("lessons/update", async (id, lessonData, thunkAPI) => {
+export const updateLesson = createAsyncThunk("lessons/update", async (lessonData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await lessonService.updateLesson(id, lessonData, token)
+        return await lessonService.updateLesson(lessonData._id, lessonData, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()

@@ -1,9 +1,10 @@
 import {useEffect} from "react"
-import {useNavigate} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
-import {getClasses, reset} from "../../features/classes/classSlice"
+import {deleteClass, getClasses, reset} from "../../features/classes/classSlice"
+import Card from "../../components/Card"
 
 function Classes() {
   const navigate = useNavigate()
@@ -29,10 +30,6 @@ function Classes() {
     }
   }, [user, navigate, isError, message, dispatch])
 
-  if (isLoading) {
-    return <Spinner />
-  }
-
   return (
     <>
       <section className="heading">
@@ -41,18 +38,16 @@ function Classes() {
       </section>
 
       <section className="content">
-        {classes.length > 0 ? (
+        <Link to={"/classes/create"}>Create new Class</Link>
+        {isLoading ? <Spinner /> : classes.length > 0 ? (
           <div className="cards">
             {classes.map((classVar) => (
-                <div>
-                    {JSON.stringify(classVar)}
-                    <hr />
-                </div>
+              <Card key={classVar._id} data={classVar} link="/classes/" currentData={{currentClass: classVar}} deleteAction={deleteClass} />
             ))}
           </div>
         ) : ( 
           <h3>You haven't set any class</h3> 
-          )}
+        )}
       </section>
     </>
   )

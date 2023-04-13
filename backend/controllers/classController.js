@@ -18,6 +18,11 @@ const setClass = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("Please add datetime")
     }
+    
+    console.log(req.body.currentLesson.lesson);
+    if (req.body.currentLesson && req.body.currentLesson.lesson === "") {
+        req.body.currentLesson.lesson = null
+    }
 
     const classVar = await Class.create(req.body)
 

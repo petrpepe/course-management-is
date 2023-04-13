@@ -1,9 +1,10 @@
 import {useEffect} from "react"
-import {useNavigate} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import {deleteUser, getUsers, reset} from "../../features/users/userSlice"
+import Card from "../../components/Card"
 
 function Users() {
   const navigate = useNavigate()
@@ -37,19 +38,16 @@ function Users() {
       </section>
 
       <section className="content">
+        <Link to={"/users/create"}>Create new User</Link>
         {isLoading ? <Spinner /> : users.length > 0 ? (
           <div className="cards">
             {users.map((user) => (
-                <div key={user._id}>
-                    <p>{user.email}</p>
-                    <button onClick={() => dispatch(deleteUser(user._id))} >Delete</button>
-                    <hr />
-                </div>
+              <Card key={user._id} data={user} title={user.lastName + " " + user.firstName} link="/users/" currentData={{currentUser: user}} deleteAction={deleteUser} />
             ))}
           </div>
         ) : ( 
           <h3>You haven't set any user</h3> 
-          )}
+        )}
       </section>
     </>
   )

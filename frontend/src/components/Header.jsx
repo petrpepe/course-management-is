@@ -14,6 +14,7 @@ function Header() {
     <header className="header">
         <div className="logo">
             <Link to="/">CourseSetter</Link>
+            <button onClick={() => navigate(-1)}>Go Back</button>
         </div>
         <ul>
             {!user || !user.roles ? "" :

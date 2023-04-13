@@ -4,7 +4,9 @@ const { getClasses, setClass, updateClass, deleteClass } = require('../controlle
 
 const { authenticate } = require("../middleware/authMiddleware")
 
-router.route("/").get(authenticate, getClasses).post(authenticate, setClass)
-router.route("/:id").delete(authenticate, updateClass).put(authenticate, deleteClass)
+router.use(authenticate)
+
+router.route("/").get(getClasses).post(setClass)
+router.route("/:id").delete(updateClass).put(deleteClass)
 
 module.exports = router

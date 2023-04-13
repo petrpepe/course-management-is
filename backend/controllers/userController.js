@@ -25,6 +25,8 @@ const getUsers = asyncHandler(async (req, res) => {
 
     const users = await User.find(arg).select(select)
 
+    //const permsRoles = await getRolesAndPermsNames(users)
+
     res.status(200).json(users)
 })
 

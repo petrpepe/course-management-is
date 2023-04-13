@@ -4,7 +4,9 @@ const { getAttendances, setAttendance, updateAttendance, deleteAttendance } = re
 
 const { authenticate } = require("../middleware/authMiddleware")
 
-router.route("/").get(authenticate, getAttendances).post(authenticate, setAttendance)
-router.route("/:id").delete(authenticate, deleteAttendance).put(authenticate, updateAttendance)
+router.use(authenticate)
+
+router.route("/").get(getAttendances).post(setAttendance)
+router.route("/:id").delete(deleteAttendance).put(updateAttendance)
 
 module.exports = router

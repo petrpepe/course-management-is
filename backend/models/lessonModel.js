@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const lessonSchema = mongoose.Schema(
     {
-        supposedOrderNum: {
+        lessonNum: {
             type: Number
         },
         title: {
@@ -12,12 +12,16 @@ const lessonSchema = mongoose.Schema(
         description: {
             type: String,
         },
-        duration: {
-            type: Number
-        },
         materials: {
             type: String
-        }
+        },
+        approval: [{
+            aprrovalRequired: {type: Boolean},
+            aprrovedBy: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            }],
+        }]
     }, {
         timestamps: true,
     }

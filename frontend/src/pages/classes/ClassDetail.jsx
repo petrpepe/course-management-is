@@ -1,5 +1,5 @@
 import {useEffect} from "react"
-import {useNavigate, useParams} from "react-router-dom"
+import {Link, useNavigate, useParams} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
@@ -38,7 +38,8 @@ function ClassDetail() {
       </section>
 
       <section className="content">
-        <p>{Object.values(classVar)}</p>
+        <div></div>
+        <Link to={"/classes/" + classVar._id + "/edit"} state={{currentClass: classVar}}>Edit</Link>
       </section>
     </>
   )

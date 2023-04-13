@@ -45,7 +45,9 @@ export const getUsers = createAsyncThunk("users/getAll", async (data = {}, thunk
 export const deleteUser = createAsyncThunk("users/delete", async (id, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await userService.deleteUser(id, token)
+        const userId = JSON.parse(localStorage.getItem("user"))._id
+        if (userId !== id) return await userService.deleteUser(id, token)
+        else throw new Error("You can't delete yourself!")
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()

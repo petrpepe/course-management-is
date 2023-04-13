@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
+import useForceUpdate from "../../hooks/useForceUpdate"
 import {toast} from "react-toastify"
 import {FaChalkboardTeacher} from "react-icons/fa"
 import {createClass, updateClass} from "../../features/classes/classSlice"
@@ -15,16 +16,10 @@ function ClassAction() {
     title: "",
     description: "",
     startDateTime: "",
-    repeatDay: {
-        day: 0,
-        time: "",
-        count: 0,
-    },
+    repeatCount: 1,
     course: "",
-    currentLesson: {
-        lessonNumber: 0,
-        lesson: "",
-    },
+    lessonNumber: 0,
+    lesson: "",
     teachers: [],
     students: [],
   })
@@ -32,11 +27,13 @@ function ClassAction() {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const forceUpdate = useForceUpdate()
 
   const { id } = useParams()
   const user = useSelector((state) => state.auth)
   const users = useSelector((state) => state.users)
   const courses = useSelector((state) => state.courses)
+  const classVar = useSelector((state) => state.classes.classes[0])
 
   useEffect(() => {
     if(users.isError || courses.isError) {
@@ -57,20 +54,31 @@ function ClassAction() {
     }
   }, [user, navigate, users.isError, users.message, courses.isError, courses.message, dispatch])
 
-  const teachersOptions = users.users.map((user) => {
-    if (user.role.includes("teacher") && (formData.teachers.includes(user._id) || formData.teachers.includes(user.email))) {
-      return {value: user._id, label: user.name, permissions: user.permissions, isSelected: true}
-    } else return {value: user._id, label: user.name, permissions: user.permissions, isSelected: false}
+  const currentClass = location.state ? location.state.currentClass : formData
+  if(id !== currentClass._id) return <p>Ids are not equal</p>
+
+  if (location.state && formData.title === "") {
+    for (const key in currentClass) {
+      if (Object.hasOwnProperty.call(currentClass, key)) {
+        formData[key] = currentClass[key];
+      }
+    }
+  }
+//filtr admin a učitele
+  const teachersOptions = users.users.filter(user => user.roles.includes("")).map((user) => {
+    if (formData.teachers.includes(user._id) || formData.teachers.includes(user.email)) {
+      return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: true}
+    } else return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: false}
   })
   const studentsOptions = users.users.map((user) => {
-    if (user.role.includes("student") && (formData.students.includes(user._id) || formData.students.includes(user.email))) {
-      return {value: user._id, label: user.name, permissions: user.permissions, isSelected: true}
-    } else return {value: user._id, label: user.name, permissions: user.permissions, isSelected: false}
+    if (formData.students.includes(user._id) || formData.students.includes(user.email)) {
+      return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: true}
+    } else return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: false}
   })
   const coursesOptions = courses.courses.map((course) => {
-    if (formData.courses.includes(course._id) || formData.courses.includes(course.title)) {
-      return {value: course._id, label: course.title, isSelected: false, isFixed: false}
-    } else return {value: course._id, label: course.title, isSelected: true, isFixed: false}
+    if (formData.course.includes(course._id) || formData.course.includes(course.title)) {
+      return {value: course._id, label: course.title, isSelected: false}
+    } else return {value: course._id, label: course.title, isSelected: true}
   })
 
   const onChange = (e) => {
@@ -90,42 +98,44 @@ function ClassAction() {
     }
   }
 
-  const currentClass = location.state ? location.state.currentClass : formData
-
   const onSubmit = (e) => {
     e.preventDefault()
 
     const classData = {
-        title: currentClass.title,
-        description: currentClass.description,
-        startDateTime: currentClass.startDateTime,
-        repeatDay: {
-            day: currentClass.repeatDay.day,
-            time: currentClass.repeatDay.time,
-            count: currentClass.repeatDay.count,
-        },
-        course: currentClass.course,
-        currentLesson: {
-            lessonNumber: currentClass.currentLesson.lessonNumber,
-            lesson: currentClass.currentLesson.lesson,
-        },
-        teachers: currentClass.teachers,
-        students: currentClass.students,
+      title: formData.title,
+      description: formData.description,
+      startDateTime: formData.startDateTime,
+      repeatCount: formData.repeatCount,
+      course: formData.course,
+      currentLesson: {
+          lessonNumber: formData.lessonNumber,
+          lesson: formData.lesson,
+      },
+      teachers: formData.teachers,
+      students: formData.students,
     }
 
+    console.log(classData);
+
     if(id){
-        dispatch(updateClass(classData))
+      classData._id = id
+      dispatch(updateClass(classData))
+      navigate("/classes/" + id)
     } else {
-        dispatch(createClass(classData))
+      dispatch(createClass(classData))
+      forceUpdate()
+      navigate("/classes/" + classVar._id)
     }
   }
 
   const onSelectChange = (e, a) => {
     let selectedOptionsValues = [];
 
-    for (let index = 0; index < e.length; index++) {
-      selectedOptionsValues[index] = e[index].value
-    }
+    if (e.length > 0) {
+      for (let index = 0; index < e.length; index++) {
+        selectedOptionsValues[index] = e[index].value
+      }
+    } else selectedOptionsValues[0] = e.value
 
     setFormData((prevState) => ({
       ...prevState,
@@ -136,6 +146,8 @@ function ClassAction() {
   if (users.isLoading || courses.isLoading) {
     return <Spinner />
   }
+
+  console.log(studentsOptions);
 
   return <>
       <section className="heading">
@@ -150,18 +162,20 @@ function ClassAction() {
           <Input  id="description" label="Description:" value={currentClass.description} 
           placeholder="Enter description" onChange={onChange} />
           <Input  id="startDateTime" label="Beggining of course:" value={currentClass.startDateTime} 
-          placeholder="Enter startDateTime" type="datetime-local" onChange={onChange} />
+          placeholder="Enter startDateTime" type="datetime-local" onChange={onChange} required={true} />
+          <Input  id="repeatCount" label="repeatCount:" value={currentClass.repeatCount} 
+          type="number" onChange={onChange} required={true} min={1} />
+          <div className="form-group ">
+            <label htmlFor="course">Select a course:</label>
+            <Select id="course" name="course" defaultInputValue={coursesOptions.filter(course => course.isSelected)} options={coursesOptions} onChange={onSelectChange} isSearchable />
+          </div>
           <div className="form-group ">
             <label htmlFor="teachers">Select teachers:</label>
-            <Select id="teachers" name="teachers" options={teachersOptions} onChange={onSelectChange} isMulti isSearchable />
+            <Select id="teachers" name="teachers" defaultValue={teachersOptions.filter(teacher => teacher.isSelected)} options={teachersOptions} onChange={onSelectChange} isMulti isSearchable isClearable />
           </div>
           <div className="form-group ">
             <label htmlFor="students">Select students:</label>
-            <Select id="students" name="students" options={studentsOptions} onChange={onSelectChange} isMulti isSearchable />
-          </div>
-          <div className="form-group ">
-            <label htmlFor="course">Select course:</label>
-            <Select id="course" name="course" options={coursesOptions} onChange={onSelectChange} isSearchable />
+            <Select id="students" name="students" defaultValue={studentsOptions.filter(student => student.isSelected)} options={studentsOptions} onChange={onSelectChange} isMulti isSearchable isClearable />
           </div>
           <div className="form-group">
             <button type="submit" className="btn btn-block">Submit</button>

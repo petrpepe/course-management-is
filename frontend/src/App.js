@@ -1,26 +1,28 @@
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import Header from "./components/Header"
 import Dashboard from './pages/Dashboard'
+import AuthVerify from "./app/auth-verify"
 import Login from './pages/Login'
 import Logout from './pages/Logout'
-import UserAction from './pages/users/UserAction'
-import Header from "./components/Header"
-import Lessons from "./pages/lessons/Lessons"
-import Attendances from "./pages/Attendances"
-import UserDetail from "./pages/users/UserDetail"
-import Permissions from "./pages/Permissions"
-import Roles from "./pages/Roles"
-import CourseDetail from './pages/courses/CourseDetail'
-import AuthVerify from "./app/auth-verify"
-import ClassAction from "./pages/classes/ClassAction"
-import ClassDetail from "./pages/classes/ClassDetail"
-import Classes from "./pages/classes/Classes"
-import Courses from "./pages/courses/Courses"
 import Users from "./pages/users/Users"
+import UserDetail from "./pages/users/UserDetail"
+import UserAction from './pages/users/UserAction'
+import Courses from "./pages/courses/Courses"
+import CourseDetail from './pages/courses/CourseDetail'
+import CourseAction from './pages/courses/CourseAction'
+import Classes from "./pages/classes/Classes"
+import ClassDetail from "./pages/classes/ClassDetail"
+import ClassAction from "./pages/classes/ClassAction"
+import Lessons from "./pages/lessons/Lessons"
+import LessonDetail from "./pages/lessons/LessonDetail"
+import LessonAction from "./pages/lessons/LessonAction"
+import Attendances from "./pages/Attendances"
+import Roles from "./pages/Roles"
+import Permissions from "./pages/Permissions"
 
 function App() {
-//me route profile pridat param do Users/Userdetail? easy edit
   return (
     <>
       <Router>
@@ -35,26 +37,20 @@ function App() {
             <Route path="/users/create" element={<UserAction />} />
             <Route path="/users/:id" element={<UserDetail />} />
             <Route path="/users/:id/edit" element={<UserAction />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/create" element={<CourseAction />} />
+            <Route path="/courses/:id" element={<CourseDetail />} />
+            <Route path="/courses/:id/edit" element={<CourseAction />} />
             <Route path="/classes" element={<Classes />} />
             <Route path="/classes/create" element={<ClassAction />} />
             <Route path="/classes/:id" element={<ClassDetail />} />
             <Route path="/classes/:id/edit" element={<ClassAction />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/courses/create" element={<CourseDetail />} />
-            <Route path="/courses/:id" element={<CourseDetail />} />
-            <Route path="/courses/:id/edit" element={<CourseDetail />} />
             <Route path="/lessons" element={<Lessons />} />
-            <Route path="/lessons/create" element={<CourseDetail />} />
-            <Route path="/lessons/:id" element={<CourseDetail />} />
-            <Route path="/lessons/:id/edit" element={<CourseDetail />} />
+            <Route path="/lessons/create" element={<LessonAction />} />
+            <Route path="/lessons/:id" element={<LessonDetail />} />
+            <Route path="/lessons/:id/edit" element={<LessonAction />} />
             <Route path="/attendances" element={<Attendances />} />
-            <Route path="/attendances/create" element={<CourseDetail />} />
-            <Route path="/attendances/:id" element={<CourseDetail />} />
-            <Route path="/attendances/:id/edit" element={<CourseDetail />} />
             <Route path="/roles" element={<Roles />} />
-            <Route path="/roles/create" element={<CourseDetail />} />
-            <Route path="/roles/:id" element={<CourseDetail />} />
-            <Route path="/roles/:id/edit" element={<CourseDetail />} />
             <Route path="/permissions" element={<Permissions />} />
           </Routes>
         </main>

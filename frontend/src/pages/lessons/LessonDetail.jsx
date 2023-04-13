@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
-import {getLessonById, reset} from "../../features/lessons/lessonSlice"
+import {getLessons, reset} from "../../features/lessons/lessonSlice"
 
 function LessonDetail() {
   const navigate = useNavigate()
@@ -17,7 +17,7 @@ function LessonDetail() {
       toast.error(message)
     }
 
-    dispatch(getLessonById(id))
+    dispatch(getLessons(id))
 
     return () => {
       dispatch(reset())

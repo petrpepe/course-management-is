@@ -4,7 +4,9 @@ const { getRoles, setRole, updateRole, deleteRole } = require('../controllers/ro
 
 const { authenticate } = require("../middleware/authMiddleware")
 
-router.route("/").get(authenticate, getRoles).post(authenticate, setRole)
-router.route("/:id").delete(authenticate, deleteRole).put(authenticate, updateRole)
+router.use(authenticate)
+
+router.route("/").get(getRoles).post(setRole)
+router.route("/:id").delete(deleteRole).put(updateRole)
 
 module.exports = router

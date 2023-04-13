@@ -4,7 +4,9 @@ const { getLessons, setLesson, updateLesson, deleteLesson } = require('../contro
 
 const { authenticate } = require("../middleware/authMiddleware")
 
-router.route("/").get(authenticate, getLessons).post(authenticate, setLesson)
-router.route("/:id").delete(authenticate, deleteLesson).put(authenticate, updateLesson)
+router.use(authenticate)
+
+router.route("/").get(getLessons).post(setLesson)
+router.route("/:id").delete(deleteLesson).put(updateLesson)
 
 module.exports = router

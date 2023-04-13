@@ -1,9 +1,10 @@
 import {useEffect} from "react"
-import {useNavigate} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
-import {getLessons, reset} from "../../features/lessons/lessonSlice"
+import {deleteLesson, getLessons, reset} from "../../features/lessons/lessonSlice"
+import Card from "../../components/Card"
 
 function Lessons() {
   const navigate = useNavigate()
@@ -29,30 +30,23 @@ function Lessons() {
     }
   }, [user, navigate, isError, message, dispatch])
 
-  if (isLoading) {
-    return <Spinner />
-  }
-
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
         <p>Lessons Dashboard</p>
       </section>
 
       <section className="content">
-        {lessons.length > 0 ? (
+        <Link to={"/lessons/create"}>Create new Lesson</Link>
+        {isLoading ? <Spinner /> : lessons.length > 0 ? (
           <div className="cards">
             {lessons.map((lesson) => (
-                <div>
-                    {JSON.stringify(lesson)}
-                    <hr />
-                </div>
+              <Card key={lesson._id} data={lesson} link="/lessons/" currentData={{currentLesson: lesson}} deleteAction={deleteLesson} />
             ))}
           </div>
         ) : ( 
           <h3>You haven't set any lesson</h3> 
-          )}
+        )}
       </section>
     </>
   )

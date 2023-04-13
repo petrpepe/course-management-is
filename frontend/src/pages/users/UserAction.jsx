@@ -1,6 +1,7 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
+import useForceUpdate from "../../hooks/useForceUpdate"
 import {toast} from "react-toastify"
 import {FaUser} from "react-icons/fa"
 import {createUser, updateUser} from "../../features/users/userSlice"
@@ -10,11 +11,6 @@ import Input from "../../components/form/Input"
 import Select from 'react-select'
 import Spinner from "../../components/Spinner"
 import { updateAuth } from "../../features/auth/authSlice"
-
-function useForceUpdate(){
-  const [value, setValue] = useState(0)
-  return () => setValue(value => value + 1)
-}
 
 function UserAction() {
   const [formData, setFormData] = useState({
@@ -32,14 +28,13 @@ function UserAction() {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const forceUpdate = useForceUpdate()
 
   const { id } = useParams()
   const { user } = useSelector((state) => state.auth)
   const users = useSelector((state) => state.users)
   const roles = useSelector((state) => state.roles)
   const permissions = useSelector((state) => state.permissions)
-
-  const forceUpdate = useForceUpdate();
 
   useEffect(() => {
     if(roles.isError || permissions.isError || users.isError) {
@@ -177,11 +172,11 @@ function UserAction() {
             <>
               <div className="form-group ">
                 <label htmlFor="roles">Select roles:</label>
-                <Select id="roles" name="roles" options={roleOptions} defaultValue={roleOptions.filter((role) => role.isSelected)} onChange={onSelectChange} isMulti isSearchable />
+                <Select id="roles" name="roles" options={roleOptions} defaultValue={roleOptions.filter((role) => role.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
               </div>
               <div className="form-group ">
                 <label htmlFor="extraPerms">Select extra permissions:</label>
-                <Select id="extraPerms" name="extraPerms" options={permsOptions} defaultValue={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable />
+                <Select id="extraPerms" name="extraPerms" options={permsOptions} defaultValue={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
               </div>
             </>
           : <></> }
