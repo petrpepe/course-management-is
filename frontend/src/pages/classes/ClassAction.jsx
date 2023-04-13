@@ -9,7 +9,7 @@ import {getUsers, reset as userReset} from "../../features/users/userSlice"
 import {getCourses, reset as courseReset} from "../../features/courses/courseSlice"
 import Input from "../../components/form/Input"
 import Select from 'react-select'
-import Spinner from "../../components/Spinner"
+//import Spinner from "../../components/Spinner"
 
 function ClassAction() {
   const [formData, setFormData] = useState({
@@ -64,8 +64,8 @@ function ClassAction() {
       }
     }
   }
-//filtr admin a učitele
-  const teachersOptions = users.users.filter(user => user.roles.includes("")).map((user) => {
+//filtr admin a učitele filter(user => user.roles.includes("teacher admin ... ale jako id? "))
+  const teachersOptions = users.users.map((user) => {
     if (formData.teachers.includes(user._id) || formData.teachers.includes(user.email)) {
       return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: true}
     } else return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: false}
@@ -143,11 +143,7 @@ function ClassAction() {
     }))
   }
 
-  if (users.isLoading || courses.isLoading) {
-    return <Spinner />
-  }
-
-  console.log(studentsOptions);
+  console.log(coursesOptions.filter(course => course.isSelected)[0]);
 
   return <>
       <section className="heading">
@@ -167,7 +163,7 @@ function ClassAction() {
           type="number" onChange={onChange} required={true} min={1} />
           <div className="form-group ">
             <label htmlFor="course">Select a course:</label>
-            <Select id="course" name="course" defaultInputValue={coursesOptions.filter(course => course.isSelected)} options={coursesOptions} onChange={onSelectChange} isSearchable />
+            <Select id="course" name="course" defaultValue={coursesOptions.filter(course => course.isSelected)} options={coursesOptions} onChange={onSelectChange} isSearchable />
           </div>
           <div className="form-group ">
             <label htmlFor="teachers">Select teachers:</label>

@@ -69,11 +69,11 @@ function UserAction() {
   }
 
   const roleOptions = roles.roles.map((role) => {
-    if (formData.roles && (formData.roles.includes(role._id) || formData.roles.includes(role.name))) {
+    if (formData.roles.length > 0 && (formData.roles.includes(role._id) || formData.roles.includes(role.name))) {
       return {value: role._id, label: role.name, permissions: role.permissions, isSelected: true}
     } else return {value: role._id, label: role.name, permissions: role.permissions, isSelected: false}
   }).filter(role => role != null)
-
+console.log(currentUser);
   const rolesPermissions = roleOptions.filter(roleOpt => roleOpt.isSelected).map(role => role.permissions).flat()
   
   const permsOptions = permissions.permissions.map((perm) => {

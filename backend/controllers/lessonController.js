@@ -40,11 +40,6 @@ const updateLesson = asyncHandler(async (req, res) => {
         throw new Error("User not found")
     }
 
-    console.log(currentLesson);
-    if (req.body.currentLesson.lesson === "") {
-        req.body.currentLesson.lesson = null
-    }
-
     const updatedLesson = await Lesson.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
     })

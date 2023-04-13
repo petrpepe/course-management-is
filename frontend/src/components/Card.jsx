@@ -4,6 +4,7 @@ import { FaPen, FaTrash } from "react-icons/fa"
 
 function Card({data, title = "", link = "", imgSrc = "", currentData, deleteAction}) {
   const dispatch = useDispatch()
+  //dispatch(getUsers({ids: [id], detail: true}))
   return (
       <div className="card">
         {imgSrc ? <div className="card-header"><img src={imgSrc} alt="kids programming" /></div> : ""}
