@@ -1,18 +1,22 @@
 const asyncHandler = require('express-async-handler')
 const Permisson = require('../models/permissionModel');
 
-// @desc Get Permissons
-// @route GET /api/Permissons
-// @access Private
+/**
+ * @desc Get Permissons
+ * @route GET /api/Permissons
+ * @access Private
+ */
 const getPermissons = asyncHandler(async (req, res) => {
     const permissons = await Permisson.find()
 
     res.status(200).json(permissons)
 })
 
-// @desc Create permisson
-// @route POST /api/permisson
-// @access Private
+/**
+ * @desc Create permisson
+ * @route POST /api/permisson
+ * @access Private
+ */
 const setPermisson = asyncHandler(async (req, res) => {
     if(!req.body.name){
         res.status(400)
@@ -37,11 +41,6 @@ const updatePermisson = asyncHandler(async (req, res) => {
         throw new Error("Permisson not find")
     }
 
-    if(!req.user) {
-        res.status(401)
-        throw new Error("User not found")
-    }
-
     const updatedPermisson = await Permisson.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
     })
@@ -60,11 +59,6 @@ const deletePermisson = asyncHandler(async (req, res) => {
     if(!permisson) {
         res.status(400)
         throw new Error("Permisson not find")
-    }
-
-    if(!req.user) {
-        res.status(401)
-        throw new Error("User not found")
     }
 
     await permisson.remove()

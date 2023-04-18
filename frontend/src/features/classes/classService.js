@@ -26,11 +26,14 @@ const updateClass = async (classId, classData, token) => {
     return response.data
 }
 
-const getClasses = async (token) => {
+const getClasses = async (ids, token) => {
+    let params = new URLSearchParams()
+    if(ids) typeof ids === "string" ? params.append("id", ids) : ids.map((id) => params.append("id", id))
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
-        }
+        },
+        params: params
     }
 
     const response = await axios.get(API_URL, config)

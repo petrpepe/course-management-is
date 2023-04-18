@@ -6,6 +6,7 @@ import ReadOnlyRow from "./ReadOnlyRow"
 import EditableRow from "./EditableRow"
 import Spinner from "../Spinner"
 import Select from 'react-select'
+import { toast } from "react-toastify"
 
 function Table({roles}) {
   const dispatch = useDispatch()
@@ -24,8 +25,6 @@ function Table({roles}) {
 
   const onSubmitEdit = e => {
     e.preventDefault()
-
-    console.log(editRole);
 
     dispatch(updateRole({_id: editRole.id, name: editRole.name, description: editRole.description, permissions: editRole.permissions ? editRole.permissions : []}))
     setEdit({id: "", isEdited: false, role: {}})
@@ -64,7 +63,7 @@ function Table({roles}) {
 
   useEffect(() => {
     if(isError) {
-      console.log(message);
+      toast.error(message);
     }
 
     dispatch(getPermissions())

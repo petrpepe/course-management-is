@@ -7,9 +7,11 @@ const Permission = require('../models/permissionModel')
 const e = require("express")
 const mongoose = require("mongoose")
 
-// @desc Get users
-// @route GET /api/users
-// @access Private
+/**
+ * @desc Get users
+ * @route GET /api/users
+ * @access Private
+ */
 const getUsers = asyncHandler(async (req, res) => {
     let arg = {}
     if(req.query.id && req.query.id != null) {
@@ -18,18 +20,32 @@ const getUsers = asyncHandler(async (req, res) => {
         arg = {_id: {$in: ids}}
     }
     
-    let select = "firstName lastName email phone";
+    let select = "firstName lastName email phone roles";
     if(req.query.detail == "true") {
         select = "-password"
     }
 
     const users = await User.find(arg).select(select)
 
-    //const permsRoles = await getRolesAndPermsNames(users)
+    let rolesIdsNames = new Map()
+    for (const user of users) {
+        user.roles.map(role => rolesIdsNames.set(role.toString(), ""))
+    }
+    rolesIdsNames = await getRolesNames(Array.from(rolesIdsNames.keys()))
 
-    res.status(200).json(users)
+    const betterUsers = JSON.parse(JSON.stringify(users))
+    for (const user of betterUsers) {
+        user.roles = user.roles.map(role => rolesIdsNames.get(role)).flat()
+    }
+
+    res.status(200).json(betterUsers)
 })
 
+/**
+ * @desc Create new user
+ * @route POST /api/users
+ * @access Private
+ */
 const createUser = asyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, roles } = req.body
 
@@ -76,9 +92,11 @@ const createUser = asyncHandler(async (req, res) => {
     }
 })
 
-// @desc Register new user
-// @route POST /api/users
-// @access Private?
+/**
+ * @desc Register new user
+ * @route POST /api/users
+ * @access Private?
+ */
 const registerUser = asyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, roles } = req.body
 
@@ -128,9 +146,11 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 })
 
-// @desc Authenticate a user
-// @route POST /api/users/login
-// @access Public
+/**
+ * @desc Authenticate a user
+ * @route POST /api/users/login
+ * @access Public
+ */
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password} = req.body
 
@@ -158,23 +178,32 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 })
 
-// @desc Get user data
-// @route GET /api/users/me
-// @access Private
+/**
+ * @desc Get user data
+ * @route GET /api/users/me
+ * @access Private
+ */
 const getMe = asyncHandler(async (req, res) => {
     res.status(200).json(req.user)
 })
 
-// Generate JWT
+/**
+ * Generate JWT with userId
+ * 
+ * @param {string} id 
+ * @returns 
+ */
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: "7d",
     })
 }
 
-// @desc Update user
-// @route PUT /api/users/:id
-// @access Private
+/**
+ * @desc Update user
+ * @route PUT /api/users/:id
+ * @access Private
+ */
 const updateUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id)
     const {password} = req.body
@@ -211,18 +240,20 @@ const deleteUser = asyncHandler(async (req, res) => {
         throw new Error("Role not find")
     }
 
-    if(!req.user) {
-        res.status(401)
-        throw new Error("User not found")
-    }
-
     await user.remove()
 
     res.status(200).json({id: req.params.id})
 })
 
+/**
+ * Gets user role names and perms names
+ * (extraPerms and role perms)
+ * 
+ * @param {Object} user 
+ * @returns permsRoles (name of roles and perms)
+ */
 async function getRolesAndPermsNames(user) {
-    let cache = {roles: [], permissions: []}
+    const cache = {roles: [], permissions: []}
 
     await Role.find({}).select("_id name permissions").then((roles) => {
         cache.roles = roles;
@@ -251,6 +282,31 @@ async function getRolesAndPermsNames(user) {
     permsRoles.userPermissions = [...permsRoles.userPermissions, ...permsRoles.rolePermissions]
 
     return permsRoles
+}
+
+/**
+ * Gets roles names by roles ids
+ * 
+ * @param {Map} rolesIds 
+ * @returns rolesNames
+ */
+async function getRolesNames(rolesIds) {
+    let rolesOut = []
+
+    await Role.find({}).select("_id name").then((roles) => {
+        rolesOut = roles;
+    }).catch((e) => {throw new Error(e)})
+
+    let rolesNames = new Map()
+    for(const roleId of rolesIds) {
+        let roleName = rolesOut.map(role => {
+            if(roleId.toString() === role._id.toString()) return role.name
+            else return null
+        }).filter(role => role != null).flat()
+        rolesNames.set(roleId, roleName)
+    }
+
+    return rolesNames
 }
 
 function getValue(object, id) {

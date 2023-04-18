@@ -7,6 +7,6 @@ const { authenticate } = require("../middleware/authMiddleware")
 router.use(authenticate)
 
 router.route("/").get(getClasses).post(setClass)
-router.route("/:id").delete(updateClass).put(deleteClass)
+router.route("/:id").put(updateClass).delete(deleteClass)
 
 module.exports = router

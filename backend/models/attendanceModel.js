@@ -6,11 +6,11 @@ const attendaceSchema = mongoose.Schema(
             type: Date,
             required: [true, "Attendance record need to happen (datetime)"],
         },
-        class: {
+        classId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Class",
         },
-        lesson: {
+        lessonId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Lesson",
         },

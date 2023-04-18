@@ -107,7 +107,6 @@ export const roleSlice = createSlice({
             state.isLoading = false
             state.isSuccess = true
             state.roles = state.roles.filter((role) => role._id !== action.payload.id)
-            console.log(action.payload);
         })
         .addCase(deleteRole.rejected, (state, action) => {
             state.isLoading = false

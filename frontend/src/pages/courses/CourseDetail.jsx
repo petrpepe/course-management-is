@@ -24,7 +24,7 @@ function CourseDetail() {
     }
   }, [id, navigate, isError, message, dispatch])
 
-  if (isLoading || courses.length === 0) {
+  if (isLoading || !courses[0]) {
     return <Spinner />
   }
 

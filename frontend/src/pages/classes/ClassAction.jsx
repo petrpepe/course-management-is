@@ -1,7 +1,6 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
-import useForceUpdate from "../../hooks/useForceUpdate"
 import {toast} from "react-toastify"
 import {FaChalkboardTeacher} from "react-icons/fa"
 import {createClass, updateClass} from "../../features/classes/classSlice"
@@ -27,13 +26,12 @@ function ClassAction() {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const forceUpdate = useForceUpdate()
 
   const { id } = useParams()
   const user = useSelector((state) => state.auth)
   const users = useSelector((state) => state.users)
   const courses = useSelector((state) => state.courses)
-  const classVar = useSelector((state) => state.classes.classes[0])
+  const classVar = useSelector((state) => state.classes.classes)
 
   useEffect(() => {
     if(users.isError || courses.isError) {
@@ -54,6 +52,10 @@ function ClassAction() {
     }
   }, [user, navigate, users.isError, users.message, courses.isError, courses.message, dispatch])
 
+  if(!id && classVar._id) {
+    navigate("/classes/" + classVar._id)
+  }
+
   const currentClass = location.state ? location.state.currentClass : formData
   if(id !== currentClass._id) return <p>Ids are not equal</p>
 
@@ -63,23 +65,33 @@ function ClassAction() {
         formData[key] = currentClass[key];
       }
     }
+
+    if (formData.startDateTime) {
+      formData.startDateTime = formData.startDateTime.split(":")
+      formData.startDateTime.pop()
+      formData.startDateTime = formData.startDateTime.join(":")
+    }
   }
-//filtr admin a učitele filter(user => user.roles.includes("teacher admin ... ale jako id? "))
-  const teachersOptions = users.users.map((user) => {
+
+  if (users.users.message) {
+    return toast.error(users.users.message)
+  }
+
+  const teachersOptions = users.users[0] ? users.users.filter(user => user.roles.includes("lector") || user.roles.includes("admin")).map((user) => {
     if (formData.teachers.includes(user._id) || formData.teachers.includes(user.email)) {
       return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: true}
     } else return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: false}
-  })
-  const studentsOptions = users.users.map((user) => {
+  }) : []
+  const studentsOptions = users.users[0] ? users.users.map((user) => {
     if (formData.students.includes(user._id) || formData.students.includes(user.email)) {
       return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: true}
     } else return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: false}
-  })
-  const coursesOptions = courses.courses.map((course) => {
+  }) : []
+  const coursesOptions = courses.courses[0] ? courses.courses.map((course) => {
     if (formData.course.includes(course._id) || formData.course.includes(course.title)) {
-      return {value: course._id, label: course.title, isSelected: false}
-    } else return {value: course._id, label: course.title, isSelected: true}
-  })
+      return {value: course._id, label: course.title, isSelected: true}
+    } else return {value: course._id, label: course.title, isSelected: false}
+  }) : []
 
   const onChange = (e) => {
     if (e.target.name.includes(".")) {
@@ -115,27 +127,25 @@ function ClassAction() {
       students: formData.students,
     }
 
-    console.log(classData);
-
     if(id){
       classData._id = id
       dispatch(updateClass(classData))
       navigate("/classes/" + id)
     } else {
       dispatch(createClass(classData))
-      forceUpdate()
-      navigate("/classes/" + classVar._id)
     }
   }
 
   const onSelectChange = (e, a) => {
     let selectedOptionsValues = [];
 
-    if (e.length > 0) {
-      for (let index = 0; index < e.length; index++) {
-        selectedOptionsValues[index] = e[index].value
-      }
-    } else selectedOptionsValues[0] = e.value
+    if (a.action !== "clear") {
+      if (e.length > 0) {
+        for (let index = 0; index < e.length; index++) {
+          selectedOptionsValues[index] = e[index].value
+        }
+      } else selectedOptionsValues[0] = e.value
+    }
 
     setFormData((prevState) => ({
       ...prevState,
@@ -143,42 +153,40 @@ function ClassAction() {
     }))
   }
 
-  console.log(coursesOptions.filter(course => course.isSelected)[0]);
-
   return <>
-      <section className="heading">
-        <h1>
-            <FaChalkboardTeacher /> {id ? "Editing class: " + currentClass.title : "Create class"}
-        </h1>
-      </section>
-      <section className="form">
-        <form onSubmit={onSubmit}>
-          <Input  id="title" label="Title:" value={currentClass.title} 
-          placeholder="Enter title" onChange={onChange} required={true} />
-          <Input  id="description" label="Description:" value={currentClass.description} 
-          placeholder="Enter description" onChange={onChange} />
-          <Input  id="startDateTime" label="Beggining of course:" value={currentClass.startDateTime} 
-          placeholder="Enter startDateTime" type="datetime-local" onChange={onChange} required={true} />
-          <Input  id="repeatCount" label="repeatCount:" value={currentClass.repeatCount} 
-          type="number" onChange={onChange} required={true} min={1} />
-          <div className="form-group ">
-            <label htmlFor="course">Select a course:</label>
-            <Select id="course" name="course" defaultValue={coursesOptions.filter(course => course.isSelected)} options={coursesOptions} onChange={onSelectChange} isSearchable />
-          </div>
-          <div className="form-group ">
-            <label htmlFor="teachers">Select teachers:</label>
-            <Select id="teachers" name="teachers" defaultValue={teachersOptions.filter(teacher => teacher.isSelected)} options={teachersOptions} onChange={onSelectChange} isMulti isSearchable isClearable />
-          </div>
-          <div className="form-group ">
-            <label htmlFor="students">Select students:</label>
-            <Select id="students" name="students" defaultValue={studentsOptions.filter(student => student.isSelected)} options={studentsOptions} onChange={onSelectChange} isMulti isSearchable isClearable />
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-block">Submit</button>
-          </div>
-        </form>
-      </section>
-    </>
+    <section className="heading">
+      <h1>
+          <FaChalkboardTeacher /> {id ? "Editing class: " + currentClass.title : "Create class"}
+      </h1>
+    </section>
+    <section className="form">
+      <form onSubmit={onSubmit}>
+        <Input  id="title" label="Title:" value={formData.title} 
+        placeholder="Enter title" onChange={onChange} required={true} />
+        <Input  id="description" label="Description:" value={formData.description} 
+        placeholder="Enter description" onChange={onChange} />
+        <Input  id="startDateTime" label="Beggining of course:" value={formData.startDateTime} 
+        placeholder="Enter startDateTime" type="datetime-local" onChange={onChange} required={true} />
+        <Input  id="repeatCount" label="repeatCount:" value={formData.repeatCount} 
+        type="number" onChange={onChange} required={true} min={1} />
+        <div className="form-group ">
+          <label htmlFor="course">Select a course:</label>
+          <Select id="course" name="course" value={coursesOptions.filter(course => course.isSelected)} options={coursesOptions} onChange={onSelectChange} isSearchable isClearable/>
+        </div>
+        <div className="form-group ">
+          <label htmlFor="teachers">Select teachers:</label>
+          <Select id="teachers" name="teachers" value={teachersOptions.filter(teacher => teacher.isSelected)} options={teachersOptions} onChange={onSelectChange} isMulti isSearchable isClearable />
+        </div>
+        <div className="form-group ">
+          <label htmlFor="students">Select students:</label>
+          <Select id="students" name="students" value={studentsOptions.filter(student => student.isSelected)} options={studentsOptions} onChange={onSelectChange} isMulti isSearchable isClearable />
+        </div>
+        <div className="form-group">
+          <button type="submit" className="btn btn-block">Submit</button>
+        </div>
+      </form>
+    </section>
+  </>
 }
 
 export default ClassAction

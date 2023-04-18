@@ -1,7 +1,6 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
-import useForceUpdate from "../../hooks/useForceUpdate"
 import {toast} from "react-toastify"
 import {FaChalkboard} from "react-icons/fa"
 import {createCourse, updateCourse} from "../../features/courses/courseSlice"
@@ -21,12 +20,11 @@ function CourseAction() {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const forceUpdate = useForceUpdate()
 
   const { id } = useParams()
   const user = useSelector((state) => state.auth)
   const lessons = useSelector((state) => state.lessons)
-  const course = useSelector((state) => state.courses.courses[0])
+  const course = useSelector((state) => state.courses.courses)
 
   useEffect(() => {
     if(lessons.isError) {
@@ -42,16 +40,28 @@ function CourseAction() {
       dispatch(getLessons())
     }
 
+    setFormData({
+      title: "",
+      description: "",
+      numLessons: 0,
+      lessons: [],
+      place: "",
+    })
+
     return () => {
       dispatch(lessonsReset())
     }
   }, [user, id, navigate, lessons.isError, lessons.message, dispatch])
 
+  if(!id && course._id) {
+    navigate("/courses/" + course._id)
+  }
+
   const currentCourse = location.state ? location.state.currentCourse : formData
   if(id !== currentCourse._id) return <p>Ids are not equal</p>
 
   const lessonOptions = lessons.lessons.map((lesson) => {
-    if (formData.lessons.length > 0 && (formData.lessons.includes(lesson._id) || formData.roles.includes(lesson.name))) {
+    if (formData.lessons && (formData.lessons.includes(lesson._id) || formData.roles.includes(lesson.name))) {
       return {value: lesson._id, label: lesson.title, isSelected: true}
     } else return {value: lesson._id, label: lesson.title, isSelected: false}
   }).filter(lesson => lesson != null)
@@ -108,8 +118,6 @@ function CourseAction() {
       navigate("/courses/" + id)
     } else {
       dispatch(createCourse(courseData))
-      forceUpdate()
-      navigate("/courses/" + course._id)
     }
   }
 

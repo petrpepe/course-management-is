@@ -17,14 +17,14 @@ function ClassDetail() {
       toast.error(message)
     }
 
-    dispatch(getClasses())
+    dispatch(getClasses({ids: id}))
 
     return () => {
       dispatch(reset())
     }
   }, [id, navigate, isError, message, dispatch])
 
-  if (isLoading || classes.length === 0) {
+  if (isLoading || !classes[0]) {
     return <Spinner />
   }
 

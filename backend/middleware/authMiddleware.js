@@ -17,62 +17,95 @@ const authenticate = asyncHandler(async (req, res, next) => {
 
             req.user = await User.findById(decoded.id).select("-password")
 
+            await populateCache()
+
+            req.userRoles = req.user.roles.map(userRole => 
+                cache.roles.filter(cacheRole => cacheRole._id.equals(userRole))[0].name
+            )
+
             next()
         } catch (error) {
             res.status(401)
-            throw new Error("Unauthorized, invalid token")
+            throw new Error("Unauthorized")
         }
     }
 
     if(!token) {
         res.status(401)
-        throw new Error("Unauthorized, invalid TOKEN")
+        throw new Error("Unauthorized")
     }
 })
 
 const authorize = (permissions) => {
     return asyncHandler( async (req, res, next) => {
-        const { user } = req
-        let contains = false
+    let token = ""
+
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+        token = req.headers.authorization.split(" ")[1]
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+        req.user = await User.findById(decoded.id).select("-password")
+
+        if(!token || (!req.user.roles && req.user._id.toString() !== req.query.id)) {
+            res.status(403)
+            throw new Error("Forbidden")
+        }
 
         if (!permissions) {
             res.status(403)
             throw new Error("Forbidden")
         }
 
-        await populateCache()
+        if (permissions.includes("userDelete") && req.user._id.toString() === req.query.id) {
+            res.status(400)
+            throw new Error("You can't delete yourself")
+        }
+
+        const user = req.user
+        let contains = new Map()
+
+        if (typeof permissions === "string") contains.set(permissions, false)
+        else {
+            for (const perm of permissions) {
+                contains.set(perm, false)
+            }
+        }
 
         for(const roleId of user.roles) {
             for (const permId of getValue(cache.roles, roleId).permissions) {
-                if (permissions.includes(getValue(cache.permissions, permId).name)) contains = true
+                const permName = getValue(cache.permissions, permId).name
+                if (contains.get(permName)) contains.set(permName, true)
             }
         }
-    
+
         for (const extraPermId of user.extraPerms) {
-            if(permissions.includes(getValue(cache.permissions, extraPermId)).name) contains = true
+            const permName = getValue(cache.permissions, extraPermId).name
+            if (contains.get(permName)) contains.set(permName, true)
         }
     
-        if (user && contains) {
+        if (user && Array.from(contains.values()).every(e => e === true)) {
             next();
         } else {
             res.status(403)
             throw new Error("Forbidden")
         }
-    })
+    }
+})
 }
 
 async function populateCache() {
-    await Role.find({}).select("permissions").then((roles) => {
+    await Role.find({}).select("_id name permissions").then((roles) => {
         cache.roles = roles;
     }).catch((e) => {throw new Error(e)})
 
-    await Permission.find({}).select("name").then((permissions) => {
+    await Permission.find({}).select("_id name").then((permissions) => {
         cache.permissions = permissions;
     }).catch((e) => {throw new Error(e)})
 }
 
 function getValue(object, id) {
-    return Object.values(object).find((perm) => perm._id.toString() == id)
+    return Object.values(object).find((value) => value._id.toString() === id)
 }
 
 module.exports = { authenticate, authorize }

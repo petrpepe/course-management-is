@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
-import useForceUpdate from "../../hooks/useForceUpdate"
 import {FaChalkboard} from "react-icons/fa"
 import {createLesson, reset, updateLesson} from "../../features/lessons/lessonSlice"
 import Input from "../../components/form/Input"
@@ -17,7 +16,6 @@ function LessonAction() {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const forceUpdate = useForceUpdate()
 
   const { id } = useParams()
   const user = useSelector((state) => state.auth)
@@ -29,10 +27,21 @@ function LessonAction() {
       return
     }
 
+    setFormData({
+      lessonNum: 1,
+      title: "",
+      description: "",
+      materials: "",
+    })
+
     return () => {
       dispatch(reset())
     }
   }, [user, navigate, dispatch])
+
+  if(!id && lesson._id) {
+    navigate("/lessons/" + lesson._id)
+  }
 
   const currentLesson = location.state ? location.state.currentLesson : formData
   if(id !== currentLesson._id) return <p>Ids are not equal</p>
@@ -78,8 +87,6 @@ function LessonAction() {
       navigate("/lessons/" + id)
     } else {
       dispatch(createLesson(lessonData))
-      forceUpdate()
-      navigate("/lessons/" + lesson._id)
     }
   }
 

@@ -23,14 +23,14 @@ function Users() {
       return
     }
 
-    if(id) dispatch(getUsers({ids: [id], detail: true}))
+    if(id) dispatch(getUsers({ids: id, detail: true}))
 
     return () => {
       dispatch(reset())
     }
   }, [user, id, navigate, isError, message, dispatch])
 
-  if (isLoading) {
+  if (isLoading || (id && !users[0])) {
     return <Spinner />
   }
 

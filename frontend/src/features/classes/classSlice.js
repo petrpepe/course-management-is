@@ -31,10 +31,10 @@ export const updateClass = createAsyncThunk("classes/update", async (classData, 
     }
 })
 
-export const getClasses = createAsyncThunk("classes/getAll", async (_, thunkAPI) => {
+export const getClasses = createAsyncThunk("classes/get", async (classData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await classService.getClasses(token)
+        return await classService.getClasses(classData.ids ? classData.ids : [], token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -67,7 +67,7 @@ export const classSlice = createSlice({
         .addCase(createClass.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.classes.push(action.payload)
+            state.classes = action.payload
         })
         .addCase(createClass.rejected, (state, action) => {
             state.isLoading = false

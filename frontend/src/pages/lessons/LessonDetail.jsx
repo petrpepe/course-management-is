@@ -24,7 +24,7 @@ function LessonDetail() {
     }
   }, [id, navigate, isError, message, dispatch])
 
-  if (isLoading || lessons.length === 0) {
+  if (isLoading || !lessons[0]) {
     return <Spinner />
   }
 

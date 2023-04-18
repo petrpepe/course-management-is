@@ -44,7 +44,6 @@ export const updateAuth = createAsyncThunk("auth/update", async (user, thunkAPI)
                 item[key] = user[key];
             }
         }
-        console.log(item);
         localStorage.setItem("user", JSON.stringify(item))
         return item
     } catch (error) {

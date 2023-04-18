@@ -16,8 +16,11 @@ const courseSchema = mongoose.Schema(
             type: String
         },
         lessons: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Lesson",
+            lesson: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Lesson",
+            },
+            orderNumber: { type: Number },
         }]
     }, {
         timestamps: true,

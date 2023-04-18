@@ -1,10 +1,9 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
-import useForceUpdate from "../../hooks/useForceUpdate"
 import {toast} from "react-toastify"
 import {FaUser} from "react-icons/fa"
-import {createUser, updateUser} from "../../features/users/userSlice"
+import {createUser, getUsers, updateUser} from "../../features/users/userSlice"
 import { getRoles, reset as roleReset } from "../../features/roles/roleSlice"
 import { getPermissions, reset as permReset} from "../../features/permissions/permissionSlice"
 import Input from "../../components/form/Input"
@@ -28,7 +27,6 @@ function UserAction() {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const forceUpdate = useForceUpdate()
 
   const { id } = useParams()
   const { user } = useSelector((state) => state.auth)
@@ -51,40 +49,60 @@ function UserAction() {
       dispatch(getPermissions())
     }
 
+    if (id) {
+      dispatch(getUsers({ids: id, detail: true}))
+    }
+
+    setFormData({
+      firstName: "",
+      otherNames: [],
+      lastName: "",
+      email: "",
+      password: "",
+      password2: "",
+      phone: [],
+      roles: [],
+      extraPerms: [],
+    })
+
     return () => {
       dispatch(roleReset())
       dispatch(permReset())
     }
   }, [user, id, navigate, roles.isError, roles.message, permissions.isError, permissions.message, users.isError, users.message, dispatch])
 
-  const currentUser = location.state ? location.state.currentUser : formData
-  if(id !== currentUser._id) return <p>Ids are not equal</p>
+  if(!id && users.users._id) {
+    navigate("/users/" + users.users._id)
+  }
 
-  if (location.state && formData.email === "") {
-    for (const key in currentUser) {
-      if (Object.hasOwnProperty.call(currentUser, key)) {
-        formData[key] = currentUser[key];
+  if(location.state && id !== location.state.currentUser._id) return <p>Ids are not equal</p>
+  const userDetail = id === user._id ? user : users.users[0]
+
+  if (formData.email === "" && users.users.length > 0) {
+    for (const key in userDetail) {
+      if (Object.hasOwnProperty.call(userDetail, key)) {
+        formData[key] = userDetail[key];
       }
     }
   }
 
   const roleOptions = roles.roles.map((role) => {
-    if (formData.roles.length > 0 && (formData.roles.includes(role._id) || formData.roles.includes(role.name))) {
+    if (formData.roles && (formData.roles.includes(role._id) || formData.roles.includes(role.name))) {
       return {value: role._id, label: role.name, permissions: role.permissions, isSelected: true}
     } else return {value: role._id, label: role.name, permissions: role.permissions, isSelected: false}
   }).filter(role => role != null)
-console.log(currentUser);
+
   const rolesPermissions = roleOptions.filter(roleOpt => roleOpt.isSelected).map(role => role.permissions).flat()
-  
+
   const permsOptions = permissions.permissions.map((perm) => {
-    if (rolesPermissions.length > 0 && (rolesPermissions.includes(perm._id) || rolesPermissions.includes(perm.name))) {
-      if (formData.extraPerms && (formData.extraPerms.includes(perm._id) || formData.extraPerms.includes(perm.name))) {
-        return {value: perm._id, label: perm.name, isSelected: true, isFixed: false}
-      } else return {value: perm._id, label: perm.name, isSelected: false, isFixed: false}
+    if (formData.extraPerms && rolesPermissions && !(rolesPermissions.includes(perm._id) || rolesPermissions.includes(perm.name))) {
+      if (formData.extraPerms.includes(perm._id) || formData.extraPerms.includes(perm.name)) {
+        return {value: perm._id, label: perm.name, isSelected: true}
+      } else return {value: perm._id, label: perm.name, isSelected: false}
     } else return null
   }).filter(permOpt => permOpt != null)
 
-  if (location.state && roleOptions.length > 0) {
+  if (location.state && roleOptions.length > 0 && permsOptions.length > 0) {
     formData.roles = roleOptions.filter(role => role.isSelected).map(role => role.value)
     formData.extraPerms = permsOptions.filter(perm => perm.isSelected).map(perm => perm.value)
   }
@@ -120,10 +138,7 @@ console.log(currentUser);
         else navigate("/users/" + id)
       } else {
         dispatch(createUser(userData))
-        forceUpdate()
-        if(users.isSuccess) navigate("/users/" + users.users[0]._id)
       }
-      setFormData({})
     }
   }
 
@@ -152,31 +167,31 @@ console.log(currentUser);
   return <>
       <section className="heading">
         <h1>
-            <FaUser /> {id ? (id === user._id ? "Edit your profile" : "Editing user: " + currentUser.firstName + " " + currentUser.lastName ) : "Create user"}
+            <FaUser /> {id && userDetail ? (id === user._id ? "Edit your profile" : "Editing user: " + userDetail.firstName + " " + userDetail.lastName ) : "Create user"}
         </h1>
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>
-          <Input  id="firstName" label="First name:" value={currentUser.firstName} 
+          <Input  id="firstName" label="First name:" value={formData.firstName} 
           placeholder="Enter first name" onChange={onChange} required={true} />
           {/* otherNames textarea nebo inputy s +? */}
-          <Input  id="lastName" label="Last name:" value={currentUser.lastName} 
+          <Input  id="lastName" label="Last name:" value={formData.lastName} 
           placeholder="Enter last name" onChange={onChange} required={true} />
-          <Input  id="email" label="Email:" value={currentUser.email} type="email" 
+          <Input  id="email" label="Email:" value={formData.email} type="email" 
           placeholder="Enter email" onChange={onChange} required={true} />
-          <Input  id="password" label="Enter password:" value={currentUser.password} type="password" 
-          placeholder="Enter password" onChange={onChange} required={true} />
-          <Input  id="password2" label="Confirm password:" value={currentUser.password2} type="password" 
-          placeholder="Confirm password" onChange={onChange} required={true} />
-          { ((user._id !== currentUser._id || user.roles.includes("admin"))) && roles.roles && permissions.permissions ?
+          <Input  id="password" label="Enter password:" value={formData.password} type="password" 
+          placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />
+          <Input  id="password2" label="Confirm password:" value={formData.password2} type="password" 
+          placeholder="Confirm password" onChange={onChange} required={id === user._id ? true : false} />
+          { (user.roles.includes("admin")) ?
             <>
               <div className="form-group ">
                 <label htmlFor="roles">Select roles:</label>
-                <Select id="roles" name="roles" options={roleOptions} defaultValue={roleOptions.filter((role) => role.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
+                <Select id="roles" name="roles" options={roleOptions} value={roleOptions.filter((role) => role.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
               </div>
               <div className="form-group ">
                 <label htmlFor="extraPerms">Select extra permissions:</label>
-                <Select id="extraPerms" name="extraPerms" options={permsOptions} defaultValue={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
+                <Select id="extraPerms" name="extraPerms" options={permsOptions} value={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
               </div>
             </>
           : <></> }
