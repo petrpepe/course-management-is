@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
-const Role = require('../models/roleModel');
+const Role = require('../models/roleModel')
+const User = require('../models/userModel')
 
 /**
  * @desc Get Roles
@@ -8,17 +9,6 @@ const Role = require('../models/roleModel');
  */
 const getRoles = asyncHandler(async (req, res) => {
     const Roles = await Role.find()
-
-    res.status(200).json(Roles)
-})
-
-/**
- * @desc Get Role by id
- * @route GET /api/Roles
- * @access Private
- */
-const getRoleById = asyncHandler(async (req, res) => {
-    const Roles = await Role.findById(req.params.id)
 
     res.status(200).json(Roles)
 })
@@ -72,6 +62,8 @@ const deleteRole = asyncHandler(async (req, res) => {
         throw new Error("Role not find")
     }
 
+    await User.updateMany({roles: role._id}, {$pull: {roles: role._id}}, {multi: true})
+
     await role.remove()
 
     res.status(200).json({id: req.params.id})
@@ -79,7 +71,6 @@ const deleteRole = asyncHandler(async (req, res) => {
 
 module.exports = {
     getRoles,
-    getRoleById,
     setRole,
     updateRole,
     deleteRole

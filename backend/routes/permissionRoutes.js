@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const { getPermissons, setPermisson, updatePermisson, deletePermisson } = require('../controllers/permissionController')
+const { getPermissions, setPermission, updatePermission, deletePermission } = require('../controllers/permissionController')
 
 const { authenticate } = require("../middleware/authMiddleware")
 
 router.use(authenticate)
 
-router.route("/").get(getPermissons).post(setPermisson)
-router.route("/:id").delete(deletePermisson).put(updatePermisson)
+router.route("/").get(getPermissions).post(setPermission)
+router.route("/:id").delete(deletePermission).put(updatePermission)
 
 module.exports = router

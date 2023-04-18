@@ -12,6 +12,7 @@ import Spinner from "../../components/Spinner"
 import { updateAuth } from "../../features/auth/authSlice"
 
 function UserAction() {
+  const [isCreate, setIsCreate] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
     otherNames: [],
@@ -71,8 +72,8 @@ function UserAction() {
     }
   }, [user, id, navigate, roles.isError, roles.message, permissions.isError, permissions.message, users.isError, users.message, dispatch])
 
-  if(!id && users.users._id) {
-    navigate("/users/" + users.users._id)
+  if(isCreate && users.users[0]) {
+    navigate("/users/" + users.users[0]._id)
   }
 
   if(location.state && id !== location.state.currentUser._id) return <p>Ids are not equal</p>
@@ -138,15 +139,15 @@ function UserAction() {
         else navigate("/users/" + id)
       } else {
         dispatch(createUser(userData))
+        setIsCreate(true)
       }
     }
   }
 
   const onChange = (e) => {
-    const inputName = e.target.name
     setFormData({
-        ...formData,
-        [inputName]: e.target.value,
+      ...formData,
+      [e.target.name]: e.target.value,
     })
   }
 

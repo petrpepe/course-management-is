@@ -38,7 +38,7 @@ function CourseDetail() {
       </section>
 
       <section className="content">
-        <p>{Object.values(course)}</p>
+        <p></p>
       </section>
     </>
   )

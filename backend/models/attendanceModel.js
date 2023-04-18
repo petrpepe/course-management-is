@@ -15,10 +15,13 @@ const attendaceSchema = mongoose.Schema(
             ref: "Lesson",
         },
         attendees: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            user: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+            attType: {type: String}
         }]
     }
 )
 
-module.exports = mongoose.model("Attendace", attendaceSchema)  
+module.exports = mongoose.model("Attendance", attendaceSchema)  

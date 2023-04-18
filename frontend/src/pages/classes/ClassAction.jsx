@@ -11,6 +11,7 @@ import Select from 'react-select'
 //import Spinner from "../../components/Spinner"
 
 function ClassAction() {
+  const [isCreate, setIsCreate] = useState()
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -43,6 +44,7 @@ function ClassAction() {
       return
     }
 
+    setIsCreate(false)
     dispatch(getUsers())
     dispatch(getCourses())
 
@@ -52,8 +54,8 @@ function ClassAction() {
     }
   }, [user, navigate, users.isError, users.message, courses.isError, courses.message, dispatch])
 
-  if(!id && classVar._id) {
-    navigate("/classes/" + classVar._id)
+  if(isCreate && classVar[0]) {
+    navigate("/classes/" + classVar[0]._id)
   }
 
   const currentClass = location.state ? location.state.currentClass : formData
@@ -88,26 +90,17 @@ function ClassAction() {
     } else return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: false}
   }) : []
   const coursesOptions = courses.courses[0] ? courses.courses.map((course) => {
-    if (formData.course.includes(course._id) || formData.course.includes(course.title)) {
-      return {value: course._id, label: course.title, isSelected: true}
-    } else return {value: course._id, label: course.title, isSelected: false}
+    if (formData.course.includes(course._id) || formData.course.includes(course.title) || 
+    (formData.course[0] && formData.course[0].id && formData.course[0].id.includes(course._id))) {
+      return {value: course._id, label: course.title, lessons: course.lessons, isSelected: true}
+    } else return {value: course._id, label: course.title, lessons: course.lessons, isSelected: false}
   }) : []
 
   const onChange = (e) => {
-    if (e.target.name.includes(".")) {
-      const keys = e.target.name.split(".")
-        setFormData((prevState) => ({
-          ...prevState,
-          [keys[0]]: {
-            [keys[1]]: e.target.value
-          },
-        }))
-    } else {
-      setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-      }))
-    }
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
   }
 
   const onSubmit = (e) => {
@@ -133,18 +126,32 @@ function ClassAction() {
       navigate("/classes/" + id)
     } else {
       dispatch(createClass(classData))
+      setIsCreate(true)
     }
   }
 
   const onSelectChange = (e, a) => {
     let selectedOptionsValues = [];
 
+    for (let index = 0; index < e.length; index++) {
+      selectedOptionsValues[index] = e[index].value
+    }
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [a.name]: selectedOptionsValues,
+    }))
+  }
+
+  const onCourseSelectChange = (e, a) => {
+    let selectedOptionsValues = [];
+
     if (a.action !== "clear") {
       if (e.length > 0) {
         for (let index = 0; index < e.length; index++) {
-          selectedOptionsValues[index] = e[index].value
+          selectedOptionsValues[index] = {id: e[index].value, lessons: e[index].lessons}
         }
-      } else selectedOptionsValues[0] = e.value
+      } else selectedOptionsValues[0] = {id: e.value, lessons: e.lessons}
     }
 
     setFormData((prevState) => ({
@@ -171,7 +178,7 @@ function ClassAction() {
         type="number" onChange={onChange} required={true} min={1} />
         <div className="form-group ">
           <label htmlFor="course">Select a course:</label>
-          <Select id="course" name="course" value={coursesOptions.filter(course => course.isSelected)} options={coursesOptions} onChange={onSelectChange} isSearchable isClearable/>
+          <Select id="course" name="course" value={coursesOptions.filter(course => course.isSelected)} options={coursesOptions} onChange={onCourseSelectChange} isSearchable isClearable/>
         </div>
         <div className="form-group ">
           <label htmlFor="teachers">Select teachers:</label>

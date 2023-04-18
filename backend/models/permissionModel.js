@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const permissonSchema = mongoose.Schema(
+const permissionSchema = mongoose.Schema(
     {
         name: {
             type: String,
-            required: [true, "Permisson should have some name"],
+            required: [true, "Permission should have some name"],
             unique: true,
         },
         description: {
@@ -13,4 +13,4 @@ const permissonSchema = mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model("Permisson", permissonSchema)  
+module.exports = mongoose.model("Permission", permissionSchema)  

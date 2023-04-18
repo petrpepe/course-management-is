@@ -1,74 +1,74 @@
 const asyncHandler = require('express-async-handler')
-const Permisson = require('../models/permissionModel');
+const Permission = require('../models/permissionModel');
 
 /**
- * @desc Get Permissons
- * @route GET /api/Permissons
+ * @desc Get Permissions
+ * @route GET /api/Permissions
  * @access Private
  */
-const getPermissons = asyncHandler(async (req, res) => {
-    const permissons = await Permisson.find()
+const getPermissions = asyncHandler(async (req, res) => {
+    const permissions = await Permission.find()
 
-    res.status(200).json(permissons)
+    res.status(200).json(permissions)
 })
 
 /**
- * @desc Create permisson
- * @route POST /api/permisson
+ * @desc Create permission
+ * @route POST /api/permission
  * @access Private
  */
-const setPermisson = asyncHandler(async (req, res) => {
+const setPermission = asyncHandler(async (req, res) => {
     if(!req.body.name){
         res.status(400)
         throw new Error("Please add some name")
     }
 
-    const permisson = await Permisson.create(req.body)
+    const permission = await Permission.create(req.body)
 
-    res.status(200).json(permisson)
+    res.status(200).json(permission)
 })
 
 /**
- * @desc Update permisson by id
- * @route PUT /api/permissons/:id
+ * @desc Update permission by id
+ * @route PUT /api/permissions/:id
  * @access Private
  */
-const updatePermisson = asyncHandler(async (req, res) => {
-    const permisson = await Permisson.findById(req.params.id)
+const updatePermission = asyncHandler(async (req, res) => {
+    const permission = await Permission.findById(req.params.id)
 
-    if(!permisson) {
+    if(!permission) {
         res.status(400)
-        throw new Error("Permisson not find")
+        throw new Error("Permission not find")
     }
 
-    const updatedPermisson = await Permisson.findByIdAndUpdate(req.params.id, req.body, {
+    const updatedPermission = await Permission.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
     })
 
-    res.status(200).json(updatedPermisson)
+    res.status(200).json(updatedPermission)
 })
 
 /**
- * @desc Delete permisson by id
- * @route DELETE /api/permissons/:id
+ * @desc Delete permission by id
+ * @route DELETE /api/permissions/:id
  * @access Private
  */
-const deletePermisson = asyncHandler(async (req, res) => {
-    const permisson = await Permisson.findById(req.params.id)
+const deletePermission = asyncHandler(async (req, res) => {
+    const permission = await Permission.findById(req.params.id)
 
-    if(!permisson) {
+    if(!permission) {
         res.status(400)
-        throw new Error("Permisson not find")
+        throw new Error("Permission not find")
     }
 
-    await permisson.remove()
+    await permission.remove()
 
     res.status(200).json({id: req.params.id})
 })
 
 module.exports = {
-    getPermissons,
-    setPermisson,
-    updatePermisson,
-    deletePermisson
+    getPermissions,
+    setPermission,
+    updatePermission,
+    deletePermission
 }

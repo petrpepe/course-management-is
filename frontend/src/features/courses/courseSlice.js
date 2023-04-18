@@ -9,10 +9,10 @@ const initialState = {
     message: "",
 }
 
-export const getCourses = createAsyncThunk("courses/getAll", async (_, thunkAPI) => {
+export const getCourses = createAsyncThunk("courses/getAll", async (courseData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await courseService.getCourses(token)
+        return await courseService.getCourses(courseData.ids ? courseData.ids : [], token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()

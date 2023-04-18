@@ -9,10 +9,10 @@ import Input from "../../components/form/Input"
 import Select from 'react-select'
 
 function CourseAction() {
+  const [isCreate, setIsCreate] = useState(false)
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    numLessons: 0,
     lessons: [],
     place: "",
   })
@@ -36,14 +36,11 @@ function CourseAction() {
       return
     }
 
-    if(user._id !== id || user.roles.includes("admin")) {
-      dispatch(getLessons())
-    }
+    dispatch(getLessons())
 
     setFormData({
       title: "",
       description: "",
-      numLessons: 0,
       lessons: [],
       place: "",
     })
@@ -53,18 +50,12 @@ function CourseAction() {
     }
   }, [user, id, navigate, lessons.isError, lessons.message, dispatch])
 
-  if(!id && course._id) {
-    navigate("/courses/" + course._id)
+  if(isCreate && course[0]) {
+    navigate("/courses/" + course[0]._id)
   }
 
   const currentCourse = location.state ? location.state.currentCourse : formData
   if(id !== currentCourse._id) return <p>Ids are not equal</p>
-
-  const lessonOptions = lessons.lessons.map((lesson) => {
-    if (formData.lessons && (formData.lessons.includes(lesson._id) || formData.roles.includes(lesson.name))) {
-      return {value: lesson._id, label: lesson.title, isSelected: true}
-    } else return {value: lesson._id, label: lesson.title, isSelected: false}
-  }).filter(lesson => lesson != null)
 
   if (location.state && formData.title === "") {
     for (const key in currentCourse) {
@@ -72,28 +63,29 @@ function CourseAction() {
         formData[key] = currentCourse[key];
       }
     }
+    formData.lessons = formData.lessons.map(l => l.lesson)
   }
 
+  const lessonOptions = lessons.lessons.map((lesson) => {
+    if (formData.lessons.length > 0 && formData.lessons.includes(lesson._id)) {
+      return {value: lesson._id, label: lesson.title, isSelected: true}
+    } else return {value: lesson._id, label: lesson.title, isSelected: false}
+  })
+
   const onChange = (e) => {
-    if (e.target.name.includes(".")) {
-      const keys = e.target.name.split(".")
-        setFormData((prevState) => ({
-          ...prevState,
-          [keys[0]]: {
-            [keys[1]]: e.target.value
-          },
-        }))
-    } else {
-      setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-      }))
-    }
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
   }
 
   const onSelectChange = (e, a) => {
     const selectName = a.name
-    let selectedOptionsValues = e.map((opt) => (opt.value))
+    let selectedOptionsValues = []
+
+    for (let index = 0; index < e.length; index++) {
+      selectedOptionsValues[index] = e[index].value
+    }
 
     setFormData({
       ...formData,
@@ -104,11 +96,16 @@ function CourseAction() {
   const onSubmit = (e) => {
     e.preventDefault()
 
+    let lessonsForm = []
+    for (let i = 0; i < formData.lessons.length; i++) {
+      const element = formData.lessons[i];
+      lessonsForm.push({lesson: element, orderNumber: i + 1})
+    }
+
     const courseData = {
       title: formData.title,
       description: formData.description,
-      numLessons: formData.numLessons,
-      lessons: formData.lessons,
+      lessons: lessonsForm,
       place: formData.place,
     }
 
@@ -118,6 +115,7 @@ function CourseAction() {
       navigate("/courses/" + id)
     } else {
       dispatch(createCourse(courseData))
+      setIsCreate(true)
     }
   }
 
@@ -133,11 +131,9 @@ function CourseAction() {
           placeholder="Enter title" onChange={onChange} required={true} />
           <Input  id="description" label="Description:" value={currentCourse.description} 
           placeholder="Enter description" onChange={onChange} />
-          <Input  id="numLessons" label="Number of lessons:" value={currentCourse.numLessons} 
-          type="number" onChange={onChange} min={0} />
           <div className="form-group ">
             <label htmlFor="lessons">Select lessons:</label>
-            <Select id="lessons" name="lessons" options={lessonOptions} defaultValue={lessonOptions.filter((lesson) => lesson.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
+            <Select id="lessons" name="lessons" options={lessonOptions} value={lessonOptions.filter((lesson) => lesson.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
           </div>
           <Input  id="place" label="Place of happening:" value={currentCourse.place} 
           placeholder="Enter place or online (URL)" onChange={onChange} />

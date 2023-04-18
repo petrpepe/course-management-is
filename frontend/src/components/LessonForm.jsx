@@ -10,8 +10,6 @@ function LessonForm() {
   const onSubmit = e => {
     e.preventDefault()
 
-    console.log(lesson);
-
     dispatch(createLesson(lesson))
     setState({})
   }

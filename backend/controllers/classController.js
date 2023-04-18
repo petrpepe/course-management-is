@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Class = require('../models/classModel');
+const Attendance = require('../models/attendanceModel');
 const mongoose = require("mongoose")
 
 /**
@@ -34,21 +35,35 @@ const getClasses = asyncHandler(async (req, res) => {
  * req.body = {
  *   datetime: classDatetime + (7 * for pocet lekci), 
  *   class: classId, 
- *   lessonId: lessonId z course lessons s orderNumber, 
+ *   lessonId: lessonId z course lessons a index je to pole, 
  *   attendees: [nejdriv prazdne a pak po zapisu ucitelem],
+ *   repeatCount: vytvorit attendaces s lekcemi z course jinak bez
  * }
  */
 const setClass = asyncHandler(async (req, res) => {
-    if(!req.body.title){
+    const {title, description, startDateTime, repeatCount, course, teachers, students} = req.body
+    if(!title){
         res.status(400)
         throw new Error("Please add datetime")
     }
-    console.log(req.body);
-    if (req.body.currentLesson && req.body.currentLesson.lesson === "") {
-        req.body.currentLesson.lesson = null
-    }
+
+    const lessons = course[0].lessons ? course[0].lessons : []
+    req.body.course = course[0].id ? course[0].id : delete req.body.course
 
     const classVar = await Class.create(req.body)
+
+    let attendances = []
+    for (let i = 0; i < repeatCount; i++) {
+        const attendance = {datetime: "", classId: classVar._id, lessonId: null, attendees: []}
+        const attDatetime = new Date(classVar.startDateTime)
+        attendance.datetime = attDatetime.setDate(attDatetime.getDate() + 7 * i)
+        attendance.attendees = classVar.students.map(student => ({user: student.toString(), attType: ""}))
+        attendance.lessonId = lessons ? lessons.filter(l => l.orderNumber === i + 1)[0]._id : null
+
+        attendances.push(attendance)
+    }
+
+    await Attendance.create(attendances)
 
     res.status(200).json(classVar)
 })
@@ -64,10 +79,6 @@ const updateClass = asyncHandler(async (req, res) => {
     if(!classVar) {
         res.status(400)
         throw new Error("Class not find")
-    }
-
-    if (req.body.currentLesson && req.body.currentLesson.lesson === "") {
-        req.body.currentLesson.lesson = null
     }
 
     const updatedClass = await Class.findByIdAndUpdate(req.params.id, req.body, {
@@ -90,7 +101,9 @@ const deleteClass = asyncHandler(async (req, res) => {
         throw new Error("Class not find")
     }
 
-    await classVar.remove()
+    await Attendance.deleteMany({classId: classVar._id.toString()})
+
+    await classVar.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })

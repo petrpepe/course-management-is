@@ -4,6 +4,7 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/userModel')
 const Role = require('../models/roleModel')
 const Permission = require('../models/permissionModel')
+const Class = require('../models/classModel')
 const e = require("express")
 const mongoose = require("mongoose")
 
@@ -239,6 +240,8 @@ const deleteUser = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("Role not find")
     }
+
+    await Class.updateMany({$or: [{students: user._id}, {teachers: user._id}]}, {$pull: {students: user._id, teachers: user._id}}, {multi: true})
 
     await user.remove()
 

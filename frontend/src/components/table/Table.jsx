@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { createRole, updateRole} from "../../features/roles/roleSlice"
+import { createRole, deleteRole, updateRole} from "../../features/roles/roleSlice"
 import { getPermissions, reset } from "../../features/permissions/permissionSlice"
 import ReadOnlyRow from "./ReadOnlyRow"
 import EditableRow from "./EditableRow"
@@ -12,7 +12,7 @@ function Table({roles}) {
   const dispatch = useDispatch()
   
   const [role, setState] = useState({name: "", description: "", permissions: []})
-  const [editRole, setEdit] = useState({id: "", isEdited: false, ...role})
+  const [editRole, setEdit] = useState({_id: "", ...role, isEdited: false})
 
   const { permissions, isLoading, isError, message } = useSelector((state) => state.permissions)
 
@@ -26,17 +26,18 @@ function Table({roles}) {
   const onSubmitEdit = e => {
     e.preventDefault()
 
-    dispatch(updateRole({_id: editRole.id, name: editRole.name, description: editRole.description, permissions: editRole.permissions ? editRole.permissions : []}))
-    setEdit({id: "", isEdited: false, role: {}})
+    dispatch(updateRole({_id: editRole._id, name: editRole.name, description: editRole.description, permissions: editRole.permissions ? editRole.permissions : []}))
+    setEdit({_id: "",  role: {}, isEdited: false})
     setState({})
   }
 
   const handleEditClick = (id) => {
-    setEdit({id: id, isEdited: true, role: role})
+    console.log(id);
+    setEdit({_id: id, role: role, isEdited: true})
   };
 
   const handleCancelClick = () => {
-    setEdit({id: "", isEdited: false, role: {}})
+    setEdit({_id: "", role: {}, isEdited: false})
   };
 
   const onChange = e => {
@@ -95,18 +96,19 @@ function Table({roles}) {
             <tbody>
               {roles.map((role) => (
                 <tr key={role._id}>
-                  { editRole.isEdited && editRole.id === role._id ? (
+                  { editRole.isEdited && editRole._id === role._id ? (
                     <EditableRow
-                      role={role}
+                      data={role}
                       setEdit={setEdit}
                       handleCancelClick={handleCancelClick}
                       options={options}
                     />
                   ) : (
                     <ReadOnlyRow
-                      role={role}
+                      data={role}
                       handleEditClick={handleEditClick}
-                      permissions={role.permissions.map(perm => {
+                      deleteAction={deleteRole}
+                      dataArray={role.permissions.map(perm => {
                         const permName = options.filter(opt => perm === opt.value)
                         if(permName.length > 0) return permName[0].label
                         else return ""

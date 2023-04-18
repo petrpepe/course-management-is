@@ -6,6 +6,7 @@ import {createLesson, reset, updateLesson} from "../../features/lessons/lessonSl
 import Input from "../../components/form/Input"
 
 function LessonAction() {
+  const [isCreate, setIsCreate] = useState(false)
   const [formData, setFormData] = useState({
     lessonNum: 1,
     title: "",
@@ -19,7 +20,7 @@ function LessonAction() {
 
   const { id } = useParams()
   const user = useSelector((state) => state.auth)
-  const lesson = useSelector((state) => state.lessons.lessons[0])
+  const lesson = useSelector((state) => state.lessons.lessons)
 
   useEffect(() => {
     if(!user) {
@@ -39,8 +40,8 @@ function LessonAction() {
     }
   }, [user, navigate, dispatch])
 
-  if(!id && lesson._id) {
-    navigate("/lessons/" + lesson._id)
+  if(isCreate && lesson[0]) {
+    navigate("/lessons/" + lesson[0]._id)
   }
 
   const currentLesson = location.state ? location.state.currentLesson : formData
@@ -55,20 +56,10 @@ function LessonAction() {
   }
 
   const onChange = (e) => {
-    if (e.target.name.includes(".")) {
-      const keys = e.target.name.split(".")
-        setFormData((prevState) => ({
-          ...prevState,
-          [keys[0]]: {
-            [keys[1]]: e.target.value
-          },
-        }))
-    } else {
-      setFormData((prevState) => ({
-          ...prevState,
-          [e.target.name]: e.target.value,
-      }))
-    }
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }))
   }
 
   const onSubmit = (e) => {
@@ -87,6 +78,7 @@ function LessonAction() {
       navigate("/lessons/" + id)
     } else {
       dispatch(createLesson(lessonData))
+      setIsCreate(true)
     }
   }
 

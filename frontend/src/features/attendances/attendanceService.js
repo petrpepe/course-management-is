@@ -14,6 +14,18 @@ const createAttendance = async (attendanceData, token) => {
     return response.data
 }
 
+const updateAttendance = async (attendanceId, attendanceData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+
+    const response = await axios.put(API_URL + attendanceId, attendanceData, config)
+
+    return response.data
+}
+
 const getAttendances = async (token) => {
     const config = {
         headers: {
@@ -40,6 +52,7 @@ const deleteAttendance = async (attendanceId, token) => {
 
 const attendanceService = {
     createAttendance,
+    updateAttendance,
     getAttendances,
     deleteAttendance,
 }

@@ -29,7 +29,6 @@ const userSchema = mongoose.Schema(
         roles: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",
-            required: [true, "User needs at least guest role"],
         }],
         extraPerms: [{
             type: mongoose.Schema.Types.ObjectId,

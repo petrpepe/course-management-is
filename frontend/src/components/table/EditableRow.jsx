@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Select from 'react-select'
 
-function EditableRow({ role, setEdit, handleCancelClick, options }) {
-  const [rowState, setRow] = useState({...role})
+function EditableRow({ data, setEdit, handleCancelClick, options = [] }) {
+  const [rowState, setRow] = useState({...data})
 
-  const defaultOptions = options.filter(opt => role.permissions.includes(opt.value))
+  const defaultOptions = options.filter(opt => data.permissions.includes(opt.value))
 
   const onChange = e => {
     const inputName = e.target.name
@@ -15,12 +15,9 @@ function EditableRow({ role, setEdit, handleCancelClick, options }) {
     })
 
     setEdit({
-      id: rowState._id,
+      ...rowState,
+      [inputName]: e.target.value,
       isEdited: true,
-      name: rowState.name,
-      description: rowState.description,
-      permissions: rowState.permissions,
-      [inputName]: e.target.value
     })
   }
 
@@ -34,12 +31,9 @@ function EditableRow({ role, setEdit, handleCancelClick, options }) {
     })
 
     setEdit({
-      id: rowState._id,
+      ...rowState,
       isEdited: true,
-      name: rowState.name,
-      description: rowState.description,
-      permissions: rowState.permissions,
-      [selectName]: selectedOptionsValues
+      [selectName]: selectedOptionsValues,
     })
   }
 
@@ -65,16 +59,18 @@ function EditableRow({ role, setEdit, handleCancelClick, options }) {
           onChange={onChange}
         />
       </td>
-      <td>
-        <Select
-          id="permissions"
-          name="permissions"
-          options={options}
-          defaultValue={defaultOptions}
-          onChange={onSelectChange}
-          isMulti isSearchable
-        />
-      </td>
+      {!options ? "" :
+        <td>
+          <Select
+            id="permissions"
+            name="permissions"
+            options={options}
+            defaultValue={defaultOptions}
+            onChange={onSelectChange}
+            isMulti isSearchable
+          />
+        </td>
+      }
       <td>
         <button type="submit">Save</button>
         <button type="button" onClick={() => handleCancelClick()}>

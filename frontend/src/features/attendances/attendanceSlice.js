@@ -20,6 +20,17 @@ export const createAttendance = createAsyncThunk("attendances/create", async (at
     }
 })
 
+export const updateAttendance = createAsyncThunk("attendances/update", async (attendanceData, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await attendanceService.updateAttendance(attendanceData._id, attendanceData, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && 
+            error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
 export const getAttendances = createAsyncThunk("attendances/getAll", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
@@ -59,6 +70,19 @@ export const attendanceSlice = createSlice({
             state.attendances.push(action.payload)
         })
         .addCase(createAttendance.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+        })
+        .addCase(updateAttendance.pending, (state) => {
+            state.isLoading = true;
+        })
+        .addCase(updateAttendance.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            //state.attendances[state.attendances.findIndex((obj => obj._id === action.payload._id))] = action.payload
+        })
+        .addCase(updateAttendance.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

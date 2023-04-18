@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
-const Course = require('../models/courseModel');
+const Course = require('../models/courseModel')
+const Class = require('../models/classModel')
 
 /**
  * @desc Get courses
@@ -76,6 +77,8 @@ const deleteCourse = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("Course not find")
     }
+
+    await Class.updateMany({course: course._id}, {$pull: {course: course._id}}, {multi: true})
 
     await course.remove()
 
