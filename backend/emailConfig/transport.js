@@ -4,13 +4,13 @@
  * @author: https://github.com/gotschmarcel/nodemailer-sendinblue-transport
  */
 
-//const fs = require("node:fs/promises");
-const http = require("node:http");
-const https = require("node:https");
-const stream = require("node:stream");
-const url = require("node:url");
+const fs = require("fs/promises");
+const http = require("http");
+const https = require("https");
+const stream = require("stream");
+const url = require("url");
 
-const pkg = require("../package.json");
+const pkg = require("../../package.json");
 
 const util = require("./util");
 
@@ -63,13 +63,13 @@ async function buildAttachment(attachment) {
     }
 
     // Local file.
-    /*if (util.isString(attachment.path)) {
+    if (util.isString(attachment.path)) {
         const content = await fs.readFile(attachment.path);
         return {
             name: attachment.filename,
             content: content.toString("base64"),
         };
-    }*/
+    }
 
     if (util.isString(attachment.content)) {
         return {
