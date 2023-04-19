@@ -20,7 +20,7 @@ function ClassAction() {
     course: "",
     lessonNumber: 0,
     lesson: "",
-    teachers: [],
+    lectors: [],
     students: [],
   })
 
@@ -79,8 +79,8 @@ function ClassAction() {
     return toast.error(users.users.message)
   }
 
-  const teachersOptions = users.users[0] ? users.users.filter(user => user.roles.includes("lector") || user.roles.includes("admin")).map((user) => {
-    if (formData.teachers.includes(user._id) || formData.teachers.includes(user.email)) {
+  const lectorsOptions = users.users[0] ? users.users.filter(user => user.roles.includes("lector") || user.roles.includes("admin")).map((user) => {
+    if (formData.lectors.includes(user._id) || formData.lectors.includes(user.email)) {
       return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: true}
     } else return {value: user._id, label: user.lastName + " " + user.firstName, isSelected: false}
   }) : []
@@ -116,7 +116,7 @@ function ClassAction() {
           lessonNumber: formData.lessonNumber,
           lesson: formData.lesson,
       },
-      teachers: formData.teachers,
+      lectors: formData.lectors,
       students: formData.students,
     }
 
@@ -181,8 +181,8 @@ function ClassAction() {
           <Select id="course" name="course" value={coursesOptions.filter(course => course.isSelected)} options={coursesOptions} onChange={onCourseSelectChange} isSearchable isClearable/>
         </div>
         <div className="form-group ">
-          <label htmlFor="teachers">Select teachers:</label>
-          <Select id="teachers" name="teachers" value={teachersOptions.filter(teacher => teacher.isSelected)} options={teachersOptions} onChange={onSelectChange} isMulti isSearchable isClearable />
+          <label htmlFor="lectors">Select lectors:</label>
+          <Select id="lectors" name="lectors" value={lectorsOptions.filter(teacher => teacher.isSelected)} options={lectorsOptions} onChange={onSelectChange} isMulti isSearchable isClearable />
         </div>
         <div className="form-group ">
           <label htmlFor="students">Select students:</label>

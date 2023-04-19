@@ -20,6 +20,7 @@ app.use("/api/lessons", require("./routes/lessonRoutes"))
 app.use("/api/roles", require("./routes/roleRoutes"))
 app.use("/api/attendances", require("./routes/attendanceRoutes"))
 app.use("/api/permissions", require("./routes/permissionRoutes"))
+app.use("/api/sendemail", require("./routes/emailRoutes"))
 
 if(process.env.NODE_ENV == "production") {
     app.use(express.static(path.join(__dirname, "..", "frontend", "build")))

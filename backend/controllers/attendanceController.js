@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
-const Attendance = require('../models/attendanceModel');
+const Attendance = require('../models/attendanceModel')
+const Class = require('../models/classModel')
 
 /** 
  * @desc Get Attendances
@@ -7,7 +8,16 @@ const Attendance = require('../models/attendanceModel');
  * @access Private
  */
 const getAttendances = asyncHandler(async (req, res) => {
-    const attendances = await Attendance.find({ user: req.user.id })
+    let arg = {}
+
+    if (req.userRoles.includes("admin")) arg = {}
+    if (req.userRoles.includes("student"))  arg = {attendees: {$elemMatch: {user: req.user._id}}}
+    if (req.userRoles.includes("lector")) {
+        const classes = await Class.find({lectors: req.user._id}).select("_id")
+        arg = {...arg, classId: {$in: classes}}
+    }
+
+    const attendances = await Attendance.find(arg)
 
     res.status(200).json(attendances)
 })

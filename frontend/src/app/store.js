@@ -7,6 +7,7 @@ import userReducer from "../features/users/userSlice"
 import permissionReducer from "../features/permissions/permissionSlice"
 import roleReducer from "../features/roles/roleSlice"
 import classReducer from "../features/classes/classSlice"
+import emailReducer from "../features/email/emailSlice"
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export const store = configureStore({
     permissions: permissionReducer,
     roles: roleReducer,
     classes: classReducer,
+    email: emailReducer,
   },
 })

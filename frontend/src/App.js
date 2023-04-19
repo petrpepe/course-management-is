@@ -21,6 +21,8 @@ import LessonAction from "./pages/lessons/LessonAction"
 import Attendances from "./pages/Attendances"
 import Roles from "./pages/Roles"
 import Permissions from "./pages/Permissions"
+import EmailPage from "./pages/EmailPage"
+import Page404 from "./pages/Page404"
 
 function App() {
   return (
@@ -52,6 +54,8 @@ function App() {
             <Route path="/attendances" element={<Attendances />} />
             <Route path="/roles" element={<Roles />} />
             <Route path="/permissions" element={<Permissions />} />
+            <Route path="/email" element={<EmailPage />} />
+            <Route path="*" element={<Page404 />} />
           </Routes>
         </main>
         <AuthVerify />

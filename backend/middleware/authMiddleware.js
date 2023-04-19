@@ -75,13 +75,13 @@ const authorize = (permissions) => {
         for(const roleId of user.roles) {
             for (const permId of getValue(cache.roles, roleId).permissions) {
                 const permName = getValue(cache.permissions, permId).name
-                if (contains.get(permName)) contains.set(permName, true)
+                if (contains.has(permName)) contains.set(permName, true)
             }
         }
 
         for (const extraPermId of user.extraPerms) {
             const permName = getValue(cache.permissions, extraPermId).name
-            if (contains.get(permName)) contains.set(permName, true)
+            if (contains.has(permName)) contains.set(permName, true)
         }
     
         if (user && Array.from(contains.values()).every(e => e === true)) {
@@ -104,8 +104,8 @@ async function populateCache() {
     }).catch((e) => {throw new Error(e)})
 }
 
-function getValue(object, id) {
-    return Object.values(object).find((value) => value._id.toString() === id)
+function getValue(array, id) {
+    return array.filter((value) => value._id.equals(id))[0]
 }
 
 module.exports = { authenticate, authorize }

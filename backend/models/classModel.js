@@ -19,7 +19,7 @@ const classSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Course",
         },
-        teachers: [{
+        lectors: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         }],

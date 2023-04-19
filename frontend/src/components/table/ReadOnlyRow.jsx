@@ -11,7 +11,7 @@ function ReadOnlyRow({ data, handleEditClick, dataArray, deleteAction }) {
           a++
           return typeof value === "object" || value === data._id || value === data.__v ? "" : <td key={a}>{value}</td>;}
         )}
-        {dataArray && dataArray.length > 0 ? <td>{dataArray}</td> : <td></td>}
+        {dataArray && dataArray.length > 0 ? <td>{dataArray.map(v => v + ", ")}</td> : <td></td>}
         <td>
           <button type="button" onClick={() => handleEditClick(data._id)} >
             Edit

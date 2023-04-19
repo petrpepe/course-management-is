@@ -10,14 +10,18 @@ const mongoose = require("mongoose")
  */
 const getClasses = asyncHandler(async (req, res) => {
     let arg = {}
-    if (req.userRoles.includes("admin")) {
-        arg = {}
-    } else arg = {$or: [{students: req.user._id}, {teachers: req.user._id}]}
+    if (req.userRoles.includes("admin")) arg = {}
+    else {
+        if (req.userRoles.includes("lector")) arg = {$or: [{students: req.user._id}, {lectors: req.user._id}]}
+        if (req.userRoles.includes("student") && !req.userRoles.includes("lector")) {
+            arg = {students: req.user._id}
+        }
+    }
 
     if(req.query.id && req.query.id != null) {
         const ids = typeof req.query.id == "string" ? mongoose.Types.ObjectId(req.query.id) 
         : req.query.id.map((id) => mongoose.Types.ObjectId(id))
-        arg = {_id: {$in: ids}}
+        arg = {_id: {$in: ids}, ...arg}
     }
  
     const classVar = await Class.find(arg)
@@ -84,6 +88,21 @@ const updateClass = asyncHandler(async (req, res) => {
     const updatedClass = await Class.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
     })
+// Replace Zvětšit počet a změna datumu a uživatelů
+    if (classVar.repeatCount !== req.repeatCount) {
+        let attendances = []
+        for (let i = 0; i < req.repeatCount - classVar.repeatCount; i++) {
+            const attendance = {datetime: "", classId: classVar._id, lessonId: null, attendees: []}
+            const attDatetime = new Date(classVar.startDateTime)
+            attendance.datetime = attDatetime.setDate(attDatetime.getDate() + 7 * i + req.repeatCount)
+            attendance.attendees = updatedClass.students.map(student => ({user: student.toString(), attType: ""}))
+            attendance.lessonId = lessons ? lessons.filter(l => l.orderNumber === i + 1)[0]._id : null
+    
+            attendances.push(attendance)
+        }
+
+        //await Attendance.updateMany({classId: updatedClass._id})
+    }
 
     res.status(200).json(updatedClass)
 })
