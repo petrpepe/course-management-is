@@ -23,6 +23,8 @@ const getAttendances = asyncHandler(async (req, res) => {
 })
 
 /**
+ * ziskat uzivatele z classId pokud neni tak supl
+ * 
  * @desc Create Attendances
  * @route POST /api/Attendances
  * @access Private
@@ -50,7 +52,7 @@ const updateAttendance = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("Attendance not find")
     }
-
+//if user existId a attType exist pak attendees
     const updatedAttendance = await Attendance.findByIdAndUpdate(req.params.id, 
         {$set: {attendees: {user: req.body.userId, attType: req.body.attType}}}, {new: true})
 
