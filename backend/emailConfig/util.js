@@ -1,5 +1,9 @@
 "use strict";
 
+/**
+ * @author: https://github.com/gotschmarcel/nodemailer-sendinblue-transport
+ */
+
 exports.isArray = function (arr) {
     return arr instanceof Array;
 };

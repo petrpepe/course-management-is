@@ -1,12 +1,16 @@
 "use strict";
 
-const fs = require("node:fs");
+/**
+ * @author: https://github.com/gotschmarcel/nodemailer-sendinblue-transport
+ */
+
+//const fs = require("node:fs/promises");
 const http = require("node:http");
 const https = require("node:https");
 const stream = require("node:stream");
 const url = require("node:url");
 
-const pkg = require("../../package.json");
+const pkg = require("../package.json");
 
 const util = require("./util");
 
@@ -16,6 +20,10 @@ function responseErrorMessage(res, body) {
     }, statusCode: ${res.statusCode})`;
 }
 
+// Reads all data of 'readable' into a Buffer.
+// Params:
+//   - readable: stream.Readable
+// Returns: Buffer
 async function readAll(readable) {
     console.assert(readable instanceof stream.Readable);
     let chunks = [];
@@ -25,70 +33,72 @@ async function readAll(readable) {
     return Buffer.concat(chunks);
 }
 
+// Removes empty 'name' fields and moves the 'address' field into
+// 'email' to be compliant with the sendinblue API.
 function fixupAddresses(addresses) {
     return addresses.map((address) => {
         return {
+            // Sendinblue wants the address under the 'email' key.
             email: address.address,
 
+            // An empty name field is not allowed.
             name: !util.isEmptyString(address.name) ? address.name : undefined,
         };
     });
 }
 
 async function buildAttachment(attachment) {
-    return new Promise(async function (resolve, reject) {
-        if (!util.isUndefined(attachment.raw)) {
-            throw new Error("raw attachments not supported");
-        }
-        if (!util.isString(attachment.filename)) {
-            throw new Error("missing filename for attachment");
-        }
+    if (!util.isUndefined(attachment.raw)) {
+        throw new Error("raw attachments not supported");
+    }
+    if (!util.isString(attachment.filename)) {
+        throw new Error("missing filename for attachment");
+    }
 
-        if (util.isString(attachment.href)) {
-            return resolve({
-                url: attachment.href,
-                name: attachment.filename,
-            });
-        }
+    if (util.isString(attachment.href)) {
+        return {
+            url: attachment.href,
+            name: attachment.filename,
+        };
+    }
 
-        // Local file.
-        if (util.isString(attachment.path)) {
-            const content = await fs.readFile(attachment.path);
-            return resolve({
-                name: attachment.filename,
-                content: content.toString("base64"),
-            });
-        }
+    // Local file.
+    /*if (util.isString(attachment.path)) {
+        const content = await fs.readFile(attachment.path);
+        return {
+            name: attachment.filename,
+            content: content.toString("base64"),
+        };
+    }*/
 
-        if (util.isString(attachment.content)) {
-            return resolve({
-                name: attachment.filename,
-                content:
-                    attachment.encoding === "base64"
-                        ? attachment.content
-                        : Buffer.from(
-                            attachment.content,
-                            attachment.encoding
-                        ).toString("base64"),
-            });
-        }
+    if (util.isString(attachment.content)) {
+        return {
+            name: attachment.filename,
+            content:
+                attachment.encoding === "base64"
+                    ? attachment.content
+                    : Buffer.from(
+                          attachment.content,
+                          attachment.encoding
+                      ).toString("base64"),
+        };
+    }
 
-        if (Buffer.isBuffer(attachment.content)) {
-            return resolve({
-                name: attachment.filename,
-                content: attachment.content.toString("base64"),
-            });
-        }
+    if (Buffer.isBuffer(attachment.content)) {
+        return {
+            name: attachment.filename,
+            content: attachment.content.toString("base64"),
+        };
+    }
 
-        if (attachment.content instanceof stream.Readable) {
-            return resolve({
-                name: attachment.filename,
-                content: (await readAll(attachment.content)).toString("base64"),
-            });
-        }
+    if (attachment.content instanceof stream.Readable) {
+        return {
+            name: attachment.filename,
+            content: (await readAll(attachment.content)).toString("base64"),
+        };
+    }
 
-        reject(new Error("unsupported attachment format"));
-    });
+    throw new Error("unsupported attachment format");
 }
 
 async function buildAttachements(attachments) {
