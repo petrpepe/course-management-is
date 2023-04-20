@@ -37,7 +37,7 @@ function Classes() {
       </section>
 
       <section className="content">
-        <Link to={"/classes/create"}>Create new Class</Link>
+        {user.roles.includes("admin") ? <Link to={"/classes/create"}>Create new Class</Link> : null}
         {isLoading ? <Spinner /> : classes.length > 0 ? (
           <div className="cards">
             {classes.map((classVar) => (

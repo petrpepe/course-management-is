@@ -38,16 +38,16 @@ function Courses() {
       </section>
 
       <section className="content">
-        <Link to={"/courses/create"}>Create new Course</Link>
-          {isLoading ? <Spinner /> : courses.length > 0 ? (
-            <div className="cards">
-              {courses.map((course) => (
-                <Card key={course._id} data={course} link="/courses/" deleteAction={deleteCourse} currentData={{currentCourse: course}} imgSrc="https://a6ad4808de.clvaw-cdnwnd.com/3fcec247b0b3f551f164ba2370f83229/200000532-3961c3961d/3D%20modelovani%202-58.jpg?ph=a6ad4808de" />
-              ))}
-            </div>
-          ) : (
-            <h3>You haven't set any course</h3> 
-          )}
+        {user.roles.includes("admin") ? <Link to={"/courses/create"}>Create new Course</Link> : null}
+        {isLoading ? <Spinner /> : courses.length > 0 ? (
+          <div className="cards">
+            {courses.map((course) => (
+              <Card key={course._id} data={course} link="/courses/" deleteAction={deleteCourse} currentData={{currentCourse: course}} imgSrc="https://a6ad4808de.clvaw-cdnwnd.com/3fcec247b0b3f551f164ba2370f83229/200000532-3961c3961d/3D%20modelovani%202-58.jpg?ph=a6ad4808de" />
+            ))}
+          </div>
+        ) : (
+          <h3>You haven't set any course</h3> 
+        )}
       </section>
     </>
   )

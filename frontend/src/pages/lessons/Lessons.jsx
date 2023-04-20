@@ -37,7 +37,7 @@ function Lessons() {
       </section>
 
       <section className="content">
-        <Link to={"/lessons/create"}>Create new Lesson</Link>
+        {user.roles.includes("admin") || user.roles.includes("lector") ? <Link to={"/lessons/create"}>Create new Lesson</Link> : null}
         {isLoading ? <Spinner /> : lessons.length > 0 ? (
           <div className="cards">
             {lessons.map((lesson) => (

@@ -54,11 +54,20 @@ function Attendances() {
                   <td>{attendance.classId}</td>
                   <td>{attendance.datetime}</td>
                   <td>{attendance.lessonId}</td>
-                  <td>{attendance.attendees.map(att =>
-                    <p key={att.user}>{att.name} : 
-                      <CheckBox id="attType" defaultValue={att.attType === "true" ? true : false} attId={attendance._id} userId={att.user} />
-                    </p>
-                  )}</td>
+                  <td>{attendance.attendees.map(att =>{
+                    if(user.roles.includes("student") && att.user === user._id) 
+                    {
+                      return <p key={att.user}>{att.name} {att.attType === "true" ? <span> attended</span> : <span> missed</span>}</p>
+                    }
+                    if(user.roles.includes("admin") || user.roles.includes("lector")) {
+                      return (
+                      <p key={att.user}>{att.name}
+                        <> : <CheckBox id="attType" defaultValue={att.attType === "true" ? true : false} 
+                        attId={attendance._id} userId={att.user} /> </> 
+                      </p>)
+                    }
+                    return null
+                  })}</td>
                 </tr>
               ))}
             </tbody>

@@ -37,7 +37,7 @@ function Users() {
       </section>
 
       <section className="content">
-        <Link to={"/users/create"}>Create new User</Link>
+        {user.roles.includes("admin") ? <Link to={"/users/create"}>Create new User</Link> : null}
         {isLoading ? <Spinner /> : users.length > 0 ? (
           <div className="cards">
             {users.map((user) => (
