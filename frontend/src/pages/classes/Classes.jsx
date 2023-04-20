@@ -33,8 +33,7 @@ function Classes() {
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Classes Dashboard</p>
+        <h1>Classes Dashboard</h1>
       </section>
 
       <section className="content">

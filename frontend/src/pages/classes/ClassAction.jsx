@@ -55,6 +55,7 @@ function ClassAction() {
   }, [user, navigate, users.isError, users.message, courses.isError, courses.message, dispatch])
 
   if(isCreate && classVar[0]) {
+    setFormData({})
     navigate("/classes/" + classVar[0]._id)
   }
 
@@ -123,6 +124,7 @@ function ClassAction() {
     if(id){
       classData._id = id
       dispatch(updateClass(classData))
+      setFormData({})
       navigate("/classes/" + id)
     } else {
       dispatch(createClass(classData))

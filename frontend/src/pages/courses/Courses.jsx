@@ -34,8 +34,7 @@ function Courses() {
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Courses dashboard</p>
+        <h1>Courses dashboard</h1>
       </section>
 
       <section className="content">

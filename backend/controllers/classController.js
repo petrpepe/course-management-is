@@ -62,10 +62,12 @@ const setClass = asyncHandler(async (req, res) => {
         const attDatetime = new Date(classVar.startDateTime)
         attendance.datetime = attDatetime.setDate(attDatetime.getDate() + 7 * i)
         attendance.attendees = classVar.students.map(student => ({user: student.toString(), attType: ""}))
-        attendance.lessonId = lessons ? lessons.filter(l => l.orderNumber === i + 1)[0]._id : null
-
+        if (lessons.length > 0 && lessons.length > i) {
+            attendance.lessonId = lessons.filter(l =>  l.orderNumber === i + 1)[0].lesson
+        }
         attendances.push(attendance)
     }
+
 
     await Attendance.create(attendances)
 

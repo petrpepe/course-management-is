@@ -41,6 +41,7 @@ function LessonAction() {
   }, [user, navigate, dispatch])
 
   if(isCreate && lesson[0]) {
+    setFormData({})
     navigate("/lessons/" + lesson[0]._id)
   }
 
@@ -75,6 +76,7 @@ function LessonAction() {
     if(id){
       lessonData._id = id
       dispatch(updateLesson(lessonData))
+      setFormData({})
       navigate("/lessons/" + id)
     } else {
       dispatch(createLesson(lessonData))

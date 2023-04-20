@@ -31,10 +31,10 @@ export const updateAttendance = createAsyncThunk("attendances/update", async (at
     }
 })
 
-export const getAttendances = createAsyncThunk("attendances/getAll", async (_, thunkAPI) => {
+export const getAttendances = createAsyncThunk("attendances/getAll", async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await attendanceService.getAttendances(token)
+        return await attendanceService.getAttendances(data.names, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -80,7 +80,14 @@ export const attendanceSlice = createSlice({
         .addCase(updateAttendance.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            //state.attendances[state.attendances.findIndex((obj => obj._id === action.payload._id))] = action.payload
+            let index = state.attendances.findIndex((obj => obj._id === action.payload._id))
+            let attendees = state.attendances[index].attendees.map(att => {
+                let actionAtt = action.payload.attendees.filter(attendee => attendee._id === att._id)[0]
+                if(att.attType !== actionAtt.attType) att.attType = actionAtt.attType
+                return att
+            })
+            console.log(action.payload);
+            state.attendances[index].attendees = attendees
         })
         .addCase(updateAttendance.rejected, (state, action) => {
             state.isLoading = false

@@ -33,8 +33,7 @@ function Users() {
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Users Dashboard</p>
+        <h1>Users Dashboard</h1>
       </section>
 
       <section className="content">

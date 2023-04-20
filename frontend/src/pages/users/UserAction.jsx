@@ -73,6 +73,7 @@ function UserAction() {
   }, [user, id, navigate, roles.isError, roles.message, permissions.isError, permissions.message, users.isError, users.message, dispatch])
 
   if(isCreate && users.users[0]) {
+    setFormData({})
     navigate("/users/" + users.users[0]._id)
   }
 
@@ -134,9 +135,13 @@ function UserAction() {
         if(user._id === id) {
           userData.roles = roleOptions.filter(roleOpt => roleOpt.isSelected).map(roleOpt => roleOpt.label)
           dispatch(updateAuth(userData))
+          setFormData({})
           navigate("/me")
         }
-        else navigate("/users/" + id)
+        else {
+          setFormData({})
+          navigate("/users/" + id)
+        }
       } else {
         dispatch(createUser(userData))
         setIsCreate(true)
@@ -180,10 +185,10 @@ function UserAction() {
           placeholder="Enter last name" onChange={onChange} required={true} />
           <Input  id="email" label="Email:" value={formData.email} type="email" 
           placeholder="Enter email" onChange={onChange} required={true} />
-          <Input  id="password" label="Enter password:" value={formData.password} type="password" 
-          placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />
-          <Input  id="password2" label="Confirm password:" value={formData.password2} type="password" 
-          placeholder="Confirm password" onChange={onChange} required={id === user._id ? true : false} />
+              <Input  id="password" label="Enter password:" value={formData.password} type="password" 
+              placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />
+              <Input  id="password2" label="Confirm password:" value={formData.password2} type="password" 
+              placeholder="Confirm password" onChange={onChange} required={id === user._id ? true : false} />
           { (user.roles.includes("admin")) ?
             <>
               <div className="form-group ">
@@ -195,9 +200,9 @@ function UserAction() {
                 <Select id="extraPerms" name="extraPerms" options={permsOptions} value={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
               </div>
             </>
-          : <></> }
+          : null }
           <div className="form-group">
-            <button type="submit" className="btn btn-block">{location.pathname.includes("create") ? "Create" : "Submit"}</button>
+            <button type="submit" className="btn btn-block">{location.pathname.includes("create") ? "Create" : "Update"}</button>
           </div>
         </form>
       </section>

@@ -26,11 +26,14 @@ const updateAttendance = async (attendanceId, attendanceData, token) => {
     return response.data
 }
 
-const getAttendances = async (token) => {
+const getAttendances = async (names, token) => {
+    let params = new URLSearchParams()
+    params.append("names", names ? names : false)
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
-        }
+        },
+        params: params
     }
 
     const response = await axios.get(API_URL, config)

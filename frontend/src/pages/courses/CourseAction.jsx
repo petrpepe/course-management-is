@@ -51,6 +51,7 @@ function CourseAction() {
   }, [user, id, navigate, lessons.isError, lessons.message, dispatch])
 
   if(isCreate && course[0]) {
+    setFormData({})
     navigate("/courses/" + course[0]._id)
   }
 
@@ -112,6 +113,7 @@ function CourseAction() {
     if(id){
       courseData._id = id
       dispatch(updateCourse(courseData))
+      setFormData({})
       navigate("/courses/" + id)
     } else {
       dispatch(createCourse(courseData))

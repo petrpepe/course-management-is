@@ -7,6 +7,7 @@ import EditableRow from "./EditableRow"
 import Spinner from "../Spinner"
 import Select from 'react-select'
 import { toast } from "react-toastify"
+import Input from "../form/Input"
 
 function Table({roles}) {
   const dispatch = useDispatch()
@@ -32,7 +33,6 @@ function Table({roles}) {
   }
 
   const handleEditClick = (id) => {
-    console.log(id);
     setEdit({_id: id, role: role, isEdited: true})
   };
 
@@ -84,7 +84,8 @@ function Table({roles}) {
     <div className="app-container">
       {roles.length > 0 ? (
         <form onSubmit={onSubmitEdit}>
-          <table>
+        <div className="table-wrapper">
+          <table className="res-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -119,28 +120,35 @@ function Table({roles}) {
               ))}
             </tbody>
           </table>
+        </div>
         </form>
       ) : ( 
         <h3>You haven't set any role</h3> 
       )}
 
       <h2>Add a Role</h2>
-      <form onSubmit={onSubmitAdd}>
-        <input
-          type="text"
-          name="name"
-          required="required"
+      <form className="form" onSubmit={onSubmitAdd}>
+        <Input
+          id="name"
+          label="Name"
+          value=""
+          required={true}
           placeholder="Enter a name..."
           onChange={onChange}
         />
-        <input
-          type="text"
+        <Input
           name="description"
+          label="Description"
+          value=""
           placeholder="Enter an description..."
           onChange={onChange}
         />
-        <Select name="permissions" options={options} onChange={onSelectChange} isMulti isSearchable />
-        <button type="submit">Add</button>
+        <div className="form-group ">
+          <Select name="permissions" options={options} onChange={onSelectChange} isMulti isSearchable />
+        </div>
+        <div className="form-group ">
+          <button type="submit" className="btn btn-block">Add</button>
+        </div>
       </form>
     </div>
   );

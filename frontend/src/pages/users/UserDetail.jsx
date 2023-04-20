@@ -46,7 +46,9 @@ function Users() {
         </section>
 
         <section className="content">
-          <div>{Object.values(currentUser).map(v => <p>{v}</p>)}</div>
+          <div><p>Whole name: {currentUser.firstName + " " + currentUser.otherNames.join(" ") + " " + currentUser.lastName}</p></div>
+          <div><p>Email: {currentUser.email}</p></div>
+          <div><p>Phone: {currentUser.phone}</p></div>
           <Link to={"/users/" + currentUser._id + "/edit"} state={{currentUser: currentUser}}>Edit</Link>
         </section>
       </>

@@ -3,7 +3,8 @@ import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
 import Spinner from "../components/Spinner"
-import {getAttendances, reset, updateAttendance} from "../features/attendances/attendanceSlice"
+import {getAttendances, reset} from "../features/attendances/attendanceSlice"
+import CheckBox from "../components/form/CheckBox"
 
 function Attendances() {
   const navigate = useNavigate()
@@ -22,31 +23,23 @@ function Attendances() {
       return
     }
 
-    dispatch(getAttendances())
+    dispatch(getAttendances({names: true}))
 
     return () => {
       dispatch(reset())
     }
   }, [user, navigate, isError, message, dispatch])
 
-  const onAttTypeChange = (attId, userId, e) => {
-    dispatch(updateAttendance({_id: attId, userId: userId, attType: e.target.checked}))
-  }
-
-  if (isLoading) {
-    return <Spinner />
-  }
-
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Attendances Dashboard</p>
+        <h1>Attendances Dashboard</h1>
       </section>
 
       <section className="content">
         {attendances.length > 0 ? (
-          <table>
+          <div className="table-wrapper">
+          <table className="res-table">
             <thead>
               <tr>
                 <th>Class</th>
@@ -56,18 +49,21 @@ function Attendances() {
               </tr>
             </thead>
             <tbody>
-              {attendances.map((attendance) => (
+              {isLoading ? <Spinner /> : attendances.map(attendance => (
                 <tr key={attendance._id} >
                   <td>{attendance.classId}</td>
                   <td>{attendance.datetime}</td>
                   <td>{attendance.lessonId}</td>
-                  <td>{attendance.attendees.map(att => {
-                    return <p key={att.user}>{att.user} : <input name="attType" id="attType" type="checkbox" onChange={(e) => onAttTypeChange(attendance._id, att.user, e)} /></p>
-                  })}</td>
+                  <td>{attendance.attendees.map(att =>
+                    <p key={att.user}>{att.name} : 
+                      <CheckBox id="attType" defaultValue={att.attType === "true" ? true : false} attId={attendance._id} userId={att.user} />
+                    </p>
+                  )}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
         ) : ( 
           <h3>You haven't set any attendance</h3> 
           )}

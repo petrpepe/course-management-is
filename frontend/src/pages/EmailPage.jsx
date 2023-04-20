@@ -53,9 +53,9 @@ function EmailPage() {
   return <>
       <section className="heading">
         <h1>
-            <FaRegEnvelope /> Send Emails to classes or students
+            <FaRegEnvelope /> Send Emails to people
         </h1>
-        <p>It can be whoever</p>
+        <p>It can send to whomever</p>
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>

@@ -36,19 +36,28 @@ function Permissions() {
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Permissions Dashboard</p>
+        <h1>Permissions Dashboard</h1>
       </section>
 
       <section className="content">
         {permissions.length > 0 ? (
-          <div className="cards">
-            {permissions.map((permission) => (
-                <div key={permission._id}>
-                    {JSON.stringify(permission)}
-                    <hr />
-                </div>
-            ))}
+          <div className="table-wrapper">
+          <table className="res-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {permissions.map((permission) => (
+                <tr key={permission._id}>
+                  <td>{permission.name}</td>
+                  <td>{permission.description}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           </div>
         ) : ( 
           <h3>You haven't set any permission</h3> 

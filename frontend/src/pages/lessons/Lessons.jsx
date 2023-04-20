@@ -33,7 +33,7 @@ function Lessons() {
   return (
     <>
       <section className="heading">
-        <p>Lessons Dashboard</p>
+        <h1>Lessons Dashboard</h1>
       </section>
 
       <section className="content">

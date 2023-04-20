@@ -1,4 +1,4 @@
-import { FaBookOpen, FaChalkboardTeacher, FaClock, FaLock, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle, FaUserFriends, FaUsers } from "react-icons/fa"
+import { FaBookOpen, FaChalkboardTeacher, FaChevronDown, FaClock, FaLock, FaRegEnvelope, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle, FaUserFriends, FaUsers } from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 
@@ -44,30 +44,28 @@ function Header() {
                     </Link>
                 </li>
                 {!user.roles.includes("admin") ? "" : (
-                        <>
-                        <li>
+                    <div className="dropdown">
+                        <li className="dropbtn">
+                            <FaChevronDown /> Management
+                        </li>
+                        <div className="dropdown-content">
                             <Link to="/users">
-                                <FaUsers />
-                                Users
+                                <FaUsers /> Users
                             </Link>
-                        </li>
-                        <li>
                             <Link to="/roles">
-                                <FaUserFriends />
-                                Roles
+                                <FaUserFriends /> Roles
                             </Link>
-                        </li>
-                        <li>
                             <Link to="/permissions">
-                                <FaLock />
-                                Permissions
+                                <FaLock /> Permissions
                             </Link>
-                        </li>
-                        </>
-                    )}
+                            <Link to="/email">
+                                <FaRegEnvelope /> Email
+                            </Link>
+                        </div>
+                    </div>
+                )}
                 </>
             }
-            
             {user ? (
                 <>
                     <li>

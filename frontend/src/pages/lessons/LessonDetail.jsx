@@ -17,7 +17,7 @@ function LessonDetail() {
       toast.error(message)
     }
 
-    dispatch(getLessons(id))
+    dispatch(getLessons({ids: id}))
 
     return () => {
       dispatch(reset())
@@ -28,17 +28,19 @@ function LessonDetail() {
     return <Spinner />
   }
 
-  const lesson = lessons[0]
+  const lesson = lessons.filter(les => les._id === id)[0]
 
   return (
     <>
       <section className="heading">
         <h1>Lesson: {lesson.title}</h1>
-        <p>{lesson.desctiption}</p>
+        <p>{lesson.description}</p>
       </section>
 
       <section className="content">
-        <p>{Object.values(lesson)}</p>
+        <div>
+          <p>{lesson.materials}</p>
+        </div>
       </section>
     </>
   )
