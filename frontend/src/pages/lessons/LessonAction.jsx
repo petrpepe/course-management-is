@@ -12,6 +12,7 @@ function LessonAction() {
     title: "",
     description: "",
     materials: "",
+    duration: 60,
   })
 
   const location = useLocation()
@@ -33,6 +34,7 @@ function LessonAction() {
       title: "",
       description: "",
       materials: "",
+      duration: 60,
     })
 
     return () => {
@@ -71,6 +73,7 @@ function LessonAction() {
       title: formData.title,
       description: formData.description,
       materials: formData.materials,
+      duration: formData.duration,
     }
 
     if(id){
@@ -100,6 +103,8 @@ function LessonAction() {
           placeholder="Enter description" onChange={onChange} />
           <Input  id="materials" label="Materials:" value={currentLesson.materials} 
           placeholder="Enter materials" onChange={onChange} />
+          <Input  id="duration" label="Duration:" value={currentLesson.duration} 
+          min={1} onChange={onChange} type="number" />
           <div className="form-group">
             <button type="submit" className="btn btn-block">Submit</button>
           </div>

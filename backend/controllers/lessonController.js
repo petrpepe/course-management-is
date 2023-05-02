@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Lesson = require('../models/lessonModel');
+const mongoose = require("mongoose");
 
 /**
  * @desc Get Lessons
@@ -7,7 +8,19 @@ const Lesson = require('../models/lessonModel');
  * @access Private
  */
 const getLessons = asyncHandler(async (req, res) => {
-    const lessons = await Lesson.find({ user: req.user.id })
+    let arg = {}
+    if(req.query.id && req.query.id != null) {
+        const ids = typeof req.query.id == "string" ? mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => mongoose.Types.ObjectId(id))
+        arg = {_id: {$in: ids}}
+    }
+    
+    let select = "title description createdAt";
+    if(req.query.detail == "true") {
+        select = ""
+    }
+    
+    const lessons = await Lesson.find({arg}).select(select)
 
     res.status(200).json(lessons)
 })

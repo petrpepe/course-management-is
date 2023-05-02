@@ -17,7 +17,7 @@ function LessonDetail() {
       toast.error(message)
     }
 
-    dispatch(getLessons({ids: id}))
+    dispatch(getLessons({ids: id, detail: true}))
 
     return () => {
       dispatch(reset())
@@ -34,13 +34,9 @@ function LessonDetail() {
     <>
       <section className="heading">
         <h1>Lesson: {lesson.title}</h1>
+        <p>{lesson.materials}</p>
         <p>{lesson.description}</p>
-      </section>
-
-      <section className="content">
-        <div>
-          <p>{lesson.materials}</p>
-        </div>
+        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam delectus rem quae deserunt consequuntur officia atque qui in cumque eius reprehenderit, quas id iste minima accusamus aspernatur. Pariatur, unde animi!</p>
       </section>
     </>
   )

@@ -19,10 +19,12 @@ const getAttendances = asyncHandler(async (req, res) => {
         arg = {...arg, classId: {$in: classes}}
     }
 
+    if(req.query.classId) arg = {...arg, classId: req.query.classId}
+
     const attendances = await Attendance.find(arg)
 
     let editableAttendances = JSON.parse(JSON.stringify(attendances))
-    if (req.query.names != null && req.query.names) {
+    if (req.query.names) {
         let classIds = []
         let lessonIds = []
         let userIds = []
@@ -33,13 +35,13 @@ const getAttendances = asyncHandler(async (req, res) => {
         })
 
         const classNames = await Class.find({_id: {$in: classIds}}).select("_id title")
-        const lessonNames = await Lesson.find({_id: {$in: lessonIds}}).select("_id title")
+        const lessonNames = await Lesson.find({_id: {$in: lessonIds}}).select("_id title duration")
         const userNames = await User.find({_id: {$in: userIds}}).select("_id lastName firstName")
 
         editableAttendances.map(att => {
             if(classNames.length > 0)att.classId = classNames.filter(className => className._id == att.classId)[0].title
             const lesson = lessonNames.filter(lessonName => lessonName._id == att.lessonId)[0]
-            if(lessonNames.length > 0 && lesson) att.lessonId = lesson.title
+            if(lessonNames.length > 0 && lesson) att.lessonId = {id: lesson._id, title: lesson.title, duration: lesson.duration}
             att.attendees = att.attendees.map(attendee => {
                 let filtUserName = userNames.filter(userName => userName._id == attendee.user)[0]
                 if (filtUserName) {

@@ -9,8 +9,8 @@ const courseSchema = mongoose.Schema(
         description: {
             type: String,
         },
-        place: {
-            type: String
+        isActive: {
+            type: Boolean,
         },
         lessons: [{
             lesson: {

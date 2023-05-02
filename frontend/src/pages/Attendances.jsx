@@ -2,9 +2,8 @@ import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
-import Spinner from "../components/Spinner"
+import AttendanceTable from "../components/table/AttendanceTable"
 import {getAttendances, reset} from "../features/attendances/attendanceSlice"
-import CheckBox from "../components/form/CheckBox"
 
 function Attendances() {
   const navigate = useNavigate()
@@ -38,41 +37,7 @@ function Attendances() {
 
       <section className="content">
         {attendances.length > 0 ? (
-          <div className="table-wrapper">
-          <table className="res-table">
-            <thead>
-              <tr>
-                <th>Class</th>
-                <th>Date and time</th>
-                <th>Lesson</th>
-                <th>Attendees</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading ? <Spinner /> : attendances.map(attendance => (
-                <tr key={attendance._id} >
-                  <td>{attendance.classId}</td>
-                  <td>{attendance.datetime}</td>
-                  <td>{attendance.lessonId}</td>
-                  <td>{attendance.attendees.map(att =>{
-                    if(user.roles.includes("student") && att.user === user._id) 
-                    {
-                      return <p key={att.user}>{att.name} {att.attType === "true" ? <span> attended</span> : <span> missed</span>}</p>
-                    }
-                    if(user.roles.includes("admin") || user.roles.includes("lector")) {
-                      return (
-                      <p key={att.user}>{att.name}
-                        <> : <CheckBox id="attType" defaultValue={att.attType === "true" ? true : false} 
-                        attId={attendance._id} userId={att.user} /> </> 
-                      </p>)
-                    }
-                    return null
-                  })}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          </div>
+          <AttendanceTable data={attendances} user={user} attendeesOnly={false} isLoading={isLoading} />
         ) : ( 
           <h3>You haven't set any attendance</h3> 
           )}

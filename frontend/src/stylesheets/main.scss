@@ -89,6 +89,40 @@ h3 {
     transform: scale(0.98);
 }
 
+.lesson-content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-content: center;
+    grid-template-rows: 75vh;
+    gap: 20px;
+}
+
+.lesson-info {
+    grid-column: 1 / 2;
+    margin-bottom: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 20px;
+}
+
+.lesson-text {
+    overflow-y: auto;
+}
+
+.lesson-text > h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 0 20px;
+}
+
+.lesson-info > .table-wrapper {
+    margin: unset;
+}
+
+.videocall {
+    grid-column: 2 / 5;
+}
+
 .loadingSpinnerContainer {
     position: fixed;
     top: 0;

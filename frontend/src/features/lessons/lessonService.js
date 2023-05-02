@@ -26,9 +26,10 @@ const updateLesson = async (lessonId, lessonData, token) => {
     return response.data
 }
 
-const getLessons = async (ids, token) => {
+const getLessons = async (ids, detail, token) => {
     let params = new URLSearchParams()
     if(ids) typeof ids === "string" ? params.append("id", ids) : ids.map((id) => params.append("id", id))
+    params.append("detail", detail)
     const config = {
         headers: {
             Authorization: `Bearer ${token}`

@@ -5,6 +5,7 @@ import {toast} from "react-toastify"
 import {deleteCourse, getCourses, reset} from "../../features/courses/courseSlice"
 import Card from "../../components/Card"
 import Spinner from "../../components/Spinner"
+import Search from "../../components/Search"
 
 function Courses() {
   const navigate = useNavigate()
@@ -38,6 +39,7 @@ function Courses() {
       </section>
 
       <section className="content">
+        <Search getData={getCourses} reset={reset} />
         {user.roles.includes("admin") ? <Link to={"/courses/create"}>Create new Course</Link> : null}
         {isLoading ? <Spinner /> : courses.length > 0 ? (
           <div className="cards">

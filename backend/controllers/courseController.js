@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Course = require('../models/courseModel')
 const Class = require('../models/classModel')
+const mongoose = require("mongoose")
 
 /**
  * @desc Get courses
@@ -8,7 +9,20 @@ const Class = require('../models/classModel')
  * @access Private
  */
 const getCourses = asyncHandler(async (req, res) => {
-    const courses = await Course.find({ user: req.user.id })
+    let arg = {}
+
+    if(req.query.id && req.query.id != null) {
+        const ids = typeof req.query.id == "string" ? mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => mongoose.Types.ObjectId(id))
+        arg = {_id: {$in: ids}}
+    }
+
+    if(req.query.keyword && req.query.keyword != null) {
+        const keyword = new RegExp(".*" + req.query.keyword + ".*", "i")
+        arg = {...arg, title: {$regex: keyword}}
+    }
+
+    const courses = await Course.find(arg)
 
     res.status(200).json(courses)
 })

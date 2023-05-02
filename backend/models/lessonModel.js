@@ -15,6 +15,9 @@ const lessonSchema = mongoose.Schema(
         materials: {
             type: String
         },
+        duration: {
+            type: Number
+        },
         approval: [{
             aprrovalRequired: {type: Boolean},
             aprrovedBy: [{

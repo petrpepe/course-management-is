@@ -12,18 +12,7 @@ const initialState = {
 export const getCourses = createAsyncThunk("courses/getAll", async (courseData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await courseService.getCourses(courseData.ids ? courseData.ids : [], token)
-    } catch (error) {
-        const message = (error.response && error.response.data && 
-            error.response.data.message) || error.message || error.toString()
-        return thunkAPI.rejectWithValue(message)
-    }
-})
-
-export const getCourseById = createAsyncThunk("courses/getOne", async (id, thunkAPI) => {
-    try {
-        const token = thunkAPI.getState().auth.user.token
-        return await courseService.getCourseById(id, token)
+        return await courseService.getCourses(courseData.ids ? courseData.ids : [], courseData.keyword ? courseData.keyword : "", token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -81,19 +70,6 @@ export const courseSlice = createSlice({
             state.courses = action.payload
         })
         .addCase(getCourses.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
-            state.message = action.payload
-        })
-        .addCase(getCourseById.pending, (state) => {
-            state.isLoading = true;
-        })
-        .addCase(getCourseById.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
-            state.courses[0] = action.payload
-        })
-        .addCase(getCourseById.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

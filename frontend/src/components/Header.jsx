@@ -1,4 +1,4 @@
-import { FaBookOpen, FaChalkboardTeacher, FaChevronDown, FaClock, FaLock, FaRegEnvelope, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle, FaUserFriends, FaUsers } from "react-icons/fa"
+import { FaBookOpen, FaChalkboardTeacher, FaChevronDown, FaClock, FaLock, FaRegEnvelope, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle, FaUserClock, FaUserFriends, FaUsers } from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 
@@ -12,91 +12,91 @@ function Header() {
 
   return (
     <header className="header">
-        <div className="logo">
-            <Link to="/">CourseSetter</Link>
-            <button onClick={() => navigate(-1)}>Go Back</button>
-        </div>
         <ul>
-            {!user || !user.roles ? "" :
-            <>
-                <li>
-                    <Link to="/courses">
-                        <FaBookOpen />
-                        Courses
+            <li className="logo">
+                <Link to="/">CourseSetter</Link>
+            </li>
+            {/*<button onClick={() => navigate(-1)}>Go Back</button>*/}
+            <li className="left">
+                <Link to="/classes">
+                    <FaChalkboardTeacher />
+                    Classes
+                </Link>
+            </li>
+            <li className="left">
+                <Link to="/timetable">
+                    <FaClock />
+                    Timetable
+                </Link>
+            </li>
+            <li className="left">
+                <Link to="/attendances">
+                    <FaUserClock />
+                    Attendances
+                </Link>
+            </li>
+        </ul>
+        <ul>
+        {user ? (<>
+            <li>
+                <Link to="/courses">
+                    <FaBookOpen />
+                    Courses
+                </Link>
+            </li>
+            <li>
+                <Link to="/lessons">
+                    <FaChalkboardTeacher />
+                    Lessons
+                </Link>
+            </li>
+            {!user.roles && !user.roles.includes("admin") ? "" : (
+            <li className="dropdown">
+                <div className="dropbtn">
+                    <FaChevronDown /> Management
+                </div>
+                <div className="dropdown-content">
+                    <Link to="/users">
+                        <FaUsers /> Users
                     </Link>
-                </li>
-                <li>
-                    <Link to="/lessons">
-                        <FaChalkboardTeacher />
-                        Lessons
+                    <Link to="/roles">
+                        <FaUserFriends /> Roles
                     </Link>
-                </li>
-                <li>
-                    <Link to="/classes">
-                        <FaChalkboardTeacher />
-                        Classes
+                    <Link to="/permissions">
+                        <FaLock /> Permissions
                     </Link>
-                </li>
-                <li>
-                    <Link to="/attendances">
-                        <FaClock />
-                        Attendances
+                    <Link to="/email">
+                        <FaRegEnvelope /> Email
                     </Link>
-                </li>
-                {!user.roles.includes("admin") ? "" : (
-                    <div className="dropdown">
-                        <li className="dropbtn">
-                            <FaChevronDown /> Management
-                        </li>
-                        <div className="dropdown-content">
-                            <Link to="/users">
-                                <FaUsers /> Users
-                            </Link>
-                            <Link to="/roles">
-                                <FaUserFriends /> Roles
-                            </Link>
-                            <Link to="/permissions">
-                                <FaLock /> Permissions
-                            </Link>
-                            <Link to="/email">
-                                <FaRegEnvelope /> Email
-                            </Link>
-                        </div>
-                    </div>
-                )}
-                </>
-            }
-            {user ? (
-                <>
-                    <li>
-                        <Link to="/me">
-                            <FaUserCircle />
-                            Profile
-                        </Link>
-                    </li>
-                    <li>
-                        <button className="btn" onClick={onLogout}>
-                            <FaSignOutAlt />
-                            Logout
-                        </button>
-                    </li>
-                </>
-            ) : (
-                <>
-                    <li>
-                        <Link to="/login">
-                            <FaSignInAlt />
-                            Login
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/register">
-                            <FaUser />
-                            Register
-                        </Link>
-                    </li>
-                </>
+                </div>
+            </li>
             )}
+            <li>
+                <Link to="/me">
+                    <FaUserCircle />
+                    Profile
+                </Link>
+            </li>
+            <li>
+                <button className="btn" onClick={onLogout}>
+                    <FaSignOutAlt />
+                    Logout
+                </button>
+            </li>
+        </>) : (<>
+            <li>
+                <Link to="/login">
+                    <FaSignInAlt />
+                    Login
+                </Link>
+            </li>
+            <li>
+                <Link to="/register">
+                    <FaUser />
+                    Register
+                </Link>
+            </li>
+        </>)}
         </ul>
     </header>
   )

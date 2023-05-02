@@ -24,6 +24,8 @@ import Permissions from "./pages/Permissions"
 import EmailPage from "./pages/EmailPage"
 import Page404 from "./pages/Page404"
 import { useSelector } from "react-redux"
+import LessonCall from "./pages/lessons/LessonCall"
+import Timetable from "./pages/Timetable"
 
 const ProtectedRoute = ({
   isAllowed,
@@ -53,11 +55,14 @@ function App() {
             <Route path="/courses/:id" element={<CourseDetail />} />
             <Route path="/lessons" element={<Lessons />} />
             <Route path="/lessons/:id" element={<LessonDetail />} />
+            <Route path="/lessons/call" element={<LessonCall />} />
             <Route path="/classes" element={<Classes />} />
             <Route path="/classes/:id" element={<ClassDetail />} />
             <Route path="/attendances" element={<Attendances />} />
             <Route path="/users/:id/edit" element={<UserAction />} />
+            <Route path="/timetable" element={<Timetable />} />
             <Route element={<ProtectedRoute isAllowed={user && user.roles && user.roles.includes("admin")} />}>
+              <Route path="/timetable/:id" element={<Timetable />} />
               <Route path="/users/create" element={<UserAction />} />
               <Route path="/courses/create" element={<CourseAction />} />
               <Route path="/courses/:id/edit" element={<CourseAction />} />
@@ -70,7 +75,6 @@ function App() {
             <Route element={<ProtectedRoute isAllowed={user && user.roles && (user.roles.includes("admin") || user.roles.includes("lector"))} />}>
               <Route path="/lessons/create" element={<LessonAction />} />
               <Route path="/lessons/:id/edit" element={<LessonAction />} />
-
             </Route>
             <Route path="*" element={<Page404 />} />
           </Routes>

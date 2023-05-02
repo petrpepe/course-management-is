@@ -9,6 +9,9 @@ const classSchema = mongoose.Schema(
         description: {
             type: String,
         },
+        place: {
+            type: String
+        },
         startDateTime: {
             type: Date,
         },
