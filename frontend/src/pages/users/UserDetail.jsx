@@ -46,7 +46,7 @@ function Users() {
         </section>
 
         <section className="content">
-          <div><p>Whole name: {currentUser.firstName + " " + currentUser.otherNames.join(" ") + " " + currentUser.lastName}</p></div>
+          <div><p>Whole name: {currentUser.firstName + (currentUser.otherNames ? " " + currentUser.otherNames.join(" ") + " " : " ") + currentUser.lastName}</p></div>
           <div><p>Email: {currentUser.email}</p></div>
           <div><p>Phone: {currentUser.phone}</p></div>
           <Link to={"/users/" + currentUser._id + "/edit"} state={{currentUser: currentUser}}>Edit</Link>

@@ -19,7 +19,7 @@ const getAttendances = asyncHandler(async (req, res) => {
         arg = {...arg, classId: {$in: classes}}
     }
 
-    if(req.query.classId) arg = {...arg, classId: req.query.classId}
+    if(req.query.itemId) arg = {...arg, $or: [{classId: req.query.itemId},{attendees: {$elemMatch: {user: req.query.itemId}}}]}
 
     const attendances = await Attendance.find(arg)
 

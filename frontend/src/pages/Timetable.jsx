@@ -14,24 +14,24 @@ function Timetable() {
   const id = useParams().id
   const { attendances, isLoading, isError, message } = useSelector((state) => state.attendances)
   const user = useSelector(state => state.auth.user)
-  
+
   useEffect(() => {
     if(isError) {
       toast.error(message)
     }
 
-    if (user) {
-      dispatch(getAttendances({names: true, userId: user._id}))
+    if (user && (!id || id === user._id)) {
+      dispatch(getAttendances({names: true}))
+    }
+
+    if (id) {
+      dispatch(getAttendances({names: true, itemId: id}))
     }
 
     return () => {
       dispatch(attReset())
     }
-  }, [user, navigate, isError, message, dispatch])
-
-  if (isLoading ) {
-    return <Spinner />
-  }
+  }, [user, id, navigate, isError, message, dispatch])
 
   const events = []
   if (attendances.length > 0) {
@@ -48,26 +48,28 @@ function Timetable() {
 
   const eventClicked = (e) => {
     const extprops = e.event._def.extendedProps
-    navigate("/lessons/call", {state: {lessonId: extprops.lessonId, roomName: extprops.lessonId, 
+    navigate("/lessons/call", {state: {lessonId: extprops.lessonId, roomName: extprops.lessonId[0], 
       attendees: extprops.attendees, attId: extprops.attId}})
   }
 
   return (
     <>
       <section className="heading">
-        <h1>Rozvrh: {user.lastName + " " + user.firstName}</h1>
+        <h1>Rozvrh {(id && id !== user._id) ? "" : ": " + user.lastName + " " + user.firstName}</h1>
       </section>
 
       <section className="content">
-        <FullCalendar
-          plugins={[ timeGridPlugin ]}
-          initialView="timeGridWeek"
-          nowIndicator={true}
-          locale={window.navigator.language}
-          firstDay={1}
-          events={events}
-          eventClick={eventClicked}
-        />
+        {isLoading ? <Spinner /> :
+          <FullCalendar
+            plugins={[ timeGridPlugin ]}
+            initialView="timeGridWeek"
+            nowIndicator={true}
+            locale={window.navigator.language}
+            firstDay={1}
+            events={events}
+            eventClick={eventClicked}
+          />
+        }
       </section>
     </>
   )

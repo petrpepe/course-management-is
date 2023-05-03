@@ -26,10 +26,10 @@ const updateAttendance = async (attendanceId, attendanceData, token) => {
     return response.data
 }
 
-const getAttendances = async (names, classId, token) => {
+const getAttendances = async (names, itemId, token) => {
     let params = new URLSearchParams()
     params.append("names", names ? names : false)
-    if(classId) params.append("classId", classId)
+    if(itemId) params.append("itemId", itemId)
     const config = {
         headers: {
             Authorization: `Bearer ${token}`

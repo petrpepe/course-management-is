@@ -1,4 +1,4 @@
-import { FaBookOpen, FaChalkboardTeacher, FaChevronDown, FaClock, FaLock, FaRegEnvelope, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle, FaUserClock, FaUserFriends, FaUsers } from "react-icons/fa"
+import { FaBars, FaBookOpen, FaChalkboardTeacher, FaChevronDown, FaClock, FaLock, FaRegEnvelope, FaSignInAlt, FaSignOutAlt, FaUser, FaUserCircle, FaUserClock, FaUserFriends, FaUsers } from "react-icons/fa"
 import { Link, useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
 
@@ -8,6 +8,11 @@ function Header() {
 
   const onLogout = () => {
     navigate("/logout")
+  }
+
+  const onClassToggle = (className) => {
+    let x = document.querySelector(className);
+    x.classList.toggle("responsive");
   }
 
   return (
@@ -51,9 +56,9 @@ function Header() {
                 </Link>
             </li>
             {!user.roles && !user.roles.includes("admin") ? "" : (
-            <li className="dropdown">
+            <li className="dropdown" onClick={() => {if(window.innerWidth <= 1100) onClassToggle(".dropdown-content")}}>
                 <div className="dropbtn">
-                    <FaChevronDown /> Management
+                    <FaChevronDown />  Management
                 </div>
                 <div className="dropdown-content">
                     <Link to="/users">
@@ -97,6 +102,9 @@ function Header() {
                 </Link>
             </li>
         </>)}
+        <li className="res-icon" onClick={() =>onClassToggle(".header")}>
+            <FaBars />
+        </li>
         </ul>
     </header>
   )

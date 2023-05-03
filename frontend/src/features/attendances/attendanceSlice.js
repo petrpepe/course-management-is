@@ -34,7 +34,7 @@ export const updateAttendance = createAsyncThunk("attendances/update", async (at
 export const getAttendances = createAsyncThunk("attendances/getAll", async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await attendanceService.getAttendances(data.names, data.classId ? data.classId : "", token)
+        return await attendanceService.getAttendances(data.names, data.itemId ? data.itemId : "", token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()

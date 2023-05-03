@@ -65,7 +65,7 @@ function ClassDetail() {
         <p>{classVar.desctiption}</p>
       </section>
 
-      <section className="content">
+      <section className="content calendar-wrapper">
         <FullCalendar
           plugins={[ timeGridPlugin ]}
           initialView="timeGridWeek"
@@ -74,6 +74,7 @@ function ClassDetail() {
           firstDay={1}
           events={events}
           eventClick={eventClicked}
+          height={"75vh"}
         />
         <Link to={"/classes/" + classVar._id + "/edit"} state={{currentClass: classVar}}>Edit</Link>
       </section>

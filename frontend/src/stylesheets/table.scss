@@ -49,13 +49,8 @@
         display: block;
         width: 100%;
     }
-    .table-wrapper:before{
-        content: "Scroll horizontally >";
-        display: block;
-        text-align: right;
-        font-size: 11px;
-        color: white;
-        padding: 0 0 10px;
+    .table-wrapper {
+        margin: 10px 10px 10px;
     }
     .res-table thead, .res-table tbody, .res-table thead th {
         display: block;
