@@ -1,9 +1,9 @@
-# course-management-is
+# Course-management-is
 Course management information system
 
-You can run this project via npm run dev
+You can run this project via `npm run dev` command
 
-This command will run backend and frontend
+This command will run both backend and frontend
 
 This system is using env variables. To use this system properly it needs following .env varibles:
 
