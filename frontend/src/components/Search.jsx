@@ -17,7 +17,7 @@ function Search({getData = () => {}, reset = () => {}}) {
 
     return (
         <div className="search-wrapper">
-            <Input id="searchBar" value={keyword} label="Search:" placeholder="Search" onChange={(e) => setKeyword(e.target.value)} />
+            <Input id="searchBar" type="search" value={keyword} label="Search:" placeholder="Search" onChange={(e) => setKeyword(e.target.value)} />
         </div>
     )
 }
