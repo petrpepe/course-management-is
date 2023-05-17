@@ -1,0 +1,759 @@
+{
+	"info": {
+		"_postman_id": "814aef47-31ed-4dc8-bb08-a5b84a34dbbe",
+		"name": "Course management IS",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these request types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT and PATCH requests.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a variable called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Tests\" tab**\n\nTests help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n- Add more scripts in \"Tests\" to verify if the API works as expected and execute flows.\n    \n\n## ℹ️ Resources\n\n[Building requests](https://learning.postman.com/docs/sending-requests/requests/)  \n[Authorizing requests](https://learning.postman.com/docs/sending-requests/authorization/)  \n[Using variables](https://learning.postman.com/docs/sending-requests/variables/)  \n[Managing environments](https://learning.postman.com/docs/sending-requests/managing-environments/)  \n[Writing scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "21200984-814aef47-31ed-4dc8-bb08-a5b84a34dbbe"
+	},
+	"item": [
+		{
+			"name": "Attendances",
+			"item": [
+				{
+					"name": "Get attendances",
+					"id": "eaa7ebf0-d9d5-49cf-85a9-d70fab4c3c96",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/attendances",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"attendances"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "a03fce95-8625-49c5-acaf-e14eac491d89"
+		},
+		{
+			"name": "Classes",
+			"item": [
+				{
+					"name": "Get classes",
+					"id": "fb9523d6-4a25-47e0-8422-0f1a9ed6aea4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/classes",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"classes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create class",
+					"id": "c8f09bd3-a6ec-4d87-9c42-effc39d96c88",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Jedna",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/classes/",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"classes",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "ad886c74-47e4-4a33-a19e-8521cf1a294d"
+		},
+		{
+			"name": "Courses",
+			"item": [
+				{
+					"name": "Create course",
+					"id": "7c9a5fd6-5ab9-4ade-afe9-0579e7973b04",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Ahoj",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/courses/",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update course",
+					"id": "81b80d6f-2cdc-4e3a-8289-3377a214f6e4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "avbcdd",
+									"type": "text"
+								},
+								{
+									"key": "users",
+									"value": "638a57f05839ff32fdac6f03",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/courses/63890a9937c4e5470e45782c",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								"63890a9937c4e5470e45782c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete course",
+					"id": "03005bc1-26cd-4cb1-9d49-5ae5e0b7325f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/courses/63890a9937c4e5470e45782c",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								"63890a9937c4e5470e45782c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get courses",
+					"id": "7837494b-1c94-4d60-94bf-ce0f2c489d8b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/courses/63f93862146e2a47b0047768",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"courses",
+								"63f93862146e2a47b0047768"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "91ee79df-2bf7-40f7-92b8-44b6aee7a0d6"
+		},
+		{
+			"name": "Lessons",
+			"item": [
+				{
+					"name": "Get lessons",
+					"id": "815c5b01-2a59-4eee-b71f-069f47c7c0f3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/lessons",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"lessons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create lesson",
+					"id": "a1fea73c-d139-4d1f-b8f8-865bda4f712d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "Ahoj",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/lessons",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"lessons"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "2109e260-72ec-493b-87f7-75ab1b23ed52"
+		},
+		{
+			"name": "Permissions",
+			"item": [
+				{
+					"name": "Create permission",
+					"id": "a2b5f744-4612-479f-a404-c9081179b9f2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "lessonGet",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/permissions",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get permissions",
+					"id": "6df18906-9ee6-4f00-bc9f-e5ad3ad47812",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/permissions",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"permissions"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "cd586544-1eef-45f0-a4ea-55c24dfcf960"
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Get roles",
+					"id": "bf42f860-52d1-427e-b94b-62b9e1994337",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/roles",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create role",
+					"id": "c2af548d-615c-4971-94f3-cab7b442f9cc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "admin role",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/roles",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update role",
+					"id": "41fd7147-382e-4dca-9f4c-3c9f3f38e98f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "permissions",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/roles/63f23424e26929615a5633f8",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								"63f23424e26929615a5633f8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete role",
+					"id": "f912938b-6f80-4dc9-9c27-69bbadcc3f3e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/roles/641d8796a1a827303f27a8ef",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"roles",
+								"641d8796a1a827303f27a8ef"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "569638ab-ea11-4949-acf7-076bed92a45f"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "User create",
+					"id": "b863d24e-eb06-4faa-80b7-a1915092f5dd",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "firstName",
+									"value": "ahoj",
+									"type": "text"
+								},
+								{
+									"key": "lastName",
+									"value": "ahjo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "test@a.a",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "roles",
+									"value": "63f23424e26929615a5633f8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/users/",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "26d90709-fa49-4d4e-9227-7c486be8cf2c",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.globals.set(\"userToken\", jsonData.token);\r",
+									"pm.globals.set(\"userId\", jsonData._id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "242b0366-ce25-47b4-b112-9189f4f976c2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@a.a",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/users/login",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me user",
+					"id": "6fd30f51-fb72-4f1f-8689-63a1f4456fa0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{site}}/api/users/all?id={{userId}}",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"all"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{userId}}"
+								},
+								{
+									"key": "detail",
+									"value": "true",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"id": "34a4080e-c16e-4454-a2fd-cd774eb77a81",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "extraPerms",
+									"value": "63f28cec0ae3ad9b514bab9c",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/users/638a57f05839ff32fdac6f03",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"638a57f05839ff32fdac6f03"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c360c29-6345-4813-8713-98f974883342",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "4eecd8f8-2600-4c5a-84a3-dd69a101fab0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "{{site}}/api/users/all?detail=true",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"all"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "638900aae341b49846b27f23",
+									"disabled": true
+								},
+								{
+									"key": "id",
+									"value": "6388fcb1f684281aee87a61a",
+									"disabled": true
+								},
+								{
+									"key": "detail",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"id": "cc598b16-d7dc-46c5-bcda-891a9a1b309f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{site}}/api/users/642c7bbd5b835cd613bd4cfc",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"642c7bbd5b835cd613bd4cfc"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "4164e6b3-5365-4086-8507-87e8e7bf20ea"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{userToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5d396e92-02c0-48d5-b8c8-fd5a57542ff1",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "7a689252-505d-438e-b968-9a3c2117d27b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
