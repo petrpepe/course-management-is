@@ -17,11 +17,12 @@ function Header() {
 
   return (
     <header className="header">
+        {/*<button onClick={() => navigate(-1)}>Go Back</button>*/}
+        {user ?
         <ul>
             <li className="logo">
                 <Link to="/">CourseSetter</Link>
             </li>
-            {/*<button onClick={() => navigate(-1)}>Go Back</button>*/}
             <li className="left">
                 <Link to="/classes">
                     <FaChalkboardTeacher />
@@ -40,9 +41,15 @@ function Header() {
                     Attendances
                 </Link>
             </li>
-        </ul>
+        </ul> : 
         <ul>
-        {user ? (<>
+            <li className="logo">
+                <Link to="/">CourseSetter</Link>
+            </li>
+        </ul>}
+        <ul>
+        {user ? 
+        <>
             <li>
                 <Link to="/courses">
                     <FaBookOpen />
@@ -56,25 +63,25 @@ function Header() {
                 </Link>
             </li>
             {!user.roles && !user.roles.includes("admin") ? "" : (
-            <li className="dropdown" onClick={() => {if(window.innerWidth <= 1100) onClassToggle(".dropdown-content")}}>
-                <div className="dropbtn">
-                    <FaChevronDown />  Management
-                </div>
-                <div className="dropdown-content">
-                    <Link to="/users">
-                        <FaUsers /> Users
-                    </Link>
-                    <Link to="/roles">
-                        <FaUserFriends /> Roles
-                    </Link>
-                    <Link to="/permissions">
-                        <FaLock /> Permissions
-                    </Link>
-                    <Link to="/email">
-                        <FaRegEnvelope /> Email
-                    </Link>
-                </div>
-            </li>
+                <li className="dropdown" onClick={() => {if(window.innerWidth <= 1100) onClassToggle(".dropdown-content")}}>
+                    <div className="dropbtn">
+                        <FaChevronDown /> Management
+                    </div>
+                    <div className="dropdown-content">
+                        <Link to="/users">
+                            <FaUsers /> Users
+                        </Link>
+                        <Link to="/roles">
+                            <FaUserFriends /> Roles
+                        </Link>
+                        <Link to="/permissions">
+                            <FaLock /> Permissions
+                        </Link>
+                        <Link to="/email">
+                            <FaRegEnvelope /> Email
+                        </Link>
+                    </div>
+                </li>
             )}
             <li>
                 <Link to="/me">
@@ -88,7 +95,7 @@ function Header() {
                     Logout
                 </button>
             </li>
-        </>) : (<>
+        </> : <>
             <li>
                 <Link to="/login">
                     <FaSignInAlt />
@@ -101,7 +108,7 @@ function Header() {
                     Register
                 </Link>
             </li>
-        </>)}
+        </>}
         <li className="res-icon" onClick={() =>onClassToggle(".header")}>
             <FaBars />
         </li>

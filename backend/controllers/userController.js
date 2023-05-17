@@ -7,6 +7,7 @@ const Permission = require('../models/permissionModel')
 const Class = require('../models/classModel')
 const e = require("express")
 const mongoose = require("mongoose")
+const {sendEmail} = require("./emailController")
 
 /**
  * @desc Get users
@@ -99,7 +100,7 @@ const createUser = asyncHandler(async (req, res) => {
  * @access Private?
  */
 const registerUser = asyncHandler(async (req, res) => {
-    const { firstName, lastName, email, password, roles } = req.body
+    const { firstName, lastName, email, password, password1, roles } = req.body
 
     if(!firstName || !lastName || !email || !password || !roles.length) {
         res.status(400)
@@ -129,7 +130,7 @@ const registerUser = asyncHandler(async (req, res) => {
         password: hashedPassword,
     })
 
-    if (user) {
+    if (user && password == password1) {
         res.status(201).json({
             _id: user.id,
             firstName: user.firstName,
@@ -180,6 +181,67 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 /**
+ * @desc Send email with link for forgotten password
+ * @route POST /api/users/forgotPassword
+ * @access PublicsetNewPassword
+ */
+const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body
+
+    const user = await User.findOne({email})
+
+    if (user) {
+        const url = process.env.FRONTEND_URL + "/" + user._id.toString() + "/" + generateToken(user._id)
+
+        sendEmail("crsis@noreplycris.com", email, "", "Forgotten password",
+        "<div>" +
+        "<p>Dear user,</p>" +
+        "<p>sending you a link for resetting your password.</p>" +
+        "<p><a href=" + url + " >Click here to reset your password!</a></p>" +
+        "</ br>" +
+        "<p>You have a week to change it.</p>" +
+        "<p>crsis</p>"
+        )
+    } else {
+        res.status(400)
+        throw new Error("Invalid email")
+    }
+})
+
+/**
+ * @desc Send email with link for forgotten password
+ * @route POST /api/users/forgotPassword
+ * @access Public
+ */
+const setNewPassword = asyncHandler(async (req, res) => {
+    const { userId, password, password1 } = req.body
+
+    const user = await User.findOne({userId})
+
+    if (user && password === password1) {
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(password, salt)
+
+        const updatedUser = await User.findByIdAndUpdate(userId, {$set: {password: hashedPassword}}, {
+            new: true,
+        }).select("-password", )
+
+        const permsRoles = await getRolesAndPermsNames(updatedUser)
+    
+        res.json({
+            ...updatedUser._doc,
+            roles: permsRoles.userRoles,
+            rolePermissions: permsRoles.rolePermissions,
+            extraPerms: permsRoles.userPermissions,
+            token: generateToken(user._id)
+        })
+    } else {
+        res.status(400)
+        throw new Error("Invalid email")
+    }
+})
+
+/**
  * @desc Get user data
  * @route GET /api/users/me
  * @access Private
@@ -207,14 +269,14 @@ const generateToken = (id) => {
  */
 const updateUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id)
-    const {password} = req.body
+    const {password, password1} = req.body
 
     if(!user) {
         res.status(400)
         throw new Error("User not find")
     }
 
-    if(password) {
+    if(password && password === password1) {
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
 
@@ -320,6 +382,8 @@ module.exports = {
     getUsers,
     registerUser,
     loginUser,
+    forgotPassword,
+    setNewPassword,
     getMe,
     updateUser,
     createUser,

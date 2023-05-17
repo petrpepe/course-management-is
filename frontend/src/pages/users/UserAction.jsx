@@ -19,7 +19,7 @@ function UserAction() {
     lastName: "",
     email: "",
     password: "",
-    password2: "",
+    password1: "",
     phone: [],
     roles: [],
     extraPerms: [],
@@ -60,7 +60,7 @@ function UserAction() {
       lastName: "",
       email: "",
       password: "",
-      password2: "",
+      password1: "",
       phone: [],
       roles: [],
       extraPerms: [],
@@ -112,7 +112,7 @@ function UserAction() {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    if(formData.password !== formData.password2) {
+    if(formData.password !== formData.password1) {
       toast.error("Passwords do not match")
     } else {
       const userData = {
@@ -187,7 +187,7 @@ function UserAction() {
           placeholder="Enter email" onChange={onChange} required={true} />
               <Input  id="password" label="Enter password:" value={formData.password} type="password" 
               placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />
-              <Input  id="password2" label="Confirm password:" value={formData.password2} type="password" 
+              <Input  id="password1" label="Confirm password:" value={formData.password1} type="password" 
               placeholder="Confirm password" onChange={onChange} required={id === user._id ? true : false} />
           { (user.roles.includes("admin")) ?
             <>

@@ -35,10 +35,32 @@ const logout = () => {
     localStorage.removeItem("user")
 }
 
+const forgotPassword = async (userData) => {
+    const response = await axios.post(API_URL + "forgotPassword", userData)
+
+    if (response.data) {
+        localStorage.setItem("user", JSON.stringify(response.data))
+    }
+
+    return response.data
+}
+
+const setNewPassword = async (userData) => {
+    const response = await axios.post(API_URL + "setNewPassword", userData)
+
+    if (response.data) {
+        localStorage.setItem("user", JSON.stringify(response.data))
+    }
+
+    return response.data
+}
+
 const authService = {
     register,
     login,
     logout,
+    forgotPassword,
+    setNewPassword,
 }
 
 export default authService
