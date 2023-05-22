@@ -48,6 +48,7 @@ function Timetable() {
 
   const eventClicked = (e) => {
     const extprops = e.event._def.extendedProps
+    console.log(attendances);
     navigate("/lessons/call", {state: {lessonId: extprops.lessonId, roomName: extprops.lessonId[0], 
       attendees: extprops.attendees, attId: extprops.attId}})
   }

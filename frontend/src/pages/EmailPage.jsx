@@ -55,7 +55,7 @@ function EmailPage() {
         <h1>
             <FaRegEnvelope /> Send Emails to people
         </h1>
-        <p>It can send to whomever</p>
+        <p>It can be send to whoever</p>
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>

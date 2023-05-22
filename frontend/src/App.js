@@ -48,6 +48,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/login/:userEmail" element={<Login />} />
             <Route path="/:userId/:token" element={<ForgottenPassword />} />
             <Route element={<ProtectedRoute isAllowed={user && user.roles} />}>
               <Route path="/logout" element={<Logout/>} />

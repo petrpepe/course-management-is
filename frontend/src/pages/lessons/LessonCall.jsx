@@ -5,7 +5,7 @@ import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import AttendanceTable from "../../components/table/AttendanceTable"
 import {getLessons, reset} from "../../features/lessons/lessonSlice"
-import { JitsiMeeting } from "@jitsi/react-sdk"
+import { JaaSMeeting } from "@jitsi/react-sdk"
 
 function LessonCall() {
   const navigate = useNavigate()
@@ -29,21 +29,19 @@ function LessonCall() {
     }
   }, [location.state.lessonId, navigate, isError, message, dispatch])
 
-  if (isLoading || !lessons[0]) {
+  if (isLoading) {
     return <Spinner />
   }
 
   const lesson = lessons.filter(les => les._id === location.state.lessonId[1])[0]
-
-
 
   return (
     <>
       <section className="lesson-content content">
         <div className="lesson-info">
           <div className="lesson-text">
-            <h1>{location.state.lessonId[0] + " " + lesson.title}</h1>
-            <p>Odkaz: {lesson.materials}</p>
+            <h1>{location.state.lessonId[0] + " " + (lesson ? lesson.title : "" )}</h1>
+            <p>{lesson ? "Odkaz: " + lesson.materials : ""}</p>
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</p>
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</p>
             <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</p>
@@ -54,8 +52,9 @@ function LessonCall() {
           : ""}
         </div> 
         <div className="videocall">
-          <JitsiMeeting
-            roomName = {location.state.roomName}
+          <JaaSMeeting
+            appId="criscoderebels"
+            roomName = {location.state.attId}
             configOverwrite = {{
                 startWithAudioMuted: true,
                 disableModeratorIndicator: true,

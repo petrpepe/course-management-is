@@ -78,6 +78,24 @@ const createUser = asyncHandler(async (req, res) => {
     })
 
     if (user) {
+        const url = process.env.FRONTEND_URL + "/" + user._id.toString() + "/" + generateToken(user._id)
+
+        try {
+            await sendEmail("crsis@noreplycris.com", user.email, "", "New account",
+            "<div>" +
+            "<p>Dear " + user.firstName + " " + user.lastName + ",</p>" +
+            "<p>sending you a link for resetting your password.</p>" +
+            "<p><a href=" + url + " >Click here to set new password and sign in!</a></p>" +
+            "</ br>" +
+            "<p>You have a week to set it.</p>" +
+            "<p>If you won't set it in a week <a href='http://localhost:3000/login/" + user.email + "'>click here</a>.</p>" +
+            "<p>crsis</p>"
+            )
+        } catch(error) {
+            res.status(500);
+            throw new Error(error)
+        }
+
         res.status(201).json({
             _id: user.id,
             firstName: user.firstName,
@@ -159,7 +177,6 @@ const loginUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({email})
 
     if (user && (await bcrypt.compare(password, user.password))) {
-                    
         const permsRoles = await getRolesAndPermsNames(user)
 
         res.json({
@@ -192,16 +209,21 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     if (user) {
         const url = process.env.FRONTEND_URL + "/" + user._id.toString() + "/" + generateToken(user._id)
-
-        sendEmail("crsis@noreplycris.com", email, "", "Forgotten password",
-        "<div>" +
-        "<p>Dear user,</p>" +
-        "<p>sending you a link for resetting your password.</p>" +
-        "<p><a href=" + url + " >Click here to reset your password!</a></p>" +
-        "</ br>" +
-        "<p>You have a week to change it.</p>" +
-        "<p>crsis</p>"
-        )
+        try {
+            await sendEmail("crsis@noreplycris.com", email, "", "Forgotten password",
+            "<div>" +
+            "<p>Dear user,</p>" +
+            "<p>sending you a link for resetting your password.</p>" +
+            "<p><a href=" + url + " >Click here to reset your password!</a></p>" +
+            "</ br>" +
+            "<p>You have a week to change it.</p>" +
+            "<p>crsis</p>"
+            )
+    
+            res.status(200);
+        } catch (error) {
+            res.status(500).json(error.message);
+        }
     } else {
         res.status(400)
         throw new Error("Invalid email")
@@ -224,16 +246,21 @@ const setNewPassword = asyncHandler(async (req, res) => {
 
         const updatedUser = await User.findByIdAndUpdate(userId, {$set: {password: hashedPassword}}, {
             new: true,
-        }).select("-password", )
+        })
 
         const permsRoles = await getRolesAndPermsNames(updatedUser)
-    
+
         res.json({
-            ...updatedUser._doc,
+            _id: updatedUser.id,
+            firstName: updatedUser.firstName,
+            otherNames: updatedUser.otherNames,
+            lastName: updatedUser.lastName,
+            email: updatedUser.email,
+            phone: updatedUser.phone,
             roles: permsRoles.userRoles,
             rolePermissions: permsRoles.rolePermissions,
             extraPerms: permsRoles.userPermissions,
-            token: generateToken(user._id)
+            token: generateToken(updatedUser._id)
         })
     } else {
         res.status(400)
@@ -285,9 +312,21 @@ const updateUser = asyncHandler(async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
-    }).select("-password", )
+    })
 
-    res.status(200).json(updatedUser)
+    const permsRoles = await getRolesAndPermsNames(updatedUser)
+
+    res.status(200).json({
+        _id: updatedUser.id,
+        firstName: updatedUser.firstName,
+        otherNames: updatedUser.otherNames,
+        lastName: updatedUser.lastName,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        roles: permsRoles.userRoles,
+        rolePermissions: permsRoles.rolePermissions,
+        extraPerms: permsRoles.userPermissions,
+    })
 })
 
 /**

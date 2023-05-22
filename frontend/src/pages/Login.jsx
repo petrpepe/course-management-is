@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import {useSelector, useDispatch} from 'react-redux'
-import {useNavigate} from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import {toast} from "react-toastify"
 import { FaSignInAlt } from "react-icons/fa"
 import {login, forgotPassword, reset} from "../features/auth/authSlice"
@@ -15,6 +15,7 @@ function Login() {
 
   const {email, password} = formData
 
+  const {userEmail} = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -29,9 +30,16 @@ function Login() {
       navigate("/")
     }
 
+    if (userEmail && !isForgotPassword) {
+      setforgotPassword(true);
+      setFormData(() => ({
+        email: userEmail
+      }))
+    }
+
     dispatch(reset())
 
-  }, [user, isError, isSuccess, message, navigate, dispatch])
+  }, [user, isError, isSuccess, message, userEmail, isForgotPassword, navigate, dispatch])
 
   const onChange = (e) => {
     setFormData((prevState) => ({

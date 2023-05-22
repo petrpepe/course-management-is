@@ -10,6 +10,7 @@ import Input from "../../components/form/Input"
 import Select from 'react-select'
 import Spinner from "../../components/Spinner"
 import { updateAuth } from "../../features/auth/authSlice"
+import InputSelect from "../../components/form/InputSelect"
 
 function UserAction() {
   const [isCreate, setIsCreate] = useState(false)
@@ -113,39 +114,40 @@ function UserAction() {
     e.preventDefault()
 
     if(formData.password !== formData.password1) {
-      toast.error("Passwords do not match")
+        toast.error("Passwords do not match")
     } else {
-      const userData = {
-        firstName: formData.firstName,
-        otherNames: formData.otherNames,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone,
-      }
-
-      if(user._id !== formData._id || user.roles.includes("admin")) {
-        userData.roles = formData.roles
-        userData.extraPerms = formData.extraPerms
-      }
-
-      if(id){
-        userData._id = id
-        dispatch(updateUser(userData))
-        if(user._id === id) {
-          userData.roles = roleOptions.filter(roleOpt => roleOpt.isSelected).map(roleOpt => roleOpt.label)
-          dispatch(updateAuth(userData))
-          setFormData({})
-          navigate("/me")
+        console.log(formData.phone);
+        const userData = {
+            firstName: formData.firstName,
+            otherNames: formData.otherNames,
+            lastName: formData.lastName,
+            email: formData.email,
+            password: formData.password,
+            phone: formData.phone,
         }
-        else {
-          setFormData({})
-          navigate("/users/" + id)
+
+        if(user._id !== formData._id || user.roles.includes("admin")) {
+            userData.roles = formData.roles
+            userData.extraPerms = formData.extraPerms
         }
-      } else {
-        dispatch(createUser(userData))
-        setIsCreate(true)
-      }
+
+        if(id){
+            userData._id = id
+            dispatch(updateUser(userData))
+            if(user._id === id) {
+            userData.roles = roleOptions.filter(roleOpt => roleOpt.isSelected).map(roleOpt => roleOpt.label)
+            dispatch(updateAuth(userData))
+            setFormData({})
+            navigate("/me")
+            }
+            else {
+            setFormData({})
+            navigate("/users/" + id)
+            }
+        } else {
+            dispatch(createUser(userData))
+            setIsCreate(true)
+        }
     }
   }
 
@@ -153,6 +155,30 @@ function UserAction() {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    })
+  }
+
+  const onPhoneChange = (e, i) => {
+    let phoneList = formData.phone.length > 0 ? formData.phone : [{ phone: '', type: '' }]
+
+    phoneList[i] = {...phoneList[i], [e.target.name]: e.target.value}
+
+    setFormData({
+      ...formData,
+      phone: phoneList,
+    })
+  }
+
+  const changeFields = (plus) => {
+    let newPhone = { phone: '', type: '' }
+    let phoneList = formData.phone.length > 0 ? formData.phone : [{ phone: '', type: '' }]
+
+    if(plus) phoneList.push(newPhone);
+    else phoneList.pop();
+
+    setFormData({
+        ...formData,
+        phone: phoneList
     })
   }
 
@@ -171,41 +197,48 @@ function UserAction() {
   }
 
   return <>
-      <section className="heading">
+    <section className="heading">
         <h1>
             <FaUser /> {id && userDetail ? (id === user._id ? "Edit your profile" : "Editing user: " + userDetail.firstName + " " + userDetail.lastName ) : "Create user"}
         </h1>
-      </section>
-      <section className="form">
+    </section>
+    <section className="form">
         <form onSubmit={onSubmit}>
-          <Input  id="firstName" label="First name:" value={formData.firstName} 
-          placeholder="Enter first name" onChange={onChange} required={true} />
-          {/* otherNames textarea nebo inputy s +? */}
-          <Input  id="lastName" label="Last name:" value={formData.lastName} 
-          placeholder="Enter last name" onChange={onChange} required={true} />
-          <Input  id="email" label="Email:" value={formData.email} type="email" 
-          placeholder="Enter email" onChange={onChange} required={true} />
-              <Input  id="password" label="Enter password:" value={formData.password} type="password" 
-              placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />
-              <Input  id="password1" label="Confirm password:" value={formData.password1} type="password" 
-              placeholder="Confirm password" onChange={onChange} required={id === user._id ? true : false} />
-          { (user.roles.includes("admin")) ?
+            <Input  id="firstName" label="First name:" value={formData.firstName} 
+            placeholder="Enter first name" onChange={onChange} required={true} />
+            {/* otherNames textarea nebo inputy s +? */}
+            <Input  id="lastName" label="Last name:" value={formData.lastName} 
+            placeholder="Enter last name" onChange={onChange} required={true} />
+            <Input  id="email" label="Email:" value={formData.email} type="email" 
+            placeholder="Enter email" onChange={onChange} required={true} />
+            {formData.phone.length > 1 ? formData.phone.map((phone, i, row) => {
+                return <InputSelect key={i} name="phone" id={"phone" + i} label="Phone:" value={phone.phone} listValue={phone.type} type="tel" changeFields={changeFields}
+                placeholder="Enter phone number" onChange={(e, i) => onPhoneChange(e, i)} listId={"type" + i} listName="type" plus={(i + 1 === row.length)} />
+            }) :
+                <InputSelect name="phone" id="phone" label="Phone:" type="tel" placeholder="Enter phone number" value={formData.phone.length === 1 ? formData.phone[0].phone : ""}
+                listValue={formData.phone.length === 1 ? formData.phone[0].type : ""} onChange={(e) => onPhoneChange(e, 0)} listId="type" listName="type" changeFields={changeFields} plus={true} />
+            }
+            <Input  id="password" label="Enter password:" value={formData.password} type="password"
+            placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />
+            <Input  id="password1" label="Confirm password:" value={formData.password1} type="password" 
+            placeholder="Confirm password" onChange={onChange} required={id === user._id ? true : false} />
+            { (user.roles.includes("admin")) ?
             <>
-              <div className="form-group ">
-                <label htmlFor="roles">Select roles:</label>
-                <Select id="roles" name="roles" options={roleOptions} value={roleOptions.filter((role) => role.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
-              </div>
-              <div className="form-group ">
-                <label htmlFor="extraPerms">Select extra permissions:</label>
-                <Select id="extraPerms" name="extraPerms" options={permsOptions} value={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
-              </div>
+                <div className="form-group ">
+                    <label htmlFor="roles">Select roles:</label>
+                    <Select id="roles" name="roles" options={roleOptions} value={roleOptions.filter((role) => role.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
+                </div>
+                <div className="form-group ">
+                    <label htmlFor="extraPerms">Select extra permissions:</label>
+                    <Select id="extraPerms" name="extraPerms" options={permsOptions} value={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
+                </div>
             </>
-          : null }
-          <div className="form-group">
-            <button type="submit" className="btn btn-block">{location.pathname.includes("create") ? "Create" : "Update"}</button>
-          </div>
+            : null }
+            <div className="form-group">
+                <button type="submit" className="btn btn-block">{location.pathname.includes("create") ? "Create" : "Update"}</button>
+            </div>
         </form>
-      </section>
+    </section>
     </>
 }
 

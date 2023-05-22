@@ -1,7 +1,9 @@
 const asyncHandler = require('express-async-handler')
 const Class = require('../models/classModel');
 const Attendance = require('../models/attendanceModel');
+const User = require('../models/userModel');
 const mongoose = require("mongoose")
+const {sendEmail} = require("./emailController")
 
 /**
  * @desc Get Classes
@@ -50,7 +52,7 @@ const getClasses = asyncHandler(async (req, res) => {
  * }
  */
 const setClass = asyncHandler(async (req, res) => {
-    const {title, description, startDateTime, repeatCount, course, teachers, students} = req.body
+    const {title, description, startDateTime, repeatCount, course, lectors, students} = req.body
     if(!title){
         res.status(400)
         throw new Error("Please add datetime")
@@ -73,8 +75,25 @@ const setClass = asyncHandler(async (req, res) => {
         attendances.push(attendance)
     }
 
-
     await Attendance.create(attendances)
+
+    const users = await User.find({_id: {$in: [lectors, students].flat()}})
+
+    for (const user of users) {
+        try {
+            await sendEmail("crsis@noreplycris.com", user.email, "", "New account",
+            "<div>" +
+            "<p>Dear " + user.firstName + " " + user.lastName + ",</p>" +
+            "<p>you have been assigned to class " + classVar.title + "</p>" +
+            "</ br>" +
+            "<p>You can <a href='" + process.env.FRONTEND_URL + "/login'>login</a> and see it in the list.</p>" +
+            "<p>crsis</p>", res, false
+            )
+        } catch(error) {
+            res.status(500);
+            throw new Error(error)
+        }
+    }
 
     res.status(200).json(classVar)
 })
