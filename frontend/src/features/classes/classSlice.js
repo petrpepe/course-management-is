@@ -34,7 +34,7 @@ export const updateClass = createAsyncThunk("classes/update", async (classData, 
 export const getClasses = createAsyncThunk("classes/get", async (classData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await classService.getClasses(classData.ids ? classData.ids : [], token)
+        return await classService.getClasses(classData.ids ? classData.ids : [], classData.keyword ? classData.keyword : "", token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()

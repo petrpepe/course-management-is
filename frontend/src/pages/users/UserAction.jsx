@@ -159,7 +159,7 @@ function UserAction() {
   }
 
   const onPhoneChange = (e, i) => {
-    let phoneList = formData.phone.length > 0 ? formData.phone : [{ phone: '', type: '' }]
+    let phoneList = formData.phone.length > 0 ? formData.phone : [{ number: '', type: '' }]
 
     phoneList[i] = {...phoneList[i], [e.target.name]: e.target.value}
 
@@ -170,8 +170,8 @@ function UserAction() {
   }
 
   const changeFields = (plus) => {
-    let newPhone = { phone: '', type: '' }
-    let phoneList = formData.phone.length > 0 ? formData.phone : [{ phone: '', type: '' }]
+    let newPhone = { number: '', type: '' }
+    let phoneList = formData.phone.length > 0 ? formData.phone : [{ number: '', type: '' }]
 
     if(plus) phoneList.push(newPhone);
     else phoneList.pop();
@@ -211,12 +211,12 @@ function UserAction() {
             placeholder="Enter last name" onChange={onChange} required={true} />
             <Input  id="email" label="Email:" value={formData.email} type="email" 
             placeholder="Enter email" onChange={onChange} required={true} />
-            {formData.phone.length > 1 ? formData.phone.map((phone, i, row) => {
-                return <InputSelect key={i} name="phone" id={"phone" + i} label="Phone:" value={phone.phone} listValue={phone.type} type="tel" changeFields={changeFields}
+            {formData.phone && formData.phone.length > 1 ? formData.phone.map((phone, i, row) => {
+                return <InputSelect key={i} name="number" id={"number" + i} label="Phone:" value={phone.phone} listValue={phone.type} type="tel" changeFields={changeFields}
                 placeholder="Enter phone number" onChange={(e, i) => onPhoneChange(e, i)} listId={"type" + i} listName="type" plus={(i + 1 === row.length)} />
             }) :
-                <InputSelect name="phone" id="phone" label="Phone:" type="tel" placeholder="Enter phone number" value={formData.phone.length === 1 ? formData.phone[0].phone : ""}
-                listValue={formData.phone.length === 1 ? formData.phone[0].type : ""} onChange={(e) => onPhoneChange(e, 0)} listId="type" listName="type" changeFields={changeFields} plus={true} />
+                <InputSelect name="number" id="number" label="Phone:" type="tel" placeholder="Enter phone number" value={formData.phone.length === 1 ? formData.phone[0].phone : ""}
+                listValue={formData.phone && formData.phone.length === 1 ? formData.phone[0].type : ""} onChange={(e) => onPhoneChange(e, 0)} listId="type" listName="type" changeFields={changeFields} plus={true} />
             }
             <Input  id="password" label="Enter password:" value={formData.password} type="password"
             placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />

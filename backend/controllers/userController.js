@@ -51,7 +51,7 @@ const getUsers = asyncHandler(async (req, res) => {
 const createUser = asyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, roles } = req.body
 
-    if(!firstName || !lastName || !email || !password || !roles || !roles.length) {
+    if(!firstName || !lastName || !email || !roles || !roles.length) {
         res.status(400)
         throw new Error("Please fill all required fields")
     }
@@ -64,7 +64,7 @@ const createUser = asyncHandler(async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    const hashedPassword = await bcrypt.hash(password ? password : Math.random().toString(36).slice(-8), salt)
 
     const user = await User.create({
         firstName,
