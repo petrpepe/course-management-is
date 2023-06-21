@@ -5,7 +5,7 @@ import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import {getUsers, reset} from "../../features/users/userSlice"
 
-function Users() {
+function UserDetail() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -59,4 +59,4 @@ function Users() {
   )
 }
 
-export default Users
+export default UserDetail
