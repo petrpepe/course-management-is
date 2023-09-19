@@ -24,10 +24,6 @@ function LessonAction() {
   const lesson = useSelector((state) => state.lessons.lessons)
 
   useEffect(() => {
-    if(!user) {
-      navigate("/")
-      return
-    }
 
     setFormData({
       lessonNum: 1,

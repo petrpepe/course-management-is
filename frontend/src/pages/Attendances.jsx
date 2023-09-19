@@ -16,11 +16,6 @@ function Attendances() {
     if(isError) {
       toast.error(message)
     }
-    
-    if(!user) {
-      navigate("/login")
-      return
-    }
 
     dispatch(getAttendances({names: true}))
 

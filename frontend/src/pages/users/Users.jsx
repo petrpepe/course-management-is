@@ -17,11 +17,6 @@ function Users() {
     if(isError) {
       toast.error(message)
     }
-    
-    if(!user) {
-      navigate("/login")
-      return
-    }
 
     dispatch(getUsers({ids: []}))
 

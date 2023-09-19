@@ -31,11 +31,6 @@ function CourseAction() {
       toast.error(lessons.message)
     }
 
-    if(!user) {
-      navigate("/")
-      return
-    }
-
     dispatch(getLessons())
 
     setFormData({

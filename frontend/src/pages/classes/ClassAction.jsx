@@ -39,11 +39,6 @@ function ClassAction() {
       toast.error("users: " + users.message + "\n courses: " + courses.message)
     }
 
-    if(!user) {
-      navigate("/")
-      return
-    }
-
     setIsCreate(false)
     dispatch(getUsers())
     dispatch(getCourses())

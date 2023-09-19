@@ -17,11 +17,6 @@ function Lessons() {
     if(isError) {
       toast.error(message)
     }
-    
-    if(!user) {
-      navigate("/login")
-      return
-    }
 
     dispatch(getLessons())
 

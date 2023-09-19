@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Routes, Route, Navigate, Outlet} from "react-router-dom"
+import {BrowserRouter as Router, Routes, Route, Outlet} from "react-router-dom"
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import Header from "./components/Header"
@@ -6,34 +6,33 @@ import Dashboard from './pages/Dashboard'
 import AuthVerify from "./app/auth-verify"
 import Login from './pages/Login'
 import Logout from './pages/Logout'
+import ForgottenPassword from "./pages/ForgottenPassword"
 import Users from "./pages/users/Users"
 import UserDetail from "./pages/users/UserDetail"
 import UserAction from './pages/users/UserAction'
 import Courses from "./pages/courses/Courses"
 import CourseDetail from './pages/courses/CourseDetail'
 import CourseAction from './pages/courses/CourseAction'
-import Classes from "./pages/classes/Classes"
-import ClassDetail from "./pages/classes/ClassDetail"
-import ClassAction from "./pages/classes/ClassAction"
 import Lessons from "./pages/lessons/Lessons"
 import LessonDetail from "./pages/lessons/LessonDetail"
 import LessonAction from "./pages/lessons/LessonAction"
+import LessonCall from "./pages/lessons/LessonCall"
+import Classes from "./pages/classes/Classes"
+import ClassDetail from "./pages/classes/ClassDetail"
+import ClassAction from "./pages/classes/ClassAction"
 import Attendances from "./pages/Attendances"
 import Roles from "./pages/Roles"
 import Permissions from "./pages/Permissions"
 import EmailPage from "./pages/EmailPage"
 import Page404 from "./pages/Page404"
 import { useSelector } from "react-redux"
-import LessonCall from "./pages/lessons/LessonCall"
 import Timetable from "./pages/Timetable"
-import ForgottenPassword from "./pages/ForgottenPassword"
 
-const ProtectedRoute = ({
+export const ProtectedRoute = ({
   isAllowed,
-  redirectPath = '/',
 }) => {
   return (
-      isAllowed ? <Outlet /> : <Navigate to={redirectPath} replace/>
+      isAllowed ? <Outlet /> : <Page404 />
   )
 };
 
@@ -49,37 +48,51 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/login/:userEmail" element={<Login />} />
+            <Route path="/logout" element={<Logout/>} />
             <Route path="/:userId/:token" element={<ForgottenPassword />} />
-            <Route element={<ProtectedRoute isAllowed={user && user.roles} />}>
-              <Route path="/logout" element={<Logout/>} />
+            <Route path="users" element={<ProtectedRoute isAllowed={user.roles} />}>
+                <Route index element={<Users />} />
+                <Route path=":id" element={<UserDetail />} />
+                <Route path=":id/edit" element={<UserAction />} />
+            </Route>
+            <Route path="users" element={<ProtectedRoute isAllowed={user.roles && user.roles.includes("admin")} />}>
+                <Route path="create" element={<UserAction />} />
+            </Route>
+            <Route path="courses" element={<ProtectedRoute isAllowed={user.roles} />}>
+                <Route index element={<Courses />} />
+                <Route path=":id" element={<CourseDetail />} />
+            </Route>
+            <Route path="courses" element={<ProtectedRoute isAllowed={user.roles && user.roles.includes("admin")} />}>
+                <Route path="create" element={<CourseAction />} />
+                <Route path=":id/edit" element={<CourseAction />} />
+            </Route>
+            <Route path="lessons" element={<ProtectedRoute isAllowed={user.roles} />}>
+                <Route index element={<Lessons />} />
+                <Route path=":id" element={<LessonDetail />} />
+                <Route path="call" element={<LessonCall />} />
+            </Route>
+            <Route path="lessons" element={<ProtectedRoute isAllowed={user && user.roles && (user.roles.includes("admin") || user.roles.includes("lector"))} />}>
+              <Route path="create" element={<LessonAction />} />
+              <Route path=":id/edit" element={<LessonAction />} />
+            </Route>
+            <Route path="classes" element={<ProtectedRoute isAllowed={user.roles} />}>
+              <Route index element={<Classes />} />
+              <Route path=":id" element={<ClassDetail />} />
+            </Route>
+            <Route path="classes" element={<ProtectedRoute isAllowed={user.roles && user.roles.includes("admin")} />}>
+              <Route path="create" element={<ClassAction />} />
+              <Route path=":id/edit" element={<ClassAction />} />
+            </Route>
+            <Route element={<ProtectedRoute isAllowed={user.roles} />}>
               <Route path="/me" element={<UserDetail />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/users/:id" element={<UserDetail />} />
-              <Route path="/courses" element={<Courses />} />
-              <Route path="/courses/:id" element={<CourseDetail />} />
-              <Route path="/lessons" element={<Lessons />} />
-              <Route path="/lessons/:id" element={<LessonDetail />} />
-              <Route path="/lessons/call" element={<LessonCall />} />
-              <Route path="/classes" element={<Classes />} />
-              <Route path="/classes/:id" element={<ClassDetail />} />
               <Route path="/attendances" element={<Attendances />} />
-              <Route path="/users/:id/edit" element={<UserAction />} />
               <Route path="/timetable" element={<Timetable />} />
             </Route>
-            <Route element={<ProtectedRoute isAllowed={user && user.roles && user.roles.includes("admin")} />}>
+            <Route element={<ProtectedRoute isAllowed={user.roles && user.roles.includes("admin")} />}>
               <Route path="/timetable/:id" element={<Timetable />} />
-              <Route path="/users/create" element={<UserAction />} />
-              <Route path="/courses/create" element={<CourseAction />} />
-              <Route path="/courses/:id/edit" element={<CourseAction />} />
-              <Route path="/classes/create" element={<ClassAction />} />
-              <Route path="/classes/:id/edit" element={<ClassAction />} />
               <Route path="/roles" element={<Roles />} />
               <Route path="/permissions" element={<Permissions />} />
               <Route path="/email" element={<EmailPage />} />
-            </Route>
-            <Route element={<ProtectedRoute isAllowed={user && user.roles && (user.roles.includes("admin") || user.roles.includes("lector"))} />}>
-              <Route path="/lessons/create" element={<LessonAction />} />
-              <Route path="/lessons/:id/edit" element={<LessonAction />} />
             </Route>
             <Route path="*" element={<Page404 />} />
           </Routes>

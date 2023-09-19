@@ -9,7 +9,7 @@ import Select from 'react-select'
 import { toast } from "react-toastify"
 import Input from "../form/Input"
 
-function Table({roles}) {
+function Table({roles, isRolesLoading}) {
   const dispatch = useDispatch()
   
   const [role, setState] = useState({name: "", description: "", permissions: []})
@@ -95,7 +95,7 @@ function Table({roles}) {
               </tr>
             </thead>
             <tbody>
-              {roles.map((role) => (
+              {isRolesLoading ? <Spinner /> : roles.map((role) => (
                 <tr key={role._id}>
                   { editRole.isEdited && editRole._id === role._id ? (
                     <EditableRow
@@ -137,7 +137,7 @@ function Table({roles}) {
           onChange={onChange}
         />
         <Input
-          name="description"
+          id="description"
           label="Description"
           value=""
           placeholder="Enter an description..."

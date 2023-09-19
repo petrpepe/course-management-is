@@ -19,11 +19,6 @@ function Courses() {
       toast.error(message);
     }
 
-    if(!user) {
-      navigate("/login")
-      return
-    }
-
     dispatch(getCourses())
 
     return () => {

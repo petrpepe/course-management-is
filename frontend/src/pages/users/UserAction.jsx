@@ -7,10 +7,10 @@ import {createUser, getUsers, updateUser} from "../../features/users/userSlice"
 import { getRoles, reset as roleReset } from "../../features/roles/roleSlice"
 import { getPermissions, reset as permReset} from "../../features/permissions/permissionSlice"
 import Input from "../../components/form/Input"
-import Select from 'react-select'
 import Spinner from "../../components/Spinner"
 import { updateAuth } from "../../features/auth/authSlice"
-import InputSelect from "../../components/form/InputSelect"
+import PhoneInputs from "../../components/users/PhoneInputs"
+import CustomSelect from "../../components/users/CustomSelect"
 
 function UserAction() {
   const [isCreate, setIsCreate] = useState(false)
@@ -39,11 +39,6 @@ function UserAction() {
   useEffect(() => {
     if(roles.isError || permissions.isError || users.isError) {
       toast.error("roles: " + roles.message + " permissions: " + permissions.message + " users: " + users.message)
-    }
-
-    if(!user) {
-      navigate("/")
-      return
     }
 
     if(user._id !== id || user.roles.includes("admin")) {
@@ -105,10 +100,10 @@ function UserAction() {
     } else return null
   }).filter(permOpt => permOpt != null)
 
-  if (location.state && roleOptions.length > 0 && permsOptions.length > 0) {
+  /*if (location.state && roleOptions.length > 0 && permsOptions.length > 0) {
     formData.roles = roleOptions.filter(role => role.isSelected).map(role => role.value)
     formData.extraPerms = permsOptions.filter(perm => perm.isSelected).map(perm => perm.value)
-  }
+  }*/
 
   const onSubmit = (e) => {
     e.preventDefault()
@@ -116,7 +111,6 @@ function UserAction() {
     if(formData.password !== formData.password1) {
         toast.error("Passwords do not match")
     } else {
-        console.log(formData.phone);
         const userData = {
             firstName: formData.firstName,
             otherNames: formData.otherNames,
@@ -134,16 +128,16 @@ function UserAction() {
         if(id){
             userData._id = id
             dispatch(updateUser(userData))
-            if(user._id === id) {
+          if(user._id === id) {
             userData.roles = roleOptions.filter(roleOpt => roleOpt.isSelected).map(roleOpt => roleOpt.label)
             dispatch(updateAuth(userData))
             setFormData({})
             navigate("/me")
-            }
-            else {
+          }
+          else {
             setFormData({})
             navigate("/users/" + id)
-            }
+          }
         } else {
             dispatch(createUser(userData))
             setIsCreate(true)
@@ -158,40 +152,6 @@ function UserAction() {
     })
   }
 
-  const onPhoneChange = (e, i) => {
-    let phoneList = formData.phone.length > 0 ? formData.phone : [{ number: '', type: '' }]
-
-    phoneList[i] = {...phoneList[i], [e.target.name]: e.target.value}
-
-    setFormData({
-      ...formData,
-      phone: phoneList,
-    })
-  }
-
-  const changeFields = (plus) => {
-    let newPhone = { number: '', type: '' }
-    let phoneList = formData.phone.length > 0 ? formData.phone : [{ number: '', type: '' }]
-
-    if(plus) phoneList.push(newPhone);
-    else phoneList.pop();
-
-    setFormData({
-        ...formData,
-        phone: phoneList
-    })
-  }
-
-  const onSelectChange = (e, a) => {
-    const selectName = a.name
-    let selectedOptionsValues = e.map((opt) => (opt.value))
-
-    setFormData({
-      ...formData,
-      [selectName]: selectedOptionsValues,
-    })
-  }
-
   if (roles.isLoading || permissions.isLoading) {
     return <Spinner />
   }
@@ -203,43 +163,32 @@ function UserAction() {
         </h1>
     </section>
     <section className="form">
-        <form onSubmit={onSubmit}>
-            <Input  id="firstName" label="First name:" value={formData.firstName} 
-            placeholder="Enter first name" onChange={onChange} required={true} />
-            {/* otherNames textarea nebo inputy s +? */}
-            <Input  id="lastName" label="Last name:" value={formData.lastName} 
-            placeholder="Enter last name" onChange={onChange} required={true} />
-            <Input  id="email" label="Email:" value={formData.email} type="email" 
-            placeholder="Enter email" onChange={onChange} required={true} />
-            {formData.phone && formData.phone.length > 1 ? formData.phone.map((phone, i, row) => {
-                return <InputSelect key={i} name="number" id={"number" + i} label="Phone:" value={phone.phone} listValue={phone.type} type="tel" changeFields={changeFields}
-                placeholder="Enter phone number" onChange={(e, i) => onPhoneChange(e, i)} listId={"type" + i} listName="type" plus={(i + 1 === row.length)} />
-            }) :
-                <InputSelect name="number" id="number" label="Phone:" type="tel" placeholder="Enter phone number" value={formData.phone.length === 1 ? formData.phone[0].phone : ""}
-                listValue={formData.phone && formData.phone.length === 1 ? formData.phone[0].type : ""} onChange={(e) => onPhoneChange(e, 0)} listId="type" listName="type" changeFields={changeFields} plus={true} />
-            }
-            <Input  id="password" label="Enter password:" value={formData.password} type="password"
-            placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />
-            <Input  id="password1" label="Confirm password:" value={formData.password1} type="password" 
-            placeholder="Confirm password" onChange={onChange} required={id === user._id ? true : false} />
-            { (user.roles.includes("admin")) ?
-            <>
-                <div className="form-group ">
-                    <label htmlFor="roles">Select roles:</label>
-                    <Select id="roles" name="roles" options={roleOptions} value={roleOptions.filter((role) => role.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
-                </div>
-                <div className="form-group ">
-                    <label htmlFor="extraPerms">Select extra permissions:</label>
-                    <Select id="extraPerms" name="extraPerms" options={permsOptions} value={permsOptions.filter((perm) => perm.isSelected)} onChange={onSelectChange} isMulti isSearchable isClearable />
-                </div>
-            </>
-            : null }
-            <div className="form-group">
-                <button type="submit" className="btn btn-block">{location.pathname.includes("create") ? "Create" : "Update"}</button>
-            </div>
-        </form>
+      <form onSubmit={onSubmit}>
+        <Input  id="firstName" label="First name:" value={formData.firstName} 
+          placeholder="Enter first name" onChange={onChange} required={true} />
+        {/* otherNames textarea nebo inputy s +? */}
+        <Input  id="lastName" label="Last name:" value={formData.lastName} 
+          placeholder="Enter last name" onChange={onChange} required={true} />
+        <Input  id="email" label="Email:" value={formData.email} type="email" 
+          placeholder="Enter email" onChange={onChange} required={true} />
+        <PhoneInputs name="number" placeholder="Enter phone number" listName="type" 
+          formData={formData} setFormData={setFormData} />
+        <Input  id="password" label="Enter password:" value={formData.password} type="password"
+          placeholder="Enter password" onChange={onChange} required={id === user._id ? true : false} />
+        <Input  id="password1" label="Confirm password:" value={formData.password1} type="password" 
+          placeholder="Confirm password" onChange={onChange} required={id === user._id ? true : false} />
+        { (user.roles.includes("admin")) ?
+        <>
+          <CustomSelect id="roles" label="Select roles:" options={roleOptions} formData={formData} setFormData={setFormData} />
+          <CustomSelect id="extraPerms" label="Select extra permissions:" options={permsOptions} formData={formData} setFormData={setFormData} />
+        </>
+        : null }
+        <div className="form-group">
+          <button type="submit" className="btn btn-block">{location.pathname.includes("create") ? "Create" : "Update"}</button>
+        </div>
+      </form>
     </section>
-    </>
+  </>
 }
 
 export default UserAction

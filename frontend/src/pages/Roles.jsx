@@ -3,7 +3,6 @@ import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import {toast} from "react-toastify"
 import {getRoles, reset} from "../features/roles/roleSlice"
-import Spinner from "../components/Spinner"
 import Table from "../components/table/Table"
 
 function Roles() {
@@ -16,11 +15,6 @@ function Roles() {
   useEffect(() => {
     if(isError) {
       toast.error(message)
-    }
-    
-    if(!user) {
-      navigate("/login")
-      return
     }
 
     dispatch(getRoles())
@@ -37,7 +31,7 @@ function Roles() {
       </section>
 
       <section className="content">
-        {isLoading ? <Spinner /> : <Table roles={roles} />}
+        <Table roles={roles} isRolesLoading={isLoading}/>
       </section>
     </>
   )

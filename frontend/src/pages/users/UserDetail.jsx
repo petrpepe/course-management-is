@@ -18,11 +18,6 @@ function UserDetail() {
       toast.error(message)
     }
 
-    if(!user) {
-      navigate("/login")
-      return
-    }
-
     if(id) dispatch(getUsers({ids: id, detail: true}))
 
     return () => {

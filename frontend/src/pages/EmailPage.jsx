@@ -24,10 +24,6 @@ function EmailPage() {
     if(isError) {
       toast.error(message)
     }
-
-    if(!user) {
-      navigate("/")
-    }
   }, [user, isError, isSuccess, message, navigate, dispatch])
 
   const onChange = (e) => {
