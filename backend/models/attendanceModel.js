@@ -14,13 +14,13 @@ const attendaceSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Lesson",
         },
-        attendees: [{
+        attendee: {
             user: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "User",
             },
             attType: {type: String}
-        }]
+        }
     }
 )
 

@@ -9,16 +9,13 @@ const courseSchema = mongoose.Schema(
         description: {
             type: String,
         },
-        isActive: {
-            type: Boolean,
+        academicTerm: {
+            type: String,
+        },        
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
         },
-        lessons: [{
-            lesson: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Lesson",
-            },
-            orderNumber: { type: Number },
-        }]
     }, {
         timestamps: true,
     }

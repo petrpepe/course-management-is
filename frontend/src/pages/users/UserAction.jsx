@@ -100,11 +100,6 @@ function UserAction() {
     } else return null
   }).filter(permOpt => permOpt != null)
 
-  /*if (location.state && roleOptions.length > 0 && permsOptions.length > 0) {
-    formData.roles = roleOptions.filter(role => role.isSelected).map(role => role.value)
-    formData.extraPerms = permsOptions.filter(perm => perm.isSelected).map(perm => perm.value)
-  }*/
-
   const onSubmit = (e) => {
     e.preventDefault()
 
@@ -124,6 +119,8 @@ function UserAction() {
             userData.roles = formData.roles
             userData.extraPerms = formData.extraPerms
         }
+
+        console.log(userData);
 
         if(id){
             userData._id = id

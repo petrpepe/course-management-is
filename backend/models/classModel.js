@@ -15,18 +15,11 @@ const classSchema = mongoose.Schema(
         startDateTime: {
             type: Date,
         },
-        repeatCount: {
-            type: Number,
-        },
         course: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Course",
         },
         lectors: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        }],
-        students: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         }],

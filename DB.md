@@ -10,21 +10,25 @@ Kurz: Javascript 1
 
 Třída: Javascript 1 Ut 15:00 Lektor
  Kurz: Javascript 1
- startDateTime: 5.9.2023 15:00
- Lektor
+ repeat: každá středa 15:00
+ Lektoři
 
 Třída: Javascript 1 St 15:00 Lektor
  Kurz: Javascript 1
- startDateTime: 6.9.2023 15:00
- Lektor
+ Lektoři
 
 Docházka:
  Kdy student přišel - spíš do poznámky
- Typ docházky: zůčastnil se/přítomen(datum a čas příchodu), omluven, 
-  neomluven(nutno dořešit zda chce náhradní lekci) a datum a čas extra
+ Typ docházky: zůčastnil se/přítomen(datum a čas příchodu), omluven,
+  neomluven(nutno dořešit zda chce náhradní lekci), pozdní příchod (víc než 15 minut)
  Student
  Kdo zapsal
+
+Rozvrh:
  Třída
+ Lekce
+ Čas konání
+ Lektor/Náhrada
 
 Zápis:
  Třída

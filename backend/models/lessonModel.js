@@ -18,12 +18,13 @@ const lessonSchema = mongoose.Schema(
         duration: {
             type: Number
         },
-        approval: [{
-            aprrovalRequired: {type: Boolean},
-            aprrovedBy: [{
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-            }],
+        course: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Course",
+        },
+        aprrovedBy: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
         }]
     }, {
         timestamps: true,
