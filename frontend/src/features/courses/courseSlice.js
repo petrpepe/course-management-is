@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import courseService from "./courseService"
+import { Status } from "../Status"
 
 const initialState = {
     courses: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -62,55 +61,47 @@ export const courseSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(getCourses.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getCourses.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.courses = action.payload
         })
         .addCase(getCourses.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(createCourse.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createCourse.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.courses.push(action.payload)
         })
         .addCase(createCourse.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })        
         .addCase(updateCourse.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateCourse.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.courses[state.courses.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateCourse.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteCourse.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(deleteCourse.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.courses = state.courses.filter((course) => course._id !== action.payload.id)
         })
         .addCase(deleteCourse.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

@@ -1,31 +1,47 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link as ReactLink, useLocation } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { FaPen, FaTrash } from "react-icons/fa"
+import * as React from 'react';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Typography from '@mui/material/Typography';
+import Button from "@mui/material/Button";
+import DeleteIcon from '@mui/icons-material/Delete';
 
-function Card({data, title = "", link = "", imgSrc = "", currentData, deleteAction}) {
+function MCard({data, title = "", link = "", imgSrc = "", currentData, deleteAction}) {
   const dispatch = useDispatch()
   const {user} = useSelector(state => state.auth)
   const location = useLocation()
   //dispatch(getUsers({ids: id, detail: true}))
   return (
-      <div className="card">
-        {imgSrc ? <div className="card-header"><img src={imgSrc} alt="kids programming" /></div> : ""}
-        <div className="card-content">
-            <p className="card-title">{title ? title : data.title}</p>
-            {data.description ? <p>{data.description}</p> : ""}
-        </div>
-        <div className="card-footer">
-            <p className="card-tag">{new Date(data.startDateTime ? data.startDateTime : data.createdAt).toLocaleString("cs-CZ")}</p>
-            <Link to={link + data._id} state={currentData} className="card-button">View detail</Link>
-            {user.roles.includes("admin") || (user.roles.includes("lector") && location.pathname.includes("lessons")) ?
-              <Link to={link + data._id + "/edit"} state={currentData}><FaPen /></Link> : null}
-            {user.roles.includes("admin") ?
-              <div onClick={() => dispatch(deleteAction(data._id))}><FaTrash /></div>
-            : null}
-
-        </div>
-    </div>
+    <Card sx={{ maxWidth: 345 }}>
+      {imgSrc ? <CardMedia
+        component="img"
+        height="194"
+        image={imgSrc}
+        alt="Paella dish"
+      /> : null }
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          {title ? title : data.title}
+        </Typography> 
+        <Typography variant="body2" color="text.secondary" sx={{minHeight: "0.875rem"}}>
+          {data.description}
+        </Typography>
+      </CardContent>
+      <CardActions disableSpacing>
+        <Button component={ReactLink} size="small" to={link + data._id}>View detail</Button> 
+        {user.roles.includes("admin") || (user.roles.includes("lector") && location.pathname.includes("lessons")) ?
+          <Button component={ReactLink} size="small" to={link + data._id + "/edit"}>Edit</Button>
+        : null }
+        {user.roles.includes("admin") ? <Button variant="outlined" startIcon={<DeleteIcon  />} 
+          onClick={() => dispatch(deleteAction(data._id))} >
+          Delete
+        </Button> : null}
+      </CardActions>
+    </Card>
   )
 }
 
-export default Card
+export default MCard

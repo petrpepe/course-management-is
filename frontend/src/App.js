@@ -4,9 +4,9 @@ import "react-toastify/dist/ReactToastify.css"
 import Header from "./components/Header"
 import Dashboard from './pages/Dashboard'
 import AuthVerify from "./app/auth-verify"
-import Login from './pages/Login'
-import Logout from './pages/Logout'
-import ForgottenPassword from "./pages/ForgottenPassword"
+import Login from './pages/auth/Login'
+import Logout from './pages/auth/Logout'
+import ForgottenPassword from "./pages/auth/ForgottenPassword"
 import Users from "./pages/users/Users"
 import UserDetail from "./pages/users/UserDetail"
 import UserAction from './pages/users/UserAction'
@@ -50,6 +50,7 @@ function App() {
             <Route path="/login/:userEmail" element={<Login />} />
             <Route path="/logout" element={<Logout/>} />
             <Route path="/:userId/:token" element={<ForgottenPassword />} />
+            {user ? <>
             <Route path="users" element={<ProtectedRoute isAllowed={user.roles} />}>
                 <Route index element={<Users />} />
                 <Route path=":id" element={<UserDetail />} />
@@ -94,6 +95,7 @@ function App() {
               <Route path="/permissions" element={<Permissions />} />
               <Route path="/email" element={<EmailPage />} />
             </Route>
+            </>: null}
             <Route path="*" element={<Page404 />} />
           </Routes>
         </main>

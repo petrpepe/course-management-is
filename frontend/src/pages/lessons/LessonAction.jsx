@@ -3,7 +3,10 @@ import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
 import {FaChalkboard} from "react-icons/fa"
 import {createLesson, reset, updateLesson} from "../../features/lessons/lessonSlice"
-import Input from "../../components/form/Input"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
+import CustomSelect from "../../components/form/CustomSelect"
+import { getCourses } from "../../features/courses/courseSlice"
 
 function LessonAction() {
   const [isCreate, setIsCreate] = useState(false)
@@ -13,6 +16,7 @@ function LessonAction() {
     description: "",
     materials: "",
     duration: 60,
+    course: "",
   })
 
   const location = useLocation()
@@ -20,8 +24,8 @@ function LessonAction() {
   const dispatch = useDispatch()
 
   const { id } = useParams()
-  const user = useSelector((state) => state.auth)
   const lesson = useSelector((state) => state.lessons.lessons)
+  const courses = useSelector((state) => state.courses)
 
   useEffect(() => {
 
@@ -31,12 +35,13 @@ function LessonAction() {
       description: "",
       materials: "",
       duration: 60,
+      course: "",
     })
 
     return () => {
       dispatch(reset())
     }
-  }, [user, navigate, dispatch])
+  }, [navigate, dispatch])
 
   if(isCreate && lesson[0]) {
     setFormData({})
@@ -59,6 +64,7 @@ function LessonAction() {
       ...prevState,
       [e.target.name]: e.target.value,
     }))
+    console.log(formData);
   }
 
   const onSubmit = (e) => {
@@ -91,19 +97,19 @@ function LessonAction() {
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>
-          <Input  id="lessonNum" label="lessonNum:" value={currentLesson.lessonNum} 
-          type="number" onChange={onChange} required={true} min={1} />
-          <Input  id="title" label="Title:" value={currentLesson.title} 
-          placeholder="Enter title" onChange={onChange} required={true} />
-          <Input  id="description" label="Description:" value={currentLesson.description} 
-          placeholder="Enter description" onChange={onChange} />
-          <Input  id="materials" label="Materials:" value={currentLesson.materials} 
-          placeholder="Enter materials" onChange={onChange} />
-          <Input  id="duration" label="Duration:" value={currentLesson.duration} 
-          min={1} onChange={onChange} type="number" />
-          <div className="form-group">
-            <button type="submit" className="btn btn-block">Submit</button>
-          </div>
+          <TextField  id="lessonNum" label="lessonNum:" value={currentLesson.lessonNum} 
+          type="number" onChange={(e) => onChange(e)} required={true} min={1} size="medium" fullWidth sx={{my: 1}} />
+          <TextField  id="title" label="Title:" value={currentLesson.title} 
+          placeholder="Enter title" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+          <TextField  id="description" label="Description:" value={currentLesson.description} 
+          placeholder="Enter description" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+          <TextField  id="materials" label="Materials:" value={currentLesson.materials} 
+          placeholder="Enter materials" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+          <TextField  id="duration" label="Duration:" value={currentLesson.duration} 
+          min={1} onChange={(e) => onChange(e)} type="number" size="medium" fullWidth sx={{my: 1}} />
+          <CustomSelect id="course" label="Select course" items={courses.courses} getItems={getCourses} itemsStatus={courses.status}
+          formData={formData} setFormData={setFormData} multiple={false} />
+          <Button type="submit" size="large" variant="contained" fullWidth sx={{my: 1}} >Submit</Button>
         </form>
       </section>
     </>

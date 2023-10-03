@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 @import "card.scss", "form.scss", "header.scss", "table.scss";
 
 * {
@@ -39,7 +39,6 @@ h3 {
 .container {
     width: 100%;
     margin: 0 auto;
-    padding: 0 20px;
     text-align: center;
 }
 

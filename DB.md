@@ -10,7 +10,6 @@ Kurz: Javascript 1
 
 Třída: Javascript 1 Ut 15:00 Lektor
  Kurz: Javascript 1
- repeat: každá středa 15:00
  Lektoři
 
 Třída: Javascript 1 St 15:00 Lektor
@@ -20,13 +19,13 @@ Třída: Javascript 1 St 15:00 Lektor
 Docházka:
  Kdy student přišel - spíš do poznámky
  Typ docházky: zůčastnil se/přítomen(datum a čas příchodu), omluven,
-  neomluven(nutno dořešit zda chce náhradní lekci), pozdní příchod (víc než 15 minut)
+  neomluven, pozdní příchod (víc než 15 minut)
  Student
  Kdo zapsal
 
 Rozvrh:
  Třída
- Lekce
+ Lekce (navíc jen u náhrad lze)
  Čas konání
  Lektor/Náhrada
 
