@@ -1,4 +1,6 @@
 import {BrowserRouter as Router, Routes, Route, Outlet} from "react-router-dom"
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import Header from "./components/Header"
@@ -27,6 +29,8 @@ import EmailPage from "./pages/EmailPage"
 import Page404 from "./pages/Page404"
 import { useSelector } from "react-redux"
 import Timetable from "./pages/Timetable"
+import { useMediaQuery } from "@mui/material";
+import { useMemo } from "react";
 
 export const ProtectedRoute = ({
   isAllowed,
@@ -38,9 +42,21 @@ export const ProtectedRoute = ({
 
 function App() {
   const {user} = useSelector(state => state.auth)
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Router>
         <main className="container">
           <Header />
@@ -102,7 +118,7 @@ function App() {
         <AuthVerify />
       </Router>
       <ToastContainer />
-    </>
+    </ThemeProvider>
   );
 }
 
