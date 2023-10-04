@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import {useNavigate, useParams} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import {getCourses, reset} from "../../features/courses/courseSlice"
 
@@ -14,7 +13,6 @@ function CourseDetail() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message)
     }
 
     dispatch(getCourses({ids: id}))

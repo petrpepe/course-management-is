@@ -2,18 +2,14 @@ import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import Input from "./form/Input"
 
-function Search({getData = () => {}, reset = () => {}}) {
+function Search({getData = () => {}}) {
     const dispatch = useDispatch()
 
     const [keyword, setKeyword] = useState("")
 
     useEffect(() => {
         dispatch(getData({keyword: keyword}))
-
-        return () => {
-            dispatch(reset())
-        }
-    }, [keyword, dispatch, getData, reset])
+    }, [keyword, dispatch, getData])
 
     return (
         <div className="search-wrapper">

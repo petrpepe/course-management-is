@@ -1,7 +1,6 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
-import {toast} from "react-toastify"
 import {FaUser} from "react-icons/fa"
 import {createUser, getUsers, updateUser} from "../../features/users/userSlice"
 import { getRoles, reset as roleReset } from "../../features/roles/roleSlice"
@@ -38,7 +37,6 @@ function UserAction() {
 
   useEffect(() => {
     if(roles.isError || permissions.isError || users.isError) {
-      toast.error("roles: " + roles.message + " permissions: " + permissions.message + " users: " + users.message)
     }
 
     if(user._id !== id || user.roles.includes("admin")) {
@@ -104,7 +102,6 @@ function UserAction() {
     e.preventDefault()
 
     if(formData.password !== formData.password1) {
-        toast.error("Passwords do not match")
     } else {
         const userData = {
             firstName: formData.firstName,

@@ -2,7 +2,7 @@ import {useEffect, useState} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
 import {FaChalkboard} from "react-icons/fa"
-import {createLesson, reset, updateLesson} from "../../features/lessons/lessonSlice"
+import {createLesson, getLessons, reset, updateLesson} from "../../features/lessons/lessonSlice"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import CustomSelect from "../../components/form/CustomSelect"
@@ -24,32 +24,23 @@ function LessonAction() {
   const dispatch = useDispatch()
 
   const { id } = useParams()
-  const lesson = useSelector((state) => state.lessons.lessons)
+  const lesson = useSelector((state) => state.lessons.lessons).filter(l =>  l._id === id)
   const courses = useSelector((state) => state.courses)
+  const currentLesson = location.state ? location.state.currentLesson : formData
 
   useEffect(() => {
 
-    setFormData({
-      lessonNum: 1,
-      title: "",
-      description: "",
-      materials: "",
-      duration: 60,
-      course: "",
-    })
+    if(!lesson && currentLesson) getLessons(id)
 
     return () => {
       dispatch(reset())
     }
-  }, [navigate, dispatch])
+  }, [lesson, currentLesson, id, navigate, dispatch])
 
   if(isCreate && lesson[0]) {
     setFormData({})
     navigate("/lessons/" + lesson[0]._id)
   }
-
-  const currentLesson = location.state ? location.state.currentLesson : formData
-  if(id !== currentLesson._id) return <p>Ids are not equal</p>
 
   if (location.state && formData.title === "") {
     for (const key in currentLesson) {
@@ -64,7 +55,6 @@ function LessonAction() {
       ...prevState,
       [e.target.name]: e.target.value,
     }))
-    console.log(formData);
   }
 
   const onSubmit = (e) => {
@@ -109,7 +99,7 @@ function LessonAction() {
           min={1} onChange={(e) => onChange(e)} type="number" size="medium" fullWidth sx={{my: 1}} />
           <CustomSelect id="course" label="Select course" items={courses.courses} getItems={getCourses} itemsStatus={courses.status}
           formData={formData} setFormData={setFormData} multiple={false} />
-          <Button type="submit" size="large" variant="contained" fullWidth sx={{my: 1}} >Submit</Button>
+          <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
         </form>
       </section>
     </>

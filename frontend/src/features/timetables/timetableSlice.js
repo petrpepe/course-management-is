@@ -1,18 +1,18 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
-import roleService from "./roleService"
+import timetableService from "./timetableService"
 
 const initialState = {
-    roles: [],
+    timetables: [],
     isError: false,
     isSuccess: false,
     isLoading: false,
     message: "",
 }
 
-export const createTimetable = createAsyncThunk("roles/create", async (roleData, thunkAPI) => {
+export const createTimetable = createAsyncThunk("timetables/create", async (timetableData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await roleService.createTimetable(roleData, token)
+        return await timetableService.createTimetable(timetableData, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -20,10 +20,10 @@ export const createTimetable = createAsyncThunk("roles/create", async (roleData,
     }
 })
 
-export const updateTimetable = createAsyncThunk("roles/update", async (roleData, thunkAPI) => {
+export const updateTimetable = createAsyncThunk("timetables/update", async (timetableData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await roleService.updateTimetable(roleData._id, roleData, token)
+        return await timetableService.updateTimetable(timetableData._id, timetableData, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -31,10 +31,10 @@ export const updateTimetable = createAsyncThunk("roles/update", async (roleData,
     }
 })
 
-export const getTimetables = createAsyncThunk("roles/getAll", async (_, thunkAPI) => {
+export const getTimetables = createAsyncThunk("timetables/getAll", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await roleService.getTimetables(token)
+        return await timetableService.getTimetables(token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -42,10 +42,10 @@ export const getTimetables = createAsyncThunk("roles/getAll", async (_, thunkAPI
     }
 })
 
-export const deleteTimetable = createAsyncThunk("roles/delete", async (id, thunkAPI) => {
+export const deleteTimetable = createAsyncThunk("timetables/delete", async (id, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await roleService.deleteTimetable(id, token)
+        return await timetableService.deleteTimetable(id, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -53,8 +53,8 @@ export const deleteTimetable = createAsyncThunk("roles/delete", async (id, thunk
     }
 })
 
-export const roleSlice = createSlice({
-    name: "role",
+export const timetableSlice = createSlice({
+    name: "timetable",
     initialState,
     reducers: {
         reset: (state) => initialState
@@ -67,7 +67,7 @@ export const roleSlice = createSlice({
         .addCase(createTimetable.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.roles.push(action.payload)
+            state.timetables.push(action.payload)
         })
         .addCase(createTimetable.rejected, (state, action) => {
             state.isLoading = false
@@ -80,7 +80,7 @@ export const roleSlice = createSlice({
         .addCase(updateTimetable.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.roles[state.roles.findIndex((obj => obj._id === action.payload._id))] = action.payload
+            state.timetables[state.timetables.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateTimetable.rejected, (state, action) => {
             state.isLoading = false
@@ -93,7 +93,7 @@ export const roleSlice = createSlice({
         .addCase(getTimetables.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.roles = action.payload
+            state.timetables = action.payload
         })
         .addCase(getTimetables.rejected, (state, action) => {
             state.isLoading = false
@@ -106,7 +106,7 @@ export const roleSlice = createSlice({
         .addCase(deleteTimetable.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.roles = state.roles.filter((role) => role._id !== action.payload.id)
+            state.timetables = state.timetables.filter((timetable) => timetable._id !== action.payload.id)
         })
         .addCase(deleteTimetable.rejected, (state, action) => {
             state.isLoading = false
@@ -116,5 +116,5 @@ export const roleSlice = createSlice({
     }
 })
 
-export const {reset} = roleSlice.actions
-export default roleSlice.reducer
+export const {reset} = timetableSlice.actions
+export default timetableSlice.reducer

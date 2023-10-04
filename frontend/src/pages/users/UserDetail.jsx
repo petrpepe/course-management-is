@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import {useNavigate, useParams, Link} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import {getUsers, reset} from "../../features/users/userSlice"
 
@@ -15,7 +14,6 @@ function UserDetail() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message)
     }
 
     if(id) dispatch(getUsers({ids: id, detail: true}))

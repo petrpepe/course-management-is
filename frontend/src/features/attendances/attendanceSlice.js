@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import attendanceService from "./attendanceService"
+import { Status } from "../Status"
 
 const initialState = {
     attendances: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -62,24 +61,21 @@ export const attendanceSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createAttendance.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createAttendance.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.attendances.push(action.payload)
         })
         .addCase(createAttendance.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updateAttendance.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateAttendance.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             let index = state.attendances.findIndex((obj => obj._id === action.payload._id))
             let attendees = state.attendances[index].attendees.map(att => {
                 let actionAtt = action.payload.attendees.filter(attendee => attendee._id === att._id)[0]
@@ -90,34 +86,29 @@ export const attendanceSlice = createSlice({
             state.attendances[index].attendees = attendees
         })
         .addCase(updateAttendance.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getAttendances.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getAttendances.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.attendances = action.payload
         })
         .addCase(getAttendances.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteAttendance.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(deleteAttendance.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.attendances = state.attendances.filter((attendance) => attendance._id !== action.payload.id)
         })
         .addCase(deleteAttendance.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

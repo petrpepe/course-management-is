@@ -1,7 +1,6 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
-import {toast} from "react-toastify"
 import {FaChalkboardTeacher} from "react-icons/fa"
 import {createClass, updateClass} from "../../features/classes/classSlice"
 import {getUsers, reset as userReset} from "../../features/users/userSlice"
@@ -36,7 +35,6 @@ function ClassAction() {
 
   useEffect(() => {
     if(users.isError || courses.isError) {
-      toast.error("users: " + users.message + "\n courses: " + courses.message)
     }
 
     setIsCreate(false)
@@ -72,7 +70,6 @@ function ClassAction() {
   }
 
   if (users.users.message) {
-    return toast.error(users.users.message)
   }
 
   const lectorsOptions = users.users[0] ? users.users.filter(user => user.roles.includes("lector") || user.roles.includes("admin")).map((user) => {

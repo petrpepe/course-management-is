@@ -8,6 +8,9 @@ import permissionReducer from "../features/permissions/permissionSlice"
 import roleReducer from "../features/roles/roleSlice"
 import classReducer from "../features/classes/classSlice"
 import emailReducer from "../features/email/emailSlice"
+import providerReducer from "../features/providers/providerSlice"
+import timetableReducer from "../features/timetables/timetableSlice"
+import enrollmentReducer from "../features/enrollments/enrollmentSlice"
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +23,8 @@ export const store = configureStore({
     roles: roleReducer,
     classes: classReducer,
     email: emailReducer,
+    providers: providerReducer,
+    timetables: timetableReducer,
+    enrollments: enrollmentReducer,
   },
 })

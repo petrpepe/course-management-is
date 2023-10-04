@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import AttendanceTable from "../components/table/AttendanceTable"
 import {getAttendances, reset} from "../features/attendances/attendanceSlice"
 
@@ -14,7 +13,6 @@ function Attendances() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message)
     }
 
     dispatch(getAttendances({names: true}))

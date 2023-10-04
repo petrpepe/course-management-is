@@ -1,8 +1,6 @@
 import {BrowserRouter as Router, Routes, Route, Outlet} from "react-router-dom"
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import {ToastContainer} from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import Header from "./components/Header"
 import Dashboard from './pages/Dashboard'
 import AuthVerify from "./app/auth-verify"
@@ -117,7 +115,6 @@ function App() {
         </main>
         <AuthVerify />
       </Router>
-      <ToastContainer />
     </ThemeProvider>
   );
 }

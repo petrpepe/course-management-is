@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import {Link, useNavigate, useParams} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -19,7 +18,6 @@ function ClassDetail() {
   
   useEffect(() => {
     if(isError || attendances.isError) {
-      toast.error(message + attendances.message)
     }
 
     dispatch(getClasses({ids: id}))

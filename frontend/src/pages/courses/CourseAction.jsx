@@ -1,12 +1,12 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
-import {toast} from "react-toastify"
 import {FaChalkboard} from "react-icons/fa"
-import {createCourse, updateCourse} from "../../features/courses/courseSlice"
+import {createCourse, getCourses, updateCourse, reset} from "../../features/courses/courseSlice"
 import { getProviders } from "../../features/providers/providerSlice"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
+import CustomSelect from "../../components/form/CustomSelect"
 
 function CourseAction() {
   const [isCreate, setIsCreate] = useState(false)
@@ -22,27 +22,19 @@ function CourseAction() {
   const dispatch = useDispatch()
 
   const { id } = useParams()
-  const user = useSelector((state) => state.auth)
-  const course = useSelector((state) => state.courses.courses)
+  const course = useSelector((state) => state.courses.courses).filter(c => c._id === id)
+  const provider = useSelector((state) => state.providers)
+  let currentCourse = location.state ? location.state.data : course
+  if (!currentCourse._id) currentCourse = formData
 
   useEffect(() => {
-
-    setFormData({
-      title: "",
-      description: "",
-      academicTerm: [],
-      owner: "",
-    })
-
-  }, [user, id, navigate, dispatch])
+    if(id !== currentCourse._id) getCourses(id)
+  }, [id, currentCourse._id, navigate, dispatch])
 
   if(isCreate && course[0]) {
     setFormData({})
     navigate("/courses/" + course[0]._id)
   }
-
-  const currentCourse = location.state ? location.state.currentCourse : formData
-  if(id !== currentCourse._id) return <p>Ids are not equal</p>
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -82,11 +74,13 @@ function CourseAction() {
         <form onSubmit={onSubmit} >
           <TextField id="title" name="title" label="Title" value={currentCourse.title} 
           onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-          <TextField id="description" name="description" label="Description" value={currentCourse.title} 
+          <TextField id="description" name="description" label="Description" value={currentCourse.description} 
           onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <TextField id="academicTerm" name="academicTerm" label="Academic Term" value={currentCourse.title} 
+          <TextField id="academicTerm" name="academicTerm" label="Academic Term" value={currentCourse.academicTerm} 
           onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <Button type="submit" size="large" variant="contained" fullWidth sx={{my: 1}} >Submit</Button>
+          <CustomSelect id="provider" label="Select owner" items={provider.providers} getItems={getProviders} itemsStatus={provider.status}
+          formData={formData} setFormData={setFormData} multiple={false} />
+          <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
         </form>
       </section>
     </>

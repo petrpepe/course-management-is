@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import classService from "./classService"
+import { Status } from "../Status"
 
 const initialState = {
     classes: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Loading,
     message: "",
 }
 
@@ -62,55 +61,47 @@ export const classSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createClass.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createClass.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.classes.push(action.payload)
         })
         .addCase(createClass.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updateClass.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateClass.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.classes[state.classes.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateClass.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getClasses.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getClasses.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.classes = action.payload
         })
         .addCase(getClasses.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteClass.pending, (state) => {
-            state.isLoading = true
+            state.status = Status.Loading
         })
         .addCase(deleteClass.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.classes = state.classes.filter((classVar) => classVar._id !== action.payload.id)
         })
         .addCase(deleteClass.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

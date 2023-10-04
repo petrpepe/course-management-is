@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import { useNavigate, useParams} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import Spinner from "../components/Spinner"
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -17,7 +16,6 @@ function Timetable() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message)
     }
 
     if (user && (!id || id === user._id)) {

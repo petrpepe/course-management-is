@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate, useParams} from "react-router-dom"
-import {toast} from "react-toastify"
 import { FaKey } from "react-icons/fa"
 import {setNewPassword, reset} from "../../features/auth/authSlice"
 import Spinner from "../../components/Spinner"
@@ -23,7 +22,6 @@ function ForgottenPassword() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message)
     }
 
     if(isSuccess || user) {

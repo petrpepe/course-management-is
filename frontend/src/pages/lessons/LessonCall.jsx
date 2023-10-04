@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import {useLocation, useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import AttendanceTable from "../../components/table/AttendanceTable"
 import {getLessons, reset} from "../../features/lessons/lessonSlice"
@@ -17,7 +16,6 @@ function LessonCall() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message)
     }
 
     if (location.state.lessonId.length > 1) {

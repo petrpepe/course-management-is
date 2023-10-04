@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import {Link, useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import {deleteUser, getUsers, reset} from "../../features/users/userSlice"
 import Card from "../../components/Card"
@@ -15,7 +14,6 @@ function Users() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message)
     }
 
     dispatch(getUsers({ids: []}))

@@ -7,7 +7,7 @@ const Input = ({ id, value, label = "", type = "text", onChange, required, min, 
     <FormControl fullWidth sx={{ m: 1 }}>
         <InputLabel htmlFor={id}>{label}</InputLabel>
         <OutlinedInput type={type} id={id} name={id} label={label} min={min} defaultValue={value} 
-        onChange={onChange} required={required} error={error} helperText={helperText}/>
+        onChange={onChange} required={required} error={error} />
     </FormControl>
   )
 }

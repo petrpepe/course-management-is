@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import {deleteClass, getClasses, reset} from "../features/classes/classSlice"
 import Spinner from "../components/Spinner"
 import Card from "../components/Card"
@@ -15,7 +14,6 @@ function Dashboard() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message);
     }
 
     if(!user) {

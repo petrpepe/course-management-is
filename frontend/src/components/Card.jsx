@@ -33,7 +33,7 @@ function MCard({data, title = "", link = "", imgSrc = "", currentData, deleteAct
       <CardActions disableSpacing>
         <Button component={ReactLink} size="small" to={link + data._id}>View detail</Button> 
         {user.roles.includes("admin") || (user.roles.includes("lector") && location.pathname.includes("lessons")) ?
-          <Button component={ReactLink} size="small" to={link + data._id + "/edit"}>Edit</Button>
+          <Button component={ReactLink} size="small" to={link + data._id + "/edit"} state={{data}}>Edit</Button>
         : null }
         {user.roles.includes("admin") ? <Button variant="outlined" startIcon={<DeleteIcon  />} 
           onClick={() => dispatch(deleteAction(data._id))} >

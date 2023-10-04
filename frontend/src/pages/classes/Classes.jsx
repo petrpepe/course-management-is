@@ -1,7 +1,6 @@
 import {useEffect} from "react"
 import {Link, useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
 import Spinner from "../../components/Spinner"
 import {deleteClass, getClasses, reset} from "../../features/classes/classSlice"
 import Card from "../../components/Card"
@@ -16,7 +15,6 @@ function Classes() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message)
     }
 
     dispatch(getClasses())

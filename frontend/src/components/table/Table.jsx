@@ -6,7 +6,6 @@ import ReadOnlyRow from "./ReadOnlyRow"
 import EditableRow from "./EditableRow"
 import Spinner from "../Spinner"
 import Select from 'react-select'
-import { toast } from "react-toastify"
 import Input from "../form/Input"
 
 function Table({roles, isRolesLoading}) {
@@ -64,7 +63,6 @@ function Table({roles, isRolesLoading}) {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message);
     }
 
     dispatch(getPermissions())

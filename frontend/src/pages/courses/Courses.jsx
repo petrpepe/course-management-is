@@ -1,8 +1,7 @@
 import {useEffect} from "react"
 import {Link, useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {toast} from "react-toastify"
-import {deleteCourse, getCourses, reset} from "../../features/courses/courseSlice"
+import {deleteCourse, getCourses} from "../../features/courses/courseSlice"
 import Card from "../../components/Card"
 import Spinner from "../../components/Spinner"
 import Search from "../../components/Search"
@@ -16,14 +15,9 @@ function Courses() {
 
   useEffect(() => {
     if(isError) {
-      toast.error(message);
     }
 
     dispatch(getCourses())
-
-    return () => {
-      dispatch(reset())
-    }
   }, [user, navigate, isError, message, dispatch])
 
 
@@ -34,7 +28,7 @@ function Courses() {
       </section>
 
       <section className="content">
-        <Search getData={getCourses} reset={reset} />
+        <Search getData={getCourses} />
         {user.roles.includes("admin") ? <Link to={"/courses/create"}>Create new Course</Link> : null}
         {isLoading ? <Spinner /> : courses.length > 0 ? (
           <div className="cards">
