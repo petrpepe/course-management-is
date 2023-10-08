@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import permissionService from "./permissionService"
+import { Status } from "../Status"
 
 const initialState = {
     permissions: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -31,7 +30,7 @@ export const updatePermission = createAsyncThunk("permissions/update", async (id
     }
 })
 
-export const getPermissions = createAsyncThunk("permissions/getAll", async (_, thunkAPI) => {
+export const getPermissions = createAsyncThunk("permissions/get", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await permissionService.getPermissions(token)
@@ -62,55 +61,47 @@ export const permissionSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createPermission.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createPermission.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.permissions.push(action.payload)
         })
         .addCase(createPermission.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updatePermission.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updatePermission.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.permissions[state.permissions.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updatePermission.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getPermissions.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getPermissions.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.permissions = action.payload
         })
         .addCase(getPermissions.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deletePermission.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(deletePermission.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.permissions = state.permissions.filter((permission) => permission._id !== action.payload.id)
         })
         .addCase(deletePermission.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

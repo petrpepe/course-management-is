@@ -8,7 +8,7 @@ const initialState = {
     message: "",
 }
 
-export const getCourses = createAsyncThunk("courses/getAll", async (courseData = {}, thunkAPI) => {
+export const getCourses = createAsyncThunk("courses/get", async (courseData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await courseService.getCourses(courseData.ids ? courseData.ids : [], courseData.keyword ? courseData.keyword : "", token)

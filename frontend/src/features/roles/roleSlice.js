@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import roleService from "./roleService"
+import { Status } from "../Status"
 
 const initialState = {
     roles: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -31,7 +30,7 @@ export const updateRole = createAsyncThunk("roles/update", async (roleData, thun
     }
 })
 
-export const getRoles = createAsyncThunk("roles/getAll", async (_, thunkAPI) => {
+export const getRoles = createAsyncThunk("roles/get", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await roleService.getRoles(token)
@@ -62,55 +61,47 @@ export const roleSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createRole.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createRole.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.roles.push(action.payload)
         })
         .addCase(createRole.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updateRole.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateRole.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.roles[state.roles.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateRole.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getRoles.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getRoles.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.roles = action.payload
         })
         .addCase(getRoles.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteRole.pending, (state) => {
-            state.isLoading = false;
+            state.status = Status.Loading
         })
         .addCase(deleteRole.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.roles = state.roles.filter((role) => role._id !== action.payload.id)
         })
         .addCase(deleteRole.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

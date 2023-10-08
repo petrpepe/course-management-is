@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import providerService from "./providerService"
+import { Status } from "../Status"
 
 const initialState = {
     providers: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -31,7 +30,7 @@ export const updateProvider = createAsyncThunk("providers/update", async (provid
     }
 })
 
-export const getProviders = createAsyncThunk("providers/getAll", async (_, thunkAPI) => {
+export const getProviders = createAsyncThunk("providers/get", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await providerService.getProviders(token)
@@ -62,55 +61,47 @@ export const providerSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createProvider.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createProvider.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.providers.push(action.payload)
         })
         .addCase(createProvider.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updateProvider.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateProvider.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.providers[state.providers.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateProvider.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getProviders.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getProviders.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.providers = action.payload
         })
         .addCase(getProviders.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteProvider.pending, (state) => {
-            state.isLoading = false;
+            state.status = Status.Loading
         })
         .addCase(deleteProvider.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.providers = state.providers.filter((provider) => provider._id !== action.payload.id)
         })
         .addCase(deleteProvider.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

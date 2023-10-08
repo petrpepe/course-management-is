@@ -30,7 +30,7 @@ export const updateAttendance = createAsyncThunk("attendances/update", async (at
     }
 })
 
-export const getAttendances = createAsyncThunk("attendances/getAll", async (data, thunkAPI) => {
+export const getAttendances = createAsyncThunk("attendances/get", async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await attendanceService.getAttendances(data.names, data.itemId ? data.itemId : "", token)

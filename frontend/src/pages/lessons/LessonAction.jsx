@@ -26,15 +26,11 @@ function LessonAction() {
   const { id } = useParams()
   const lesson = useSelector((state) => state.lessons.lessons).filter(l =>  l._id === id)
   const courses = useSelector((state) => state.courses)
-  const currentLesson = location.state ? location.state.currentLesson : formData
+  let currentLesson = location.state ? location.state.data : lesson
+  if (!currentLesson._id) currentLesson = formData
 
   useEffect(() => {
-
-    if(!lesson && currentLesson) getLessons(id)
-
-    return () => {
-      dispatch(reset())
-    }
+    if(!lesson && currentLesson) getLessons({ids: [id], detail: true})
   }, [lesson, currentLesson, id, navigate, dispatch])
 
   if(isCreate && lesson[0]) {
@@ -66,6 +62,7 @@ function LessonAction() {
       description: formData.description,
       materials: formData.materials,
       duration: formData.duration,
+      course: formData.course,
     }
 
     if(id){
@@ -87,16 +84,16 @@ function LessonAction() {
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>
-          <TextField  id="lessonNum" label="lessonNum:" value={currentLesson.lessonNum} 
-          type="number" onChange={(e) => onChange(e)} required={true} min={1} size="medium" fullWidth sx={{my: 1}} />
+          <TextField  id="lessonNum" label="lessonNum:" value={currentLesson.lessonNum} type="number" 
+          onChange={(e) => onChange(e)} required={true} InputProps={{ inputProps: { min: 1 } }} size="medium" fullWidth sx={{my: 1}} />
           <TextField  id="title" label="Title:" value={currentLesson.title} 
           placeholder="Enter title" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
           <TextField  id="description" label="Description:" value={currentLesson.description} 
           placeholder="Enter description" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
           <TextField  id="materials" label="Materials:" value={currentLesson.materials} 
           placeholder="Enter materials" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="duration" label="Duration:" value={currentLesson.duration} 
-          min={1} onChange={(e) => onChange(e)} type="number" size="medium" fullWidth sx={{my: 1}} />
+          <TextField  id="duration" label="Duration:" value={currentLesson.duration} type="number"
+          InputProps={{ inputProps: { min: 1 } }}onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
           <CustomSelect id="course" label="Select course" items={courses.courses} getItems={getCourses} itemsStatus={courses.status}
           formData={formData} setFormData={setFormData} multiple={false} />
           <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>

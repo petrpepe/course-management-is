@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import enrollmentService from "./enrollmentService"
+import { Status } from "../Status"
 
 const initialState = {
     enrollments: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -31,7 +30,7 @@ export const updateEnrollment = createAsyncThunk("enrollments/update", async (en
     }
 })
 
-export const getEnrollments = createAsyncThunk("enrollments/getAll", async (_, thunkAPI) => {
+export const getEnrollments = createAsyncThunk("enrollments/get", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await enrollmentService.getEnrollments(token)
@@ -62,55 +61,47 @@ export const enrollmentSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createEnrollment.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createEnrollment.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.enrollments.push(action.payload)
         })
         .addCase(createEnrollment.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updateEnrollment.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateEnrollment.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.enrollments[state.enrollments.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateEnrollment.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getEnrollments.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getEnrollments.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.enrollments = action.payload
         })
         .addCase(getEnrollments.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteEnrollment.pending, (state) => {
-            state.isLoading = false;
+            state.status = Status.Loading
         })
         .addCase(deleteEnrollment.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.enrollments = state.enrollments.filter((enrollment) => enrollment._id !== action.payload.id)
         })
         .addCase(deleteEnrollment.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

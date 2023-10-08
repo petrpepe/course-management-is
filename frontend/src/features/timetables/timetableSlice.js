@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import timetableService from "./timetableService"
+import { Status } from "../Status"
 
 const initialState = {
     timetables: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -31,7 +30,7 @@ export const updateTimetable = createAsyncThunk("timetables/update", async (time
     }
 })
 
-export const getTimetables = createAsyncThunk("timetables/getAll", async (_, thunkAPI) => {
+export const getTimetables = createAsyncThunk("timetables/get", async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await timetableService.getTimetables(token)
@@ -62,55 +61,47 @@ export const timetableSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createTimetable.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createTimetable.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.timetables.push(action.payload)
         })
         .addCase(createTimetable.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updateTimetable.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateTimetable.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.timetables[state.timetables.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateTimetable.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getTimetables.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getTimetables.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.timetables = action.payload
         })
         .addCase(getTimetables.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteTimetable.pending, (state) => {
-            state.isLoading = false;
+            state.status = Status.Loading
         })
         .addCase(deleteTimetable.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.timetables = state.timetables.filter((timetable) => timetable._id !== action.payload.id)
         })
         .addCase(deleteTimetable.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

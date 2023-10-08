@@ -1,26 +1,19 @@
 import {useEffect} from "react"
-import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {getRoles, reset} from "../features/roles/roleSlice"
-import Table from "../components/table/Table"
+import {getRoles} from "../features/roles/roleSlice"
+import RoleTable from "../components/table/RoleTable"
+import { Status } from "../features/Status"
 
 function Roles() {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { user } = useSelector((state) => state.auth)
-  const { roles, isLoading, isError, message } = useSelector((state) => state.roles)
+  const { roles, status, message } = useSelector((state) => state.roles)
 
   useEffect(() => {
-    if(isError) {
+    if(status === Status.Idle) {
+      dispatch(getRoles())
     }
-
-    dispatch(getRoles())
-
-    return () => {
-      dispatch(reset())
-    }
-  }, [user, navigate, isError, message, dispatch])
+  }, [status, message, dispatch])
 
   return (
     <>
@@ -29,7 +22,7 @@ function Roles() {
       </section>
 
       <section className="content">
-        <Table roles={roles} isRolesLoading={isLoading}/>
+        <RoleTable roles={roles} rolesStatus={status}/>
       </section>
     </>
   )

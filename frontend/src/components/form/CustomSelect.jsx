@@ -37,11 +37,11 @@ const CustomSelect = ({ id, label, items, getItems, itemsStatus, formData, setFo
 
     const onSelectChange = (e) => {
         const value = e.target.value
-        setSelected(typeof value === 'string' ? value.split(',') : value);
+        setSelected(Array.isArray(value) ? value.map(v => v.label).split(',') : value.label);
 
         setFormData({
             ...formData,
-            [e.target.name]: value,
+            [e.target.name]: Array.isArray(value) ? value.map(v => v._id) : value._id,
         })
     }
 
@@ -58,12 +58,12 @@ const CustomSelect = ({ id, label, items, getItems, itemsStatus, formData, setFo
                 value={selected}
                 onChange={onSelectChange}
                 input={<OutlinedInput label={label} />}
-                renderValue={(e) => e.length > 1 ? e.join(", ") : e}
+                renderValue={(e) => Array.isArray(e) ? e.join(", ") : e}
                 MenuProps={MenuProps}>
                     {items.map((item) => (
-                    <MenuItem key={item._id} value={item._id}>
+                    <MenuItem key={item._id} value={{_id: item._id, label: item.title ? item.title : (item.name ? item.name : item.lastName + item.firstName)}}>
                         {multiple ? <Checkbox checked={selected.indexOf(item._id) > -1} /> : null}
-                        <ListItemText primary={item.title} />
+                        <ListItemText primary={item.title ? item.title : (item.label ? item.label : item.lastName + item.firstName)} />
                     </MenuItem>
                     ))}
             </Select>

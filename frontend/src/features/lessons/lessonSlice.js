@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import lessonService from "./lessonService"
+import { Status } from "../Status"
 
 const initialState = {
     lessons: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -31,7 +30,7 @@ export const updateLesson = createAsyncThunk("lessons/update", async (lessonData
     }
 })
 
-export const getLessons = createAsyncThunk("lessons/getAll", async (lessonData = {}, thunkAPI) => {
+export const getLessons = createAsyncThunk("lessons/get", async (lessonData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
         return await lessonService.getLessons(lessonData.ids ? lessonData.ids : [], lessonData.detail ? true : false, token)
@@ -62,55 +61,47 @@ export const lessonSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createLesson.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createLesson.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.lessons.push(action.payload)
         })
         .addCase(createLesson.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updateLesson.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateLesson.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.lessons[state.lessons.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateLesson.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getLessons.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getLessons.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.lessons = action.payload
         })
         .addCase(getLessons.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteLesson.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(deleteLesson.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.lessons = state.lessons.filter((lesson) => lesson._id !== action.payload.id)
         })
         .addCase(deleteLesson.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }
