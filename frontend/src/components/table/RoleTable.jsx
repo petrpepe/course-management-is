@@ -94,69 +94,43 @@ function RoleTable({roles, rolesStatus}) {
 
   return (
   <div className="app-container">
-    {roles.length > 0 ? (
+    {roles.length > 0 && status === Status.Success && rolesStatus === Status.Success ? (
       <form onSubmit={onSubmitEdit}>
         <TableContainer component={Paper} sx={{mx: 3, width: "auto"}} >
-                  <Table sx={{ overflowX: "auto" }} size="small" aria-label="permissions table">
-                    <TableHead>
-                      <TableRow>
-                        {headers.map((headCell) => (
-                        <TableCell key={headCell.id} sortDirection={orderBy === headCell.id ? order : false}>
-                          <TableSortLabel
-                            active={orderBy === headCell.id}
-                            direction={orderBy === headCell.id ? order : 'asc'}
-                            onClick={setSortOrderBy(headCell.id)}
-                          >
-                            {headCell.label}
-                            {orderBy === headCell.id ? (
-                              <Box component="span" sx={visuallyHidden}>
-                                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                              </Box>
-                            ) : null}
-                          </TableSortLabel>
-                        </TableCell>))}
-                        <TableCell>Permissions</TableCell>
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {sortedRoles.map((role) => (
-                        <TableRow key={role.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                          <TableCell scope="row">{role.name}</TableCell>
-                          <TableCell>{role.description}</TableCell>
-                          <TableCell>{role.permissions.map(p => permissions.map(perm => {
-                            if(p === perm._id) return perm.name
-                            else return 0
-                            }).filter(p => p !== 0)).join(", ")}</TableCell>
-                          <TableCell>actions</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-            {/*rolesStatus.Loading ? <Spinner /> : roles.map((role) => (
-              <tr key={role._id}>
-                { editRole.isEdited && editRole._id === role._id ? (
-                  <EditableRow
-                    data={role}
-                    setEdit={setEdit}
-                    handleCancelClick={handleCancelClick}
-                    options={permissions.map(p => ({value: p._id, label: p.name}))}
-                  />
+          <Table sx={{ overflowX: "auto" }} size="small" aria-label="permissions table">
+            <TableHead>
+              <TableRow>
+                {headers.map((headCell) => (
+                <TableCell key={headCell.id} sortDirection={orderBy === headCell.id ? order : false}>
+                  <TableSortLabel
+                    active={orderBy === headCell.id}
+                    direction={orderBy === headCell.id ? order : 'asc'}
+                    onClick={setSortOrderBy(headCell.id)}
+                  >
+                    {headCell.label}
+                    {orderBy === headCell.id ? (
+                      <Box component="span" sx={visuallyHidden}>
+                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                      </Box>
+                    ) : null}
+                  </TableSortLabel>
+                </TableCell>))}
+                <TableCell>Permissions</TableCell>
+                <TableCell align="center" >Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {sortedRoles.map((role) => <>
+                {editRole.isEdited && editRole._id === role._id ? (
+                  <EditableRow role={role} permissions={permissions} getPermissions={getPermissions} 
+                  setEdit={setEdit} handleCancelClick={handleCancelClick} />
                 ) : (
-                  <ReadOnlyRow
-                    data={role}
-                    handleEditClick={handleEditClick}
-                    deleteAction={deleteRole}
-                    dataArray={role.permissions.map(perm => {
-                      const permName = permissions.map(p => ({value: p._id, label: p.name})).filter(opt => perm === opt.value)
-                      if(permName.length > 0) return permName[0].label
-                      else return ""
-                    })}
-                  />
+                  <ReadOnlyRow role={role} permissions={permissions} handleEditClick={handleEditClick} deleteAction={deleteRole} />
                 )}
-              </tr>
-            ))*/}
+              </>)}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </form>
     ) : ( 
       <h3>You haven't set any role</h3> 
@@ -164,11 +138,11 @@ function RoleTable({roles, rolesStatus}) {
 
     <h2>Add a Role</h2>
     <form className="form" onSubmit={onSubmitAdd}>
-      <TextField  id="name" label="Name:" placeholder="Enter name" onChange={(e) => onChange(e)} 
+      <TextField  id="name" name="name" label="Name:" placeholder="Enter name" onChange={(e) => onChange(e)} 
       required={true} size="medium" fullWidth sx={{my: 1}} />
-      <TextField  id="description" label="Description:" placeholder="Enter description" onChange={(e) => onChange(e)} 
+      <TextField  id="description" name="description" label="Description:" placeholder="Enter description" onChange={(e) => onChange(e)} 
       size="medium" fullWidth sx={{my: 1}} />
-      <CustomSelect id="permissions" label="Select permissions" items={permissions} getItems={getPermissions} itemsStatus={status}
+      <CustomSelect id="permissions" label="Select permissions" items={permissions.map(p => {return {_id: p._id, title: p.name}})} getItems={getPermissions} itemsStatus={status}
         formData={role} setFormData={setState} multiple={true} />
       <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Add</Button>
     </form>

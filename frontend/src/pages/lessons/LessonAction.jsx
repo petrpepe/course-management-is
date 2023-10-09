@@ -84,17 +84,17 @@ function LessonAction() {
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>
-          <TextField  id="lessonNum" label="lessonNum:" value={currentLesson.lessonNum} type="number" 
+          <TextField  id="lessonNum" name="lessonNum" label="lessonNum:" value={currentLesson.lessonNum} type="number" 
           onChange={(e) => onChange(e)} required={true} InputProps={{ inputProps: { min: 1 } }} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="title" label="Title:" value={currentLesson.title} 
+          <TextField  id="title" name="title" label="Title:" value={currentLesson.title} 
           placeholder="Enter title" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="description" label="Description:" value={currentLesson.description} 
+          <TextField  id="description" name="description" label="Description:" value={currentLesson.description} 
           placeholder="Enter description" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="materials" label="Materials:" value={currentLesson.materials} 
+          <TextField  id="materials" name="materials" label="Materials:" value={currentLesson.materials} 
           placeholder="Enter materials" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="duration" label="Duration:" value={currentLesson.duration} type="number"
+          <TextField  id="duration" name="duration" label="Duration:" value={currentLesson.duration} type="number"
           InputProps={{ inputProps: { min: 1 } }}onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <CustomSelect id="course" label="Select course" items={courses.courses} getItems={getCourses} itemsStatus={courses.status}
+          <CustomSelect id="course" label="Select course" items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} getItems={getCourses} itemsStatus={courses.status}
           formData={formData} setFormData={setFormData} multiple={false} />
           <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
         </form>

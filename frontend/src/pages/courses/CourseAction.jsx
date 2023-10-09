@@ -2,7 +2,7 @@ import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
 import {FaChalkboard} from "react-icons/fa"
-import {createCourse, getCourses, updateCourse, reset} from "../../features/courses/courseSlice"
+import {createCourse, getCourses, updateCourse} from "../../features/courses/courseSlice"
 import { getProviders } from "../../features/providers/providerSlice"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
@@ -78,7 +78,7 @@ function CourseAction() {
           onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
           <TextField id="academicTerm" name="academicTerm" label="Academic Term" value={currentCourse.academicTerm} 
           onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <CustomSelect id="provider" label="Select owner" items={provider.providers} getItems={getProviders} itemsStatus={provider.status}
+          <CustomSelect id="provider" label="Select owner" items={provider.providers.map(p => {return {_id: p._id, title: p.name}})} getItems={getProviders} itemsStatus={provider.status}
           formData={formData} setFormData={setFormData} multiple={false} />
           <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
         </form>

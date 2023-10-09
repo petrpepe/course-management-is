@@ -21,7 +21,7 @@ const getRoles = asyncHandler(async (req, res) => {
 const setRole = asyncHandler(async (req, res) => {
     if(!req.body.name){
         res.status(400)
-        throw new Error("Please add text")
+        throw new Error("Please add name")
     }
 
     const role = await Role.create(req.body)

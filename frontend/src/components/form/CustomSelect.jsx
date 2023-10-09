@@ -8,6 +8,9 @@ import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { Status } from '../../features/Status';
 import { useDispatch } from 'react-redux'
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -37,11 +40,20 @@ const CustomSelect = ({ id, label, items, getItems, itemsStatus, formData, setFo
 
     const onSelectChange = (e) => {
         const value = e.target.value
-        setSelected(Array.isArray(value) ? value.map(v => v.label).split(',') : value.label);
 
+        setSelected(value);
         setFormData({
             ...formData,
-            [e.target.name]: Array.isArray(value) ? value.map(v => v._id) : value._id,
+            [e.target.name]: multiple ? value : value._id,
+        })
+    }
+
+    const handleDelete = (itemId) => {
+        let filteredSelected = selected.filter(s => s !== itemId)
+        setSelected(filteredSelected);
+        setFormData({
+            ...formData,
+            [id]: filteredSelected,
         })
     }
 
@@ -58,12 +70,19 @@ const CustomSelect = ({ id, label, items, getItems, itemsStatus, formData, setFo
                 value={selected}
                 onChange={onSelectChange}
                 input={<OutlinedInput label={label} />}
-                renderValue={(e) => Array.isArray(e) ? e.join(", ") : e}
+                renderValue={(s) => multiple ? 
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {selected.map((s) => (
+                        <Chip key={s} label={items.find(i => i._id === s).title} onDelete={() => handleDelete(s)} 
+                        deleteIcon={<ClearIcon onMouseDown={(event) => event.stopPropagation()}/> }/>
+                        ))}
+                    </Box>
+                    : items.find(i => i._id === s).title}
                 MenuProps={MenuProps}>
                     {items.map((item) => (
-                    <MenuItem key={item._id} value={{_id: item._id, label: item.title ? item.title : (item.name ? item.name : item.lastName + item.firstName)}}>
+                    <MenuItem key={item._id} value={item._id}>
                         {multiple ? <Checkbox checked={selected.indexOf(item._id) > -1} /> : null}
-                        <ListItemText primary={item.title ? item.title : (item.label ? item.label : item.lastName + item.firstName)} />
+                        <ListItemText primary={item.title} />
                     </MenuItem>
                     ))}
             </Select>

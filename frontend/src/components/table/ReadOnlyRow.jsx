@@ -1,28 +1,29 @@
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import TableCell from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import IconButton from "@mui/material/IconButton";
 import {useDispatch} from "react-redux"
+import Box from "@mui/material/Box";
 
-function ReadOnlyRow({ data, handleEditClick, dataArray, deleteAction }) {
+function ReadOnlyRow({ role, permissions, handleEditClick, deleteAction }) {
   const dispatch = useDispatch()
-  let a = 1;
+
   return (
-    <>
-    {data.length <= 0 ? "" :
-      <>
-        {Object.values(data).map(value => {
-          a++
-          return typeof value === "object" || value === data._id || value === data.__v ? "" : <td key={a}>{value}</td>;}
-        )}
-        {dataArray && dataArray.length > 0 ? <td>{dataArray.map(v => v + ", ")}</td> : <td></td>}
-        <td>
-          <button type="button" onClick={() => handleEditClick(data._id)} >
-            Edit
-          </button>
-          <button type="button" onClick={() => dispatch(deleteAction(data._id))}>
-            Delete
-          </button>
-        </td>
-      </>
-    }
-    </>
+  <TableRow key={role.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+    <TableCell scope="row">{role.name}</TableCell>
+    <TableCell>{role.description}</TableCell>
+    <TableCell>{role.permissions.map(p => permissions.map(perm => {
+      if(p === perm._id) return perm.name
+      else return 0
+      }).filter(p => p !== 0)).join(", ")}</TableCell>
+    <TableCell>
+      <Box sx={{display: "inline-flex"}} >
+        <IconButton onClick={() => handleEditClick(role._id)}><EditIcon/></IconButton>
+        <IconButton onClick={() => dispatch(deleteAction(role._id))}><DeleteIcon/></IconButton>
+      </Box>
+    </TableCell>
+  </TableRow>
   );
 };
 
