@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react"
 import {useSelector, useDispatch} from 'react-redux'
-import {useLocation, useNavigate, useParams} from "react-router-dom"
+import {useNavigate, useParams} from "react-router-dom"
 import {FaChalkboard} from "react-icons/fa"
 import {createCourse, getCourses, updateCourse} from "../../features/courses/courseSlice"
 import { getProviders } from "../../features/providers/providerSlice"
@@ -9,7 +9,6 @@ import Button from "@mui/material/Button"
 import CustomSelect from "../../components/form/CustomSelect"
 
 function CourseAction() {
-  const [isCreate, setIsCreate] = useState(false)
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -17,24 +16,17 @@ function CourseAction() {
     owner: "",
   })
 
-  const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { id } = useParams()
-  const course = useSelector((state) => state.courses.courses).filter(c => c._id === id)
+  const courses = useSelector((state) => state.courses.courses)
   const provider = useSelector((state) => state.providers)
-  let currentCourse = location.state ? location.state.data : course
-  if (!currentCourse._id) currentCourse = formData
+  let currentCourse = id ? courses.filter(c => c._id === id) : formData
 
   useEffect(() => {
-    if(id !== currentCourse._id) getCourses(id)
+    if(id !== currentCourse._id) dispatch(getCourses(id))
   }, [id, currentCourse._id, navigate, dispatch])
-
-  if(isCreate && course[0]) {
-    setFormData({})
-    navigate("/courses/" + course[0]._id)
-  }
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -46,21 +38,14 @@ function CourseAction() {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    const courseData = {
-      title: formData.title,
-      description: formData.description,
-      academicTerm: formData.academicTerm,
-      owner: formData.owner,
-    }
-
     if(id){
-      courseData._id = id
-      dispatch(updateCourse(courseData))
+      formData._id = id
+      dispatch(updateCourse(formData))
       setFormData({})
       navigate("/courses/" + id)
     } else {
-      dispatch(createCourse(courseData))
-      setIsCreate(true)
+      dispatch(createCourse(formData))
+      navigate("/courses/" + courses[courses.length - 1]._id)
     }
   }
 
@@ -78,7 +63,7 @@ function CourseAction() {
           onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
           <TextField id="academicTerm" name="academicTerm" label="Academic Term" value={currentCourse.academicTerm} 
           onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <CustomSelect id="provider" label="Select owner" items={provider.providers.map(p => {return {_id: p._id, title: p.name}})} getItems={getProviders} itemsStatus={provider.status}
+          <CustomSelect id="owner" label="Select owner" items={provider.providers.map(p => {return {_id: p._id, title: p.name}})} getItems={getProviders} itemsStatus={provider.status}
           formData={formData} setFormData={setFormData} multiple={false} />
           <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
         </form>

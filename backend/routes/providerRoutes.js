@@ -6,7 +6,7 @@ const { authenticate, authorize } = require("../middleware/authMiddleware")
 
 router.use(authenticate)
 
-router.route("/").get(authorize("providerGet"), getProviders).post(authorize("providersManagement"), setProvider)
+router.route("/").get(authorize("providersGet"), getProviders).post(authorize("providersManagement"), setProvider)
 router.route("/:id").delete(authorize("providersManagement"), deleteProvider).put(authorize("providersManagement"), updateProvider)
 
 module.exports = router

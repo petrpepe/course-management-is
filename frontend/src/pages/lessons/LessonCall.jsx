@@ -1,33 +1,26 @@
 import {useEffect} from "react"
-import {useLocation, useNavigate} from "react-router-dom"
+import {useLocation} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import Spinner from "../../components/Spinner"
 import AttendanceTable from "../../components/table/AttendanceTable"
-import {getLessons, reset} from "../../features/lessons/lessonSlice"
+import {getLessons} from "../../features/lessons/lessonSlice"
 import { JaaSMeeting } from "@jitsi/react-sdk"
+import { Status } from "../../features/Status"
 
 function LessonCall() {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { lessons, isLoading, isError, message } = useSelector((state) => state.lessons)
+  const { lessons, status } = useSelector((state) => state.lessons)
   const user = useSelector(state => state.auth.user)
   const location = useLocation()
 
   useEffect(() => {
-    if(isError) {
-    }
-
     if (location.state.lessonId.length > 1) {
         dispatch(getLessons({ids: location.state.lessonId[1]}))
     }
+  }, [location.state.lessonId, dispatch])
 
-    return () => {
-      dispatch(reset())
-    }
-  }, [location.state.lessonId, navigate, isError, message, dispatch])
-
-  if (isLoading) {
+  if (status === Status.Loading) {
     return <Spinner />
   }
 

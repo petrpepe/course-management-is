@@ -1,28 +1,23 @@
 import {useEffect} from "react"
-import {useNavigate, useParams} from "react-router-dom"
+import {useParams} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import Spinner from "../../components/Spinner"
-import {getLessons, reset} from "../../features/lessons/lessonSlice"
+import {getLessons} from "../../features/lessons/lessonSlice"
+import { Status } from "../../features/Status"
 
 function LessonDetail() {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const id = useParams().id
-  const { lessons, isLoading, isError, message } = useSelector((state) => state.lessons)
+  const { lessons, status } = useSelector((state) => state.lessons)
 
   useEffect(() => {
-    if(isError) {
+    if (status === Status.Idle) {
+      dispatch(getLessons({ids: id, detail: true}))
     }
+  }, [id, status, dispatch])
 
-    dispatch(getLessons({ids: id, detail: true}))
-
-    return () => {
-      dispatch(reset())
-    }
-  }, [id, navigate, isError, message, dispatch])
-
-  if (isLoading || !lessons[0]) {
+  if (status === Status.Loading || !lessons[0]) {
     return <Spinner />
   }
 

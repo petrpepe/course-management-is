@@ -30,8 +30,8 @@ const MenuProps = {
     },
 };
 
-const CustomSelect = ({ id, label, items, getItems, itemsStatus, formData, setFormData, compareItems, multiple}) => {
-    const [selected, setSelected] = React.useState([])
+const CustomSelect = ({ id, label, items, selectedItems, getItems, itemsStatus, formData, setFormData, compareItems, multiple}) => {
+    const [selected, setSelected] = React.useState(selectedItems ? selectedItems : (multiple ? [] : ""))
     const dispatch = useDispatch()
 
     React.useEffect(() => {
@@ -44,12 +44,13 @@ const CustomSelect = ({ id, label, items, getItems, itemsStatus, formData, setFo
         setSelected(value);
         setFormData({
             ...formData,
-            [e.target.name]: multiple ? value : value._id,
+            [e.target.name]: value,
         })
     }
 
     const handleDelete = (itemId) => {
         let filteredSelected = selected.filter(s => s !== itemId)
+
         setSelected(filteredSelected);
         setFormData({
             ...formData,
@@ -72,8 +73,8 @@ const CustomSelect = ({ id, label, items, getItems, itemsStatus, formData, setFo
                 input={<OutlinedInput label={label} />}
                 renderValue={(s) => multiple ? 
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {selected.map((s) => (
-                        <Chip key={s} label={items.find(i => i._id === s).title} onDelete={() => handleDelete(s)} 
+                        {s.map((item) => (
+                        <Chip key={item} label={items.find(i => i._id === item).title} onDelete={() => handleDelete(s[0])} 
                         deleteIcon={<ClearIcon onMouseDown={(event) => event.stopPropagation()}/> }/>
                         ))}
                     </Box>
@@ -89,10 +90,6 @@ const CustomSelect = ({ id, label, items, getItems, itemsStatus, formData, setFo
         </FormControl>}
     </div>
     )
-}
-
-function transfromData(options) {
-    
 }
 
 export default CustomSelect

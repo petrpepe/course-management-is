@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import emailService from "./emailService"
+import { Status } from "../Status"
 
 const initialState = {
     options: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -29,16 +28,14 @@ export const emailSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(sendEmail.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(sendEmail.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.options = action.payload
         })
         .addCase(sendEmail.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

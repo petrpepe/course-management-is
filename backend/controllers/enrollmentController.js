@@ -19,14 +19,19 @@ const getEnrollments = asyncHandler(async (req, res) => {
  * @access Private
  */
 const setEnrollment = asyncHandler(async (req, res) => {
-    if(!req.body.name){
+    const {classId, students} = req.body
+    if(!classId){
         res.status(400)
-        throw new Error("Please add text")
+        throw new Error("Please specify classId")
     }
 
-    const enrollment = await Enrollment.create(req.body)
+    let enrollments = []
+    for (let i = 0; i < students.length; i++) {
+        const enrollment = await Enrollment.create({classId: classId, student: students[i]})
+        enrollments.push(enrollment)
+    }
 
-    res.status(200).json(enrollment)
+    res.status(200).json(enrollments)
 })
 
 /**

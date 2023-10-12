@@ -1,33 +1,23 @@
 import {useEffect} from "react"
-import {useNavigate} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import {deleteClass, getClasses, reset} from "../features/classes/classSlice"
+import {deleteClass, getClasses} from "../features/classes/classSlice"
 import Spinner from "../components/Spinner"
 import Card from "../components/Card"
+import { Status } from "../features/Status"
 
 function Dashboard() {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { classes, isLoading, isError, message } = useSelector((state) => state.classes)
+  const { classes, status, message } = useSelector((state) => state.classes)
 
   useEffect(() => {
-    if(isError) {
+    if (status === Status.Idle) {
+      dispatch(getClasses())
     }
+  }, [status, message, dispatch])
 
-    if(!user) {
-      navigate("/login")
-      return
-    }
-
-    dispatch(getClasses())
-
-    return () => {
-      dispatch(reset())
-    }
-  }, [user, navigate, isError, message, dispatch])
-
+  if(status === Status.Loading) return <Spinner />
 
   return (
     <>
@@ -36,19 +26,17 @@ function Dashboard() {
         <p>Main Dashboard</p>
       </section>
 
-      {isLoading ? <Spinner /> :
-        <section className="content">
-          {classes.length > 0 ? (
-            <div className="cards">
-              {classes.map((classVar) => (
-                <Card key={classVar._id} data={classVar} currentData={{currentClass: classVar}} link="/classes/" deleteAction={deleteClass} />
-              ))}
-            </div>
-          ) : ( 
-            <h3>You don't have any class today</h3> 
-            )}
-        </section>
-      }
+      <section className="content">
+        {classes.length > 0 ? (
+          <div className="cards">
+            {classes.map((classVar) => (
+              <Card key={classVar._id} data={classVar} currentData={{currentClass: classVar}} link="/classes/" deleteAction={deleteClass} />
+            ))}
+          </div>
+        ) : ( 
+          <h3>You don't have any class today</h3> 
+          )}
+      </section>
     </>
   )
 }

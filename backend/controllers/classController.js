@@ -2,6 +2,8 @@ const asyncHandler = require('express-async-handler')
 const Class = require('../models/classModel');
 const Attendance = require('../models/attendanceModel');
 const User = require('../models/userModel');
+const Lesson = require('../models/lessonModel');
+const Timetable = require('../models/timetableModel');
 const mongoose = require("mongoose")
 const {sendEmail} = require("./emailController")
 
@@ -52,36 +54,31 @@ const getClasses = asyncHandler(async (req, res) => {
  * }
  */
 const setClass = asyncHandler(async (req, res) => {
-    const {title, description, startDateTime, repeatCount, course, lectors, students} = req.body
+    const {title, startDateTime, lectors} = req.body
     if(!title){
         res.status(400)
         throw new Error("Please add datetime")
     }
 
-    const lessons = course[0].lessons ? course[0].lessons : []
-    req.body.course = course[0].id ? course[0].id : delete req.body.course
-
+    req.body.course = mongoose.Types.ObjectId(req.body.course)
+    const lessons = await Lesson.find({course: req.body.course})
     const classVar = await Class.create(req.body)
 
-    let attendances = []
-    for (let i = 0; i < repeatCount; i++) {
-        const attendance = {datetime: "", classId: classVar._id, lessonId: null, attendees: []}
-        const attDatetime = new Date(classVar.startDateTime)
-        attendance.datetime = attDatetime.setDate(attDatetime.getDate() + 7 * i)
-        attendance.attendees = classVar.students.map(student => ({user: student.toString(), attType: ""}))
-        if (lessons.length > 0 && lessons.length > i) {
-            attendance.lessonId = lessons.filter(l =>  l.orderNumber === i + 1)[0].lesson
-        }
-        attendances.push(attendance)
+    let timetables = []
+    for (let i = 0; i < lessons.length; i++) {
+        const timetable = {datetime: "", classId: classVar._id, lesson: lessons[i]._id, lector: classVar.lectors}
+        const datetime = new Date(classVar.startDateTime)
+        timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i)
+        timetables.push(timetable)
     }
 
-    await Attendance.create(attendances)
+    await Timetable.create(timetables)
 
-    const users = await User.find({_id: {$in: [lectors, students].flat()}})
-
+    /*const users = await User.find({_id: {$in: [lectors, students].flat()}})
+    
     for (const user of users) {
         try {
-            await sendEmail("crsis@noreplycris.com", user.email, "", "New account",
+            await sendEmail("no-reply@noreplycris.com", user.email, "", "New account",
             "<div>" +
             "<p>Dear " + user.firstName + " " + user.lastName + ",</p>" +
             "<p>you have been assigned to class " + classVar.title + "</p>" +
@@ -93,7 +90,7 @@ const setClass = asyncHandler(async (req, res) => {
             res.status(500);
             throw new Error(error)
         }
-    }
+    }*/
 
     res.status(200).json(classVar)
 })

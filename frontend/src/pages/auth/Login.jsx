@@ -4,6 +4,7 @@ import {useNavigate, useParams} from "react-router-dom"
 import { FaSignInAlt } from "react-icons/fa"
 import {login, forgotPassword, reset} from "../../features/auth/authSlice"
 import Spinner from "../../components/Spinner"
+import { Status } from "../../features/Status"
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -18,13 +19,10 @@ function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
+  const {user, status, message} = useSelector((state) => state.auth)
 
   useEffect(() => {
-    if(isError) {
-    }
-
-    if(isSuccess || user) {
+    if(status === Status.Success || user) {
       navigate("/")
     }
 
@@ -37,7 +35,7 @@ function Login() {
 
     dispatch(reset())
 
-  }, [user, isError, isSuccess, message, userEmail, isForgotPassword, navigate, dispatch])
+  }, [user, status, message, userEmail, isForgotPassword, navigate, dispatch])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -66,7 +64,7 @@ function Login() {
     dispatch(forgotPassword(userData))
   }
 
-  if (isLoading) {
+  if (status === Status.Loading) {
     return <Spinner />
   }
 

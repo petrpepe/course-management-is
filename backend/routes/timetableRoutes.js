@@ -6,7 +6,7 @@ const { authenticate, authorize } = require("../middleware/authMiddleware")
 
 router.use(authenticate)
 
-router.route("/").get(authorize("timetableGet"), getTimetables).post(authorize("timetablesManagement"), setTimetable)
+router.route("/").get(authorize("timetablesGet"), getTimetables).post(authorize("timetablesManagement"), setTimetable)
 router.route("/:id").delete(authorize("timetablesManagement"), deleteTimetable).put(authorize("timetablesManagement"), updateTimetable)
 
 module.exports = router

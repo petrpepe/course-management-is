@@ -54,6 +54,7 @@ const setCourse = asyncHandler(async (req, res) => {
         throw new Error("Please add course title ", req.body)
     }
 
+    req.body.owner = req.body.owner ? req.body.owner : null
     const course = await Course.create(req.body)
 
     res.status(200).json(course)

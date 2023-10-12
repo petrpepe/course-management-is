@@ -122,10 +122,10 @@ function RoleTable({roles, rolesStatus}) {
             <TableBody>
               {sortedRoles.map((role) => <>
                 {editRole.isEdited && editRole._id === role._id ? (
-                  <EditableRow role={role} permissions={permissions} getPermissions={getPermissions} 
+                  <EditableRow key={role._id} role={role} permissions={permissions} getPermissions={getPermissions} 
                   setEdit={setEdit} handleCancelClick={handleCancelClick} />
                 ) : (
-                  <ReadOnlyRow role={role} permissions={permissions} handleEditClick={handleEditClick} deleteAction={deleteRole} />
+                  <ReadOnlyRow key={role._id} role={role} permissions={permissions} handleEditClick={handleEditClick} deleteAction={deleteRole} />
                 )}
               </>)}
             </TableBody>

@@ -2,7 +2,7 @@ import {useEffect, useState} from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useLocation, useNavigate, useParams} from "react-router-dom"
 import {FaChalkboard} from "react-icons/fa"
-import {createLesson, getLessons, reset, updateLesson} from "../../features/lessons/lessonSlice"
+import {createLesson, getLessons, updateLesson} from "../../features/lessons/lessonSlice"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import CustomSelect from "../../components/form/CustomSelect"
@@ -30,7 +30,7 @@ function LessonAction() {
   if (!currentLesson._id) currentLesson = formData
 
   useEffect(() => {
-    if(!lesson && currentLesson) getLessons({ids: [id], detail: true})
+    if(!lesson && currentLesson) dispatch(getLessons({ids: [id], detail: true}))
   }, [lesson, currentLesson, id, navigate, dispatch])
 
   if(isCreate && lesson[0]) {

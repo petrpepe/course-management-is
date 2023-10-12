@@ -9,10 +9,10 @@ const timetableSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Class",
         },
-        lesson: [{
+        lesson: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Lesson",
-        }],
+        },
         lector: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

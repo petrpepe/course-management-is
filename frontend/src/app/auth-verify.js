@@ -1,10 +1,9 @@
 import jwt_decode from "jwt-decode"
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const AuthVerify = () => {
-    const location = useLocation()
     const navigate = useNavigate()
     const {user} = useSelector((state) => state.auth);
 
@@ -16,7 +15,7 @@ const AuthVerify = () => {
                 navigate("/logout")
             }
         }
-    }, [user, location, navigate])
+    }, [user, navigate])
 }
 
 export default AuthVerify;

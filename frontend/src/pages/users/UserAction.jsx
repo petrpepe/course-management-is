@@ -9,7 +9,7 @@ import Input from "../../components/form/Input"
 import Spinner from "../../components/Spinner"
 import { updateAuth } from "../../features/auth/authSlice"
 import PhoneInputs from "../../components/users/PhoneInputs"
-import CustomSelect from "../../components/users/CustomSelect"
+import CustomSelect from "../../components/form/CustomSelect"
 
 function UserAction() {
   const [isCreate, setIsCreate] = useState(false)

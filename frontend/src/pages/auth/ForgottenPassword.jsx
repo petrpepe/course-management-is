@@ -5,6 +5,7 @@ import { FaKey } from "react-icons/fa"
 import {setNewPassword, reset} from "../../features/auth/authSlice"
 import Spinner from "../../components/Spinner"
 import Input from "../../components/form/Input"
+import { Status } from "../../features/Status"
 
 function ForgottenPassword() {
   const [formData, setFormData] = useState({
@@ -18,18 +19,15 @@ function ForgottenPassword() {
   const dispatch = useDispatch()
   const {userId} = useParams()
 
-  const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
+  const {user, status, message} = useSelector((state) => state.auth)
 
   useEffect(() => {
-    if(isError) {
-    }
-
-    if(isSuccess || user) {
+    if(status === Status.Success || user) {
       navigate("/")
     }
 
     dispatch(reset())
-  }, [user, isError, isSuccess, message, navigate, dispatch])
+  }, [user, status, message, navigate, dispatch])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -50,7 +48,7 @@ function ForgottenPassword() {
     dispatch(setNewPassword(userData))
   }
 
-  if (isLoading) {
+  if (status === Status.Loading) {
     return <Spinner />
   }
 

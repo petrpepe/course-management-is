@@ -1,28 +1,23 @@
 import {useEffect} from "react"
-import {Link, useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import Spinner from "../../components/Spinner"
 import {deleteClass, getClasses, reset} from "../../features/classes/classSlice"
 import Card from "../../components/Card"
 import Search from "../../components/Search"
+import { Status } from "../../features/Status"
 
 function Classes() {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { classes, isLoading, isError, message } = useSelector((state) => state.classes)
+  const { classes, status, message } = useSelector((state) => state.classes)
 
   useEffect(() => {
-    if(isError) {
+    if (status === Status.Idle) {
+      dispatch(getClasses())
     }
-
-    dispatch(getClasses())
-
-    return () => {
-      dispatch(reset())
-    }
-  }, [user, navigate, isError, message, dispatch])
+  }, [status, message, dispatch])
 
   return (
     <>
@@ -33,7 +28,7 @@ function Classes() {
       <section className="content">
         <Search getData={getClasses} reset={reset} />
         {user.roles.includes("admin") ? <Link to={"/classes/create"}>Create new Class</Link> : null}
-        {isLoading ? <Spinner /> : classes.length > 0 ? (
+        {status === Status.Loading ? <Spinner /> : classes.length > 0 ? (
           <div className="cards">
             {classes.map((classVar) => (
               <Card key={classVar._id} data={classVar} link="/classes/" currentData={{currentClass: classVar}} deleteAction={deleteClass} />

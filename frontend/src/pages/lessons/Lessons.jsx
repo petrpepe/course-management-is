@@ -1,27 +1,22 @@
 import {useEffect} from "react"
-import {Link, useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import Spinner from "../../components/Spinner"
-import {deleteLesson, getLessons, reset} from "../../features/lessons/lessonSlice"
+import {deleteLesson, getLessons} from "../../features/lessons/lessonSlice"
 import Card from "../../components/Card"
+import { Status } from "../../features/Status"
 
 function Lessons() {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { user } = useSelector((state) => state.auth)
-  const { lessons, isLoading, isError, message } = useSelector((state) => state.lessons)
+  const { lessons, status } = useSelector((state) => state.lessons)
 
   useEffect(() => {
-    if(isError) {
+    if (status === Status.Idle) {
+      dispatch(getLessons())
     }
-
-    dispatch(getLessons())
-
-    return () => {
-      dispatch(reset())
-    }
-  }, [user, navigate, isError, message, dispatch])
+  }, [user, status, dispatch])
 
   return (
     <>
@@ -31,7 +26,7 @@ function Lessons() {
 
       <section className="content">
         {user.roles.includes("admin") || user.roles.includes("lector") ? <Link to={"/lessons/create"}>Create new Lesson</Link> : null}
-        {isLoading ? <Spinner /> : lessons.length > 0 ? (
+        {status === Status.Loading ? <Spinner /> : lessons.length > 0 ? (
           <div className="cards">
             {lessons.map((lesson) => (
               <Card key={lesson._id} data={lesson} link="/lessons/" currentData={{currentLesson: lesson}} deleteAction={deleteLesson} />

@@ -1,13 +1,12 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import authService from './authService';
+import { Status } from '../Status';
 
 const user = JSON.parse(localStorage.getItem("user"))
 
 const initialState = {
     user: user ? user : null,
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -85,30 +84,26 @@ export const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(register.pending, (state) => {
-            state.isLoading = true
+            state.status = Status.Loading
         })
         .addCase(register.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.user = action.payload
         })
         .addCase(register.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
             state.user = null
         })
         .addCase(login.pending, (state) => {
-            state.isLoading = true
+            state.status = Status.Loading
         })
         .addCase(login.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.user = action.payload
         })
         .addCase(login.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
             state.user = null
         })
@@ -120,29 +115,25 @@ export const authSlice = createSlice({
             state.courses = null
         })
         .addCase(forgotPassword.pending, (state) => {
-            state.isLoading = true
+            state.status = Status.Loading
         })
         .addCase(forgotPassword.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
         })
         .addCase(forgotPassword.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
             state.user = null
         })
         .addCase(setNewPassword.pending, (state) => {
-            state.isLoading = true
+            state.status = Status.Loading
         })
         .addCase(setNewPassword.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.user = action.payload
         })
         .addCase(setNewPassword.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
             state.user = null
         })

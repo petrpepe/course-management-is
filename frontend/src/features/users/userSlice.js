@@ -1,11 +1,10 @@
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import userService from "./userService"
+import { Status } from "../Status"
 
 const initialState = {
     users: [],
-    isError: false,
-    isSuccess: false,
-    isLoading: false,
+    status: Status.Idle,
     message: "",
 }
 
@@ -64,55 +63,47 @@ export const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(createUser.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(createUser.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.users.push(action.payload)
         })
         .addCase(createUser.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(updateUser.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(updateUser.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.users[state.users.findIndex((obj => obj._id === action.payload._id))] = action.payload
         })
         .addCase(updateUser.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(getUsers.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(getUsers.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.users = action.payload
         })
         .addCase(getUsers.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
         .addCase(deleteUser.pending, (state) => {
-            state.isLoading = true;
+            state.status = Status.Loading
         })
         .addCase(deleteUser.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
+            state.status = Status.Success
             state.users = state.users.filter((user) => user._id !== action.payload.id)
         })
         .addCase(deleteUser.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
+            state.status = Status.Error
             state.message = action.payload
         })
     }

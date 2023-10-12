@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {useSelector, useDispatch} from 'react-redux'
-import {useNavigate} from "react-router-dom"
 import {FaRegEnvelope } from "react-icons/fa"
 import Spinner from "../components/Spinner"
 import {sendEmail} from "../features/email/emailSlice"
+import { Status } from "../features/Status"
 
 function EmailPage() {
   const [formData, setFormData] = useState({
@@ -14,15 +14,9 @@ function EmailPage() {
     content: "",
   })
 
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
-
-  useEffect(() => {
-    if(isError) {
-    }
-  }, [user, isError, isSuccess, message, navigate, dispatch])
+  const {status} = useSelector((state) => state.auth)
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -40,7 +34,7 @@ function EmailPage() {
     dispatch(sendEmail(options))
   }
 
-  if (isLoading) {
+  if (status === Status.Loading) {
     return <Spinner />
   }
 
