@@ -1,20 +1,21 @@
 import {useState, useEffect} from "react"
-import {useSelector, useDispatch} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {useParams} from "react-router-dom"
 import {FaChalkboardTeacher} from "react-icons/fa"
-import {createClass, getClasses, updateClass} from "../../features/classes/classSlice"
-import {getUsers} from "../../features/users/userSlice"
-import {getCourses} from "../../features/courses/courseSlice"
+import {createClass, getClasses, updateClass, reset as resetClasses} from "../../features/classes/classSlice"
+import {getUsers, reset as resetUsers} from "../../features/users/userSlice"
+import {getCourses, reset as resetCourses} from "../../features/courses/courseSlice"
 import TextField from "@mui/material/TextField"
 import CustomSelect from "../../components/form/CustomSelect"
 import Button from "@mui/material/Button"
 import { Status } from "../../features/Status"
 import StudentModal from "../../components/form/StudentModal"
 import CircularProgress from "@mui/material/CircularProgress"
+import Typography from "@mui/material/Typography"
+import useGetData from "../../hooks/useGetData"
 
 function ClassAction() {
   const [openModal, setOpenModal] = useState(false)
-  const [classStatus, setClassStatus] = useState(Status.Idle)
 
   let today = new Date()
   const day = today.getDate();
@@ -34,23 +35,11 @@ function ClassAction() {
   const dispatch = useDispatch()
 
   const { id } = useParams()
-  const users = useSelector((state) => state.users)
-  const courses = useSelector((state) => state.courses)
-  const classes = useSelector((state) => state.classes)
+  const users = useGetData("users", getUsers, resetUsers)
+  const courses = useGetData("courses", getCourses, resetCourses)
+  const classes = useGetData("classes", getClasses, resetClasses)
 
   let currentClassId = null;
-
-  useEffect(() => {
-    if(courses.status === Status.Idle) {
-      dispatch(getCourses())
-    }
-
-    if(users.status === Status.Idle) {
-      dispatch(getUsers())
-    }
-    setClassStatus(classes.status);
-  }, [id, classes.status, users.status, courses.status, dispatch])
-
   let currentClass = id ? classes.classes.filter(c => c._id === id) : formData
 
   const onChange = (e) => {
@@ -84,9 +73,9 @@ function ClassAction() {
 
   return <>
     <section className="heading">
-      <h1>
+      <Typography variant="h2">
           <FaChalkboardTeacher /> {id ? "Editing class: " + currentClass.title : "Create class"}
-      </h1>
+      </Typography>
     </section>
     <section className="form">
       <form onSubmit={onSubmit}>

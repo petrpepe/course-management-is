@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
-import Input from "./form/Input"
+import TextField from "@mui/material/TextField"
 
 function Search({getData = () => {}}) {
     const dispatch = useDispatch()
@@ -12,9 +12,8 @@ function Search({getData = () => {}}) {
     }, [keyword, dispatch, getData])
 
     return (
-        <div className="search-wrapper">
-            <Input id="searchBar" type="search" value={keyword} label="Search:" placeholder="Search" onChange={(e) => setKeyword(e.target.value)} />
-        </div>
+        <TextField id="searchBar" type="search" value={keyword} label="Search:" placeholder="Search"  size="medium" 
+        fullWidth sx={{my: 1}} onChange={(e) => setKeyword(e.target.value)} />
     )
 }
 

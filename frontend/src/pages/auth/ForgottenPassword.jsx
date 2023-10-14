@@ -4,8 +4,10 @@ import {useNavigate, useParams} from "react-router-dom"
 import { FaKey } from "react-icons/fa"
 import {setNewPassword, reset} from "../../features/auth/authSlice"
 import Spinner from "../../components/Spinner"
-import Input from "../../components/form/Input"
 import { Status } from "../../features/Status"
+import TextField from "@mui/material/TextField"
+import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
 
 function ForgottenPassword() {
   const [formData, setFormData] = useState({
@@ -54,22 +56,16 @@ function ForgottenPassword() {
 
   return <>
     <section className="heading">
-        <h1><FaKey /> Set new password</h1>
+      <Typography variant="h2"><FaKey /> Set new password</Typography>
     </section>
     <section className="form">
-        <form onSubmit={onSubmit}>
-            <div className="form-group" >
-                <Input type="password" id="password" value={password}
-                placeholder="Enter your password" onChange={onChange} required />
-            </div>
-            <div className="form-group" >
-                <Input type="password" id="password1" value={password1} 
-                placeholder="Repeat your password" onChange={onChange} required />
-            </div>
-            <div className="form-group">
-                <button type="submit" className="btn btn-block">Set new password</button>
-            </div>
-        </form>
+      <form onSubmit={onSubmit}>
+        <TextField id="password" name="password" label="Enter your password" type="password" value={password} 
+          onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
+        <TextField id="password1" name="password1" label="Enter your password" type="password" value={password1} 
+          onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
+        <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Set new password</Button>
+      </form>
     </section>
   </>
 }

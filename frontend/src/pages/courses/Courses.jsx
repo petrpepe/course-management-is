@@ -5,6 +5,7 @@ import {deleteCourse, getCourses} from "../../features/courses/courseSlice"
 import Card from "../../components/Card"
 import Spinner from "../../components/Spinner"
 import Search from "../../components/Search"
+import Typography from "@mui/material/Typography"
 
 function Courses() {
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ function Courses() {
   return (
     <>
       <section className="heading">
-        <h1>Courses dashboard</h1>
+        <Typography variant="h2">Courses dashboard</Typography>
       </section>
 
       <section className="content">
@@ -37,7 +38,7 @@ function Courses() {
             ))}
           </div>
         ) : (
-          <h3>You haven't set any course</h3> 
+          <Typography variant="h2">You haven't set any course</Typography> 
         )}
       </section>
     </>
