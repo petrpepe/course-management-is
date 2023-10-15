@@ -10,11 +10,16 @@ import Button from "@mui/material/Button"
 import { createEnrollment } from '../../features/enrollments/enrollmentSlice'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import useGetData from '../../hooks/useGetData'
+import { getRoles, reset as resetRoles } from "../../features/roles/roleSlice"
+import { Status } from '../../features/Status'
+import { CircularProgress } from '@mui/material'
 
 const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
     const [formData, setFormData] = React.useState({classId: "", students: []});
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const roles = useGetData("roles", getRoles, resetRoles)
 
     const handleClose = (e, reason) => {
         if (reason !== 'backdropClick') {
@@ -29,6 +34,10 @@ const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
         navigate("/classes/" + classId)
     }
 
+    const studentsOptions = users.users.filter(u => u.roles.includes(roles.roles.filter(r => r.name === "student")[0]._id))
+    if (roles.status === Status.Loading || roles.status === Status.Idle) {
+        return <CircularProgress />
+    }
     return (
     <Dialog open={defaultOpened} onClose={handleClose}>
         <DialogTitle>Subscribe</DialogTitle>
@@ -37,7 +46,7 @@ const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
                 To subscribe to this website, please enter your email address here. We
                 will send updates occasionally.
             </DialogContentText>
-            <CustomSelect id="students" label="Select students" items={users.users.filter(u => u.roles.includes("student")).map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
+            <CustomSelect id="students" label="Select students" items={studentsOptions.map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
             getItems={getUsers} itemsStatus={users.status} formData={formData.students} setFormData={setFormData} multiple={true} />
         </DialogContent>
         <DialogActions>

@@ -66,9 +66,9 @@ const setClass = asyncHandler(async (req, res) => {
 
     let timetables = []
     for (let i = 0; i < lessons.length; i++) {
-        const timetable = {datetime: "", classId: classVar._id, lesson: lessons[i]._id, lector: classVar.lectors}
-        const datetime = new Date(classVar.startDateTime)
-        timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i)
+        const timetable = {dateTime: classVar.startDateTime, classId: classVar._id, lesson: lessons[i]._id, lector: classVar.lectors}
+        const dateTime = new Date(classVar.startDateTime)
+        timetable.dateTime = dateTime.setDate(dateTime.getDate() + 7 * i)
         timetables.push(timetable)
     }
 

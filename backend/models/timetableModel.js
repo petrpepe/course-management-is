@@ -5,7 +5,7 @@ const timetableSchema = mongoose.Schema(
         dateTime: {
             type: Date,
         },
-        class: {
+        classId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Class",
         },

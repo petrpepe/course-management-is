@@ -13,6 +13,7 @@ import StudentModal from "../../components/form/StudentModal"
 import CircularProgress from "@mui/material/CircularProgress"
 import Typography from "@mui/material/Typography"
 import useGetData from "../../hooks/useGetData"
+import { getRoles, reset as resetRoles } from "../../features/roles/roleSlice"
 
 function ClassAction() {
   const [isCreated, setIsCreated] = useState(false)
@@ -39,6 +40,7 @@ function ClassAction() {
   const users = useGetData("users", getUsers, resetUsers)
   const courses = useGetData("courses", getCourses, resetCourses)
   const classes = useGetData("classes", getClasses, resetClasses)
+  const roles = useGetData("roles", getRoles, resetRoles)
 
   let currentClassId = null
 
@@ -55,6 +57,7 @@ function ClassAction() {
 
   const onSubmit = (e) => {
     e.preventDefault()
+    formData.startDateTime = formData.startDateTime.toLocaleString()
 
     if(id){
       formData._id = id
@@ -71,10 +74,10 @@ function ClassAction() {
     currentClassId = classes.classes[classes.classes.length-1]._id;
   }
 
-  if(classes.status === Status.Loading) {
+  if((id && classes.status === Status.Loading) || roles.status === Status.Loading || roles.status === Status.Idle) {
     return <CircularProgress />
   }
-
+  const lectorsOptions = users.users.filter(u => u.roles.includes(roles.roles.filter(r => r.name === "lector")[0]._id))
   return <>
     <section className="heading">
       <Typography variant="h2">
@@ -94,7 +97,7 @@ function ClassAction() {
         <CustomSelect id="course" label="Select course" selectedItems={formData.course} items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} 
         getItems={getCourses} itemsStatus={courses.status} formData={formData} setFormData={setFormData} multiple={false} />
         <CustomSelect id="lectors" label="Select lectors" selectedItems={formData.lectors}
-        items={users.users.filter(u => u.roles.includes("lector")).map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
+        items={lectorsOptions.map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
         getItems={getUsers} itemsStatus={users.status} formData={formData} setFormData={setFormData} multiple={true} />
         <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Submit</Button>
       </form>
