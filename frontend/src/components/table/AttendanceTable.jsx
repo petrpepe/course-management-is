@@ -4,7 +4,7 @@ import Spinner from "../Spinner"
 function AttendanceTable({data = [], user = [], attendeesOnly = false, isLoading = false}) {
   return (
     <>
-      {data.length > 0 && attendeesOnly ? (
+      {data.length > 0 && attendeesOnly && (
       <div className="table-wrapper">
       <table className="res-table">
       <thead>
@@ -26,8 +26,8 @@ function AttendanceTable({data = [], user = [], attendeesOnly = false, isLoading
       </tbody>
       </table>
       </div>
-      ) : null}
-      {data.length > 0 && !attendeesOnly ? (
+      )}
+      {data.length > 0 && !attendeesOnly && (
       <div className="table-wrapper">
       <table className="res-table">
         <thead>
@@ -63,7 +63,7 @@ function AttendanceTable({data = [], user = [], attendeesOnly = false, isLoading
         </tbody>
       </table>
       </div>
-      ) : null}
+      )}
     </>
   )
 }

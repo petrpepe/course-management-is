@@ -20,7 +20,7 @@ function Courses() {
 
       <section className="content">
         <Search getData={getCourses} />
-        {user.roles.includes("admin") ? <Link to={"/courses/create"}>Create new Course</Link> : null}
+        {user.roles.includes("admin") && <Link to={"/courses/create"}>Create new Course</Link>}
         {status === Status.Loading ? <Spinner /> : courses.length > 0 ? (
           <div className="cards">
             {courses.map((course) => (

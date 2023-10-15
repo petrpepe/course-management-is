@@ -87,7 +87,7 @@ const CustomSelect = ({ id, label, items, selectedItems, getItems, itemsStatus, 
                 MenuProps={MenuProps}>
                     {items.map((item) => (
                     <MenuItem key={item._id} value={item._id}>
-                        {multiple ? <Checkbox checked={selected.indexOf(item._id) > -1} /> : null}
+                        {multiple && <Checkbox checked={selected.indexOf(item._id) > -1} />}
                         <ListItemText primary={item.title} />
                     </MenuItem>
                     ))}

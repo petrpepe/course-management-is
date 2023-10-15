@@ -18,7 +18,7 @@ function Users() {
       </section>
 
       <section className="content">
-        {user.roles.includes("admin") ? <Link to={"/users/create"}>Create new User</Link> : null}
+        {user.roles.includes("admin") && <Link to={"/users/create"}>Create new User</Link>}
         {status === Status.Loading ? <CircularProgress /> : users.length > 0 ? (
           <div className="cards">
             {users.map((user) => (

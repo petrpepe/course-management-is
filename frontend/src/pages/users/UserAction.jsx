@@ -121,14 +121,13 @@ function UserAction() {
           placeholder="Enter password" onChange={(e) => onChange(e)} required={id === user._id ? true : false} size="medium" fullWidth sx={{my: 1}} />
         <TextField  id="password1" name="password1" label="Confirm password:" value={formData.password1}  type="password"
           placeholder="Confirm password" onChange={(e) => onChange(e)} required={id === user._id ? true : false} size="medium" fullWidth sx={{my: 1}} />
-        { (user.roles.includes("admin")) ?
+        { (user.roles.includes("admin")) &&
         <>
           <CustomSelect id="roles" label="Select roles" items={roles.roles.map(r => {return {_id: r._id, title: r.name}})} getItems={getRoles} itemsStatus={roles.status}
             formData={formData} selectedItems={formData.roles} setFormData={setFormData} multiple={true} />
           <CustomSelect id="extraPerms" label="Select extra permissions" items={avaiblePermissions.map(p => {return {_id: p._id, title: p.name}})} 
           getItems={getPermissions} itemsStatus={permissions.status} formData={formData} selectedItems={formData.extraPerms} setFormData={setFormData} multiple={true} />
-        </>
-        : null }
+        </>}
         <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
       </form>
     </section>

@@ -41,9 +41,9 @@ function UserDetail() {
         <section className="content">
           <div><p>Whole name: {currentUser.firstName + (currentUser.otherNames ? " " + currentUser.otherNames.join(" ") + " " : " ") + currentUser.lastName}</p></div>
           <div><p>Email: {currentUser.email}</p></div>
-          <div><p>{currentUser.phone.length > 0 ? <>Phone:
+          <div><p>{currentUser.phone.length > 0 && <>Phone:
             {currentUser.phone.map(phone => " " + phone.type + ": " + phone.number)}
-          </>: null}</p></div>
+          </>}</p></div>
           <Link to={"/users/" + currentUser._id + "/edit"} state={{currentUser: currentUser}}>Edit</Link>
         </section>
       </>

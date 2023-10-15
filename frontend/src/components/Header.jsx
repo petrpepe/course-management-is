@@ -65,14 +65,14 @@ function Header() {
                     <ListItemText primary="Email" />
                 </ListItemButton>
             </ListItem>
-            {!drawerState["main"] ? <>
+            {!drawerState["main"] && <>
             <Divider />
             <ListItem key="logout" disablePadding>
                 <ListItemButton component={ReactLink} to="/logout" sx={{ textAlign: 'center' }}>
                     <ListItemText primary="Logout" />
                 </ListItemButton>
             </ListItem>
-            </> : null }
+            </>}
         </>
     )
 
@@ -147,7 +147,7 @@ function Header() {
                     <Button component={ReactLink} to="/me" sx={{ color: '#fff' }}>Profile</Button>
                     </>}
                 </Box>
-                {user && user.roles.includes("admin") ? <>
+                {user && user.roles.includes("admin") && <>
                 <IconButton
                     size="large"
                     edge="start"
@@ -164,7 +164,7 @@ function Header() {
                     onOpen={toggleDrawer("management", true)}>
                     {managementDrawer}
                 </SwipeableDrawer>
-                </> : null}
+                </>}
                 { user ? <>
                     <IconButton
                         size="large"

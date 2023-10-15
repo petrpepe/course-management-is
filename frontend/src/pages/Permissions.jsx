@@ -67,11 +67,11 @@ function Permissions() {
                     onClick={setSortOrderBy(headCell.id)}
                   >
                     {headCell.label}
-                    {orderBy === headCell.id ? (
+                    {orderBy === headCell.id && (
                       <Box component="span" sx={visuallyHidden}>
                         {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                       </Box>
-                    ) : null}
+                    )}
                   </TableSortLabel>
                 </TableCell>))}
               </TableRow>

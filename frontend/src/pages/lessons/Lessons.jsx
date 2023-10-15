@@ -18,7 +18,7 @@ function Lessons() {
       </section>
 
       <section className="content">
-        {user.roles.includes("admin") || user.roles.includes("lector") ? <Link to={"/lessons/create"}>Create new Lesson</Link> : null}
+        {(user.roles.includes("admin") || user.roles.includes("lector")) && <Link to={"/lessons/create"}>Create new Lesson</Link>}
         {status === Status.Loading ? <CircularProgress /> : lessons.length > 0 ? (
           <div className="cards">
             {lessons.map((lesson) => (

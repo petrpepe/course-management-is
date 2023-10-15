@@ -20,7 +20,7 @@ function Classes() {
 
       <section className="content">
         <Search getData={getClasses} reset={resetClasses} />
-        {user.roles.includes("admin") ? <Link to={"/classes/create"}>Create new Class</Link> : null}
+        {user.roles.includes("admin") && <Link to={"/classes/create"}>Create new Class</Link>}
         {status === Status.Loading ? <Spinner /> : classes.length > 0 ? (
           <div className="cards">
             {classes.map((classVar) => (

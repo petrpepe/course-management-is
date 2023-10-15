@@ -16,12 +16,12 @@ function CustomCard({data, title = "", link = "", imgSrc = "", deleteAction}) {
 
   return (
     <Card sx={{ maxWidth: 345 }}>
-      {imgSrc ? <CardMedia
+      {imgSrc && <CardMedia
         component="img"
         height="194"
         image={imgSrc}
         alt="Paella dish"
-      /> : null }
+      /> }
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
           {title ? title : data.title}
@@ -32,13 +32,12 @@ function CustomCard({data, title = "", link = "", imgSrc = "", deleteAction}) {
       </CardContent>
       <CardActions disableSpacing>
         <Button component={ReactLink} size="small" to={link + data._id}>View detail</Button> 
-        {user.roles.includes("admin") || (user.roles.includes("lector") && location.pathname.includes("lessons")) ?
-          <Button component={ReactLink} size="small" to={link + data._id + "/edit"} state={{data}}>Edit</Button>
-        : null }
-        {user.roles.includes("admin") ? <Button variant="outlined" startIcon={<DeleteIcon  />} 
+        {(user.roles.includes("admin") || (user.roles.includes("lector") && location.pathname.includes("lessons"))) &&
+          <Button component={ReactLink} size="small" to={link + data._id + "/edit"} state={{data}}>Edit</Button>}
+        {user.roles.includes("admin") && <Button variant="outlined" startIcon={<DeleteIcon  />} 
           onClick={() => dispatch(deleteAction(data._id))} >
           Delete
-        </Button> : null}
+        </Button>}
       </CardActions>
     </Card>
   )

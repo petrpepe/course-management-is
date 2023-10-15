@@ -64,7 +64,7 @@ function App() {
             <Route path="/login/:userEmail" element={<Login />} />
             <Route path="/logout" element={<Logout/>} />
             <Route path="/:userId/:token" element={<ForgottenPassword />} />
-            {user ? <>
+            {user && <>
             <Route path="users" element={<ProtectedRoute isAllowed={user.roles} />}>
                 <Route index element={<Users />} />
                 <Route path=":id" element={<UserDetail />} />
@@ -109,7 +109,7 @@ function App() {
               <Route path="/permissions" element={<Permissions />} />
               <Route path="/email" element={<EmailPage />} />
             </Route>
-            </>: null}
+            </>}
             <Route path="*" element={<Page404 />} />
           </Routes>
         </main>
