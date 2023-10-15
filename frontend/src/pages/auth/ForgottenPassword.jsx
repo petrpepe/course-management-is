@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate, useParams} from "react-router-dom"
-import { FaKey } from "react-icons/fa"
+import KeyIcon from '@mui/icons-material/Key'
 import {setNewPassword, reset} from "../../features/auth/authSlice"
 import Spinner from "../../components/Spinner"
 import { Status } from "../../features/Status"
@@ -56,7 +56,7 @@ function ForgottenPassword() {
 
   return <>
     <section className="heading">
-      <Typography variant="h2"><FaKey /> Set new password</Typography>
+      <Typography variant="h2"><KeyIcon fontSize="large" /> Set new password</Typography>
     </section>
     <section className="form">
       <form onSubmit={onSubmit}>

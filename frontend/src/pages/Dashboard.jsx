@@ -1,23 +1,12 @@
-import {useEffect} from "react"
-import {useSelector, useDispatch} from "react-redux"
-import {deleteClass, getClasses} from "../features/classes/classSlice"
-import Spinner from "../components/Spinner"
-import Card from "../components/Card"
+import {useSelector} from "react-redux"
+import {deleteClass, getClasses, reset as resetClasses} from "../features/classes/classSlice"
+import CustomCard from "../components/CustomCard"
 import { Status } from "../features/Status"
+import useGetData from "../hooks/useGetData"
 
 function Dashboard() {
-  const dispatch = useDispatch()
-
   const { user } = useSelector((state) => state.auth)
-  const { classes, status, message } = useSelector((state) => state.classes)
-
-  useEffect(() => {
-    if (status === Status.Idle) {
-      dispatch(getClasses())
-    }
-  }, [status, message, dispatch])
-
-  if(status === Status.Loading) return <Spinner />
+  const { classes, status } = useGetData("classes", getClasses, resetClasses)
 
   return (
     <>
@@ -27,10 +16,10 @@ function Dashboard() {
       </section>
 
       <section className="content">
-        {classes.length > 0 ? (
+        {classes.length > 0 && status === Status.Success ? (
           <div className="cards">
             {classes.map((classVar) => (
-              <Card key={classVar._id} data={classVar} currentData={{currentClass: classVar}} link="/classes/" deleteAction={deleteClass} />
+              <CustomCard key={classVar._id} data={classVar} link="/classes/" deleteAction={deleteClass} />
             ))}
           </div>
         ) : ( 

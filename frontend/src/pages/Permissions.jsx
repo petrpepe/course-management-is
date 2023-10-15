@@ -1,7 +1,5 @@
 import {useEffect, useState} from "react"
-import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../components/Spinner"
-import {getPermissions,} from "../features/permissions/permissionSlice"
+import {getPermissions, reset as resetPermissions} from "../features/permissions/permissionSlice"
 import { Status } from "../features/Status"
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -13,27 +11,22 @@ import TableRow from '@mui/material/TableRow'
 import Paper from "@mui/material/Paper"
 import Box from "@mui/material/Box"
 import { visuallyHidden } from '@mui/utils'
+import CircularProgress from "@mui/material/CircularProgress"
+import Typography from "@mui/material/Typography"
+import useGetData from "../hooks/useGetData"
 
 function Permissions() {
-  const dispatch = useDispatch()
-
-  const { permissions, status, message } = useSelector((state) => state.permissions)
+  const { permissions, status } = useGetData("permissions", getPermissions, resetPermissions)
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [sortedPermissions, setSortedPermissions] = useState(permissions);
   const headers = [{id: "name", label: "Name"}, {id: "description", label: "Description"}]
 
   useEffect(() => {
-    if(status === Status.Idle) {
-      dispatch(getPermissions())
-    }
-    if (status === Status.Error) {
-      //show msg
-    }
     if (status === Status.Success) {
       setSortedPermissions(permissions)
     }
-  }, [status, permissions, message, dispatch])
+  }, [status, permissions])
 
   const setSortOrderBy = (property) => (event) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -51,13 +44,13 @@ function Permissions() {
   }
 
   if (status === Status.Loading) {
-    return <Spinner />
+    return <CircularProgress />
   }
 
   return (
     <>
       <section className="heading">
-        <h1>Permissions Dashboard</h1>
+        <Typography variant="h2">Permissions Dashboard</Typography>
       </section>
 
       <section className="content">
@@ -94,7 +87,7 @@ function Permissions() {
           </Table>
         </TableContainer>
         ) : ( 
-          <h3>You haven't set any permission</h3> 
+          <Typography variant="h3">You haven't set any permission</Typography> 
         )}
       </section>
     </>

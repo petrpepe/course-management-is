@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import ClearIcon from '@mui/icons-material/Clear';
+import { CircularProgress } from '@mui/material';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -30,13 +31,14 @@ const MenuProps = {
     },
 };
 
-const CustomSelect = ({ id, label, items, selectedItems, getItems, itemsStatus, formData, setFormData, compareItems, multiple}) => {
-    const [selected, setSelected] = React.useState(selectedItems ? selectedItems : (multiple ? [] : ""))
+const CustomSelect = ({ id, label, items, selectedItems, getItems, itemsStatus, formData, setFormData, multiple}) => {
+    const [selected, setSelected] = React.useState(multiple ? [] : "")
     const dispatch = useDispatch()
 
     React.useEffect(() => {
         if(itemsStatus === Status.Idle) dispatch(getItems())
-    }, [itemsStatus, getItems, dispatch])
+        if(itemsStatus === Status.Success) setSelected(selectedItems)
+    }, [itemsStatus, getItems, selectedItems, dispatch])
 
     const onSelectChange = (e) => {
         const value = e.target.value
@@ -58,9 +60,12 @@ const CustomSelect = ({ id, label, items, selectedItems, getItems, itemsStatus, 
         })
     }
 
+    if(itemsStatus === Status.Loading || itemsStatus === Status.Idle) {
+        return <CircularProgress /> 
+    }
+
     return (
     <div>
-        {itemsStatus === Status.Loading || itemsStatus === Status.Idle ? <p>Loading</p> :
         <FormControl fullWidth sx={{ my: 1 }}>
             <InputLabel id={id + "-label"}>{label}</InputLabel>
             <Select
@@ -71,7 +76,7 @@ const CustomSelect = ({ id, label, items, selectedItems, getItems, itemsStatus, 
                 value={selected}
                 onChange={onSelectChange}
                 input={<OutlinedInput label={label} />}
-                renderValue={(s) => multiple ? 
+                renderValue={(s) => multiple ?
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                         {s.map((item) => (
                         <Chip key={item} label={items.find(i => i._id === item).title} onDelete={() => handleDelete(s[0])} 
@@ -87,7 +92,7 @@ const CustomSelect = ({ id, label, items, selectedItems, getItems, itemsStatus, 
                     </MenuItem>
                     ))}
             </Select>
-        </FormControl>}
+        </FormControl>
     </div>
     )
 }

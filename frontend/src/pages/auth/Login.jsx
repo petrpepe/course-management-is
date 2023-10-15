@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate, useParams} from "react-router-dom"
-import { FaSignInAlt } from "react-icons/fa"
+import LoginIcon from '@mui/icons-material/Login'
 import {login, forgotPassword} from "../../features/auth/authSlice"
 import Spinner from "../../components/Spinner"
 import { Status } from "../../features/Status"
@@ -73,7 +73,7 @@ function Login() {
     </Snackbar>
     <section className="heading">
       <Typography variant="h2">
-        <FaSignInAlt /> {isForgotPassword ? "Forgot password?" : "Login"}
+        <LoginIcon fontSize="large" /> {isForgotPassword ? "Forgot password?" : "Login"}
       </Typography>
       <Typography variant="subtitle1">
         {isForgotPassword ? "Write your email and check your mailbox" : "Please sign in"}

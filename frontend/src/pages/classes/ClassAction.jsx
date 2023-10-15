@@ -1,7 +1,7 @@
 import {useState, useEffect} from "react"
 import {useDispatch} from 'react-redux'
 import {useParams} from "react-router-dom"
-import {FaChalkboardTeacher} from "react-icons/fa"
+import CoPresentIcon from '@mui/icons-material/CoPresent'
 import {createClass, getClasses, updateClass, reset as resetClasses} from "../../features/classes/classSlice"
 import {getUsers, reset as resetUsers} from "../../features/users/userSlice"
 import {getCourses, reset as resetCourses} from "../../features/courses/courseSlice"
@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography"
 import useGetData from "../../hooks/useGetData"
 
 function ClassAction() {
+  const [isCreated, setIsCreated] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
   let today = new Date()
@@ -39,8 +40,11 @@ function ClassAction() {
   const courses = useGetData("courses", getCourses, resetCourses)
   const classes = useGetData("classes", getClasses, resetClasses)
 
-  let currentClassId = null;
-  let currentClass = id ? classes.classes.filter(c => c._id === id) : formData
+  let currentClassId = null
+
+  useEffect(() => {
+    if(id && classes.status === Status.Success) setFormData(classes.classes.filter(l => l._id === id)[0])
+  }, [id, classes.status, classes.classes])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -58,40 +62,40 @@ function ClassAction() {
       currentClassId = id
     } else {
       dispatch(createClass(formData))
+      setIsCreated(true)
     }
     setOpenModal(true);
   }
 
-  if(users.status === Status.Loading || courses.status === Status.Loading) {
-    return <CircularProgress />
+  if (isCreated && classes.status === Status.Success) {
+    currentClassId = classes.classes[classes.classes.length-1]._id;
   }
 
-  if (!id && classes.status === Status.Success) {
-    currentClassId = classes.classes[classes.classes.length-1]._id;
-    console.log(currentClassId);
+  if(classes.status === Status.Loading) {
+    return <CircularProgress />
   }
 
   return <>
     <section className="heading">
       <Typography variant="h2">
-          <FaChalkboardTeacher /> {id ? "Editing class: " + currentClass.title : "Create class"}
+          <CoPresentIcon fontSize="large" /> {id ? "Editing class: " + formData.title : "Create class"}
       </Typography>
     </section>
     <section className="form">
       <form onSubmit={onSubmit}>
-        <TextField id="title" name="title" label="Title:" value={currentClass.title} 
+        <TextField id="title" name="title" label="Title:" value={formData.title} 
         onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <TextField id="description" name="description" label="Description" value={currentClass.description} 
+        <TextField id="description" name="description" label="Description" value={formData.description} 
         onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-        <TextField id="startDateTime" name="startDateTime" label="First lesson:" value={currentClass.startDateTime} 
+        <TextField id="startDateTime" name="startDateTime" label="First lesson:" value={formData.startDateTime} 
         onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} type="datetime-local" InputLabelProps={{shrink: true,}} />
-        <TextField id="place" name="place" label="Place (address or online url)" value={currentClass.place}
+        <TextField id="place" name="place" label="Place (address or online url)" value={formData.place}
         onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-        <CustomSelect id="course" label="Select course" selectedItems={currentClass.course} items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} 
-        getItems={getCourses} itemsStatus={courses.status} formData={currentClass} setFormData={setFormData} multiple={false} />
-        <CustomSelect id="lectors" label="Select lectors" selectedItems={currentClass.lectors}
+        <CustomSelect id="course" label="Select course" selectedItems={formData.course} items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} 
+        getItems={getCourses} itemsStatus={courses.status} formData={formData} setFormData={setFormData} multiple={false} />
+        <CustomSelect id="lectors" label="Select lectors" selectedItems={formData.lectors}
         items={users.users.filter(u => u.roles.includes("lector")).map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
-        getItems={getUsers} itemsStatus={users.status} formData={currentClass} setFormData={setFormData} multiple={true} />
+        getItems={getUsers} itemsStatus={users.status} formData={formData} setFormData={setFormData} multiple={true} />
         <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Submit</Button>
       </form>
       <StudentModal users={users} defaultOpened={openModal} setOpenModal={setOpenModal} classId={currentClassId} />

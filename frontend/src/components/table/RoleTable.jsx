@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
-import { useSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import { createRole, deleteRole, updateRole} from "../../features/roles/roleSlice"
-import { getPermissions } from "../../features/permissions/permissionSlice"
+import { getPermissions, reset as resetPermissions } from "../../features/permissions/permissionSlice"
 import ReadOnlyRow from "./ReadOnlyRow"
 import EditableRow from "./EditableRow"
 import Spinner from "../Spinner"
@@ -19,13 +19,15 @@ import TableRow from '@mui/material/TableRow'
 import Paper from "@mui/material/Paper"
 import Box from "@mui/material/Box"
 import { visuallyHidden } from '@mui/utils'
+import Typography from "@mui/material/Typography"
+import useGetData from "../../hooks/useGetData"
 
 function RoleTable({roles, rolesStatus}) {
   const dispatch = useDispatch()
   
   const [role, setState] = useState({name: "", description: "", permissions: []})
   const [editRole, setEdit] = useState({_id: "", ...role, isEdited: false})
-  const { permissions, status, message } = useSelector((state) => state.permissions)
+  const { permissions, status } = useGetData("permissions", getPermissions, resetPermissions)
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [sortedRoles, setSortedRoles] = useState(permissions);
@@ -64,13 +66,10 @@ function RoleTable({roles, rolesStatus}) {
   }
 
   useEffect(() => {
-    if (status === Status.Idle) {
-      dispatch(getPermissions())
-    }
     if (rolesStatus === Status.Success) {
       setSortedRoles(roles)
     }
-  }, [status, roles, rolesStatus, message, dispatch])
+  }, [roles, rolesStatus])
 
   
   const setSortOrderBy = (property) => (event) => {
@@ -133,10 +132,10 @@ function RoleTable({roles, rolesStatus}) {
         </TableContainer>
       </form>
     ) : ( 
-      <h3>You haven't set any role</h3> 
+      <Typography variant="h3">You haven't set any role</Typography> 
     )}
 
-    <h2>Add a Role</h2>
+    <Typography variant="h2">Add a Role</Typography>
     <form className="form" onSubmit={onSubmitAdd}>
       <TextField  id="name" name="name" label="Name:" placeholder="Enter name" onChange={(e) => onChange(e)} 
       required={true} size="medium" fullWidth sx={{my: 1}} />

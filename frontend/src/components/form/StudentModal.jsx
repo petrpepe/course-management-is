@@ -26,7 +26,7 @@ const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
         formData.classId = classId
         dispatch(createEnrollment(formData))
         setOpenModal(false);
-        //navigate("/classes/" + classId)
+        navigate("/classes/" + classId)
     }
 
     return (

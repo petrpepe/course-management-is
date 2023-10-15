@@ -9,11 +9,11 @@ import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-function MCard({data, title = "", link = "", imgSrc = "", currentData, deleteAction}) {
+function CustomCard({data, title = "", link = "", imgSrc = "", deleteAction}) {
   const dispatch = useDispatch()
   const {user} = useSelector(state => state.auth)
   const location = useLocation()
-  //dispatch(getUsers({ids: id, detail: true}))
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       {imgSrc ? <CardMedia
@@ -44,4 +44,4 @@ function MCard({data, title = "", link = "", imgSrc = "", currentData, deleteAct
   )
 }
 
-export default MCard
+export default CustomCard

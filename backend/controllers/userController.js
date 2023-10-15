@@ -21,26 +21,10 @@ const getUsers = asyncHandler(async (req, res) => {
         : req.query.id.map((id) => mongoose.Types.ObjectId(id))
         arg = {_id: {$in: ids}}
     }
-    
-    let select = "firstName lastName email phone roles";
-    if(req.query.detail == "true") {
-        select = "-password"
-    }
 
-    const users = await User.find(arg).select(select)
+    const users = await User.find(arg).select("-password")
 
-    let rolesIdsNames = new Map()
-    for (const user of users) {
-        user.roles.map(role => rolesIdsNames.set(role.toString(), ""))
-    }
-    rolesIdsNames = await getRolesNames(Array.from(rolesIdsNames.keys()))
-
-    const betterUsers = JSON.parse(JSON.stringify(users))
-    for (const user of betterUsers) {
-        user.roles = user.roles.map(role => rolesIdsNames.get(role)).flat()
-    }
-
-    res.status(200).json(betterUsers)
+    res.status(200).json(users)
 })
 
 /**

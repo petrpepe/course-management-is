@@ -1,9 +1,12 @@
 import { useState } from "react"
 import {useSelector, useDispatch} from 'react-redux'
-import {FaRegEnvelope } from "react-icons/fa"
+import EmailIcon from '@mui/icons-material/Email'
 import Spinner from "../components/Spinner"
 import {sendEmail} from "../features/email/emailSlice"
 import { Status } from "../features/Status"
+import TextField from "@mui/material/TextField"
+import Button from "@mui/material/Button"
+import { Typography } from "@mui/material"
 
 function EmailPage() {
   const [formData, setFormData] = useState({
@@ -15,7 +18,6 @@ function EmailPage() {
   })
 
   const dispatch = useDispatch()
-
   const {status} = useSelector((state) => state.auth)
 
   const onChange = (e) => {
@@ -27,11 +29,7 @@ function EmailPage() {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    const options = {
-      ...formData
-    }
-
-    dispatch(sendEmail(options))
+    dispatch(sendEmail(formData))
   }
 
   if (status === Status.Loading) {
@@ -39,40 +37,28 @@ function EmailPage() {
   }
 
   return <>
-      <section className="heading">
-        <h1>
-            <FaRegEnvelope /> Send Emails to people
-        </h1>
-        <p>It can be send to whoever</p>
-      </section>
-      <section className="form">
-        <form onSubmit={onSubmit}>
-            <div className="form-group" >
-                <input type="email" className="form-control" name="from" id="from"
-                value={formData.from} placeholder="Enter email you want to send it from" onChange={onChange} />
-            </div>
-            <div className="form-group" >
-                <input type="email" className="form-control" name="to" id="to"
-                value={formData.to} placeholder="Enter recepiens" onChange={onChange} required />
-            </div>
-            <div className="form-group" >
-                <input type="email" className="form-control" name="replyTo" id="replyTo"
-                value={formData.replyTo} placeholder="Enter email you want people reply to" onChange={onChange} />
-            </div>
-            <div className="form-group" >
-                <input type="text" className="form-control" name="subject" id="subject"
-                value={formData.subject} placeholder="Enter subject" onChange={onChange} required />
-            </div>
-            <div className="form-group" >
-                <textarea type="text" className="form-control" name="content" id="content"
-                value={formData.content} placeholder="Enter content of email" onChange={onChange} />
-            </div>
-            <div className="form-group">
-                <button type="submit" className="btn btn-block">Submit</button>
-            </div>
-        </form>
-      </section>
-    </>
+    <section className="heading">
+      <Typography variant="h2">
+          <EmailIcon fontSize="large" /> Send Emails to people
+      </Typography>
+      <Typography variant="body1">It can be send to whoever</Typography>
+    </section>
+    <section className="form">
+      <form onSubmit={onSubmit}>
+        <TextField  id="from" name="from" label="Enter sender email:" value={formData.from} type="email"
+          placeholder="example@domain.com" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+        <TextField  id="to" name="to" label="Enter recepient:" value={formData.to} type="email"
+          placeholder="student@domain.com" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+        <TextField  id="replyTo" name="replyTo" label="Enter email, which user will reply to (optional):" value={formData.replyTo} type="email"
+          placeholder="example@domain.com" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+        <TextField  id="subject" name="subject" label="Enter email subject:" value={formData.subject} 
+          placeholder="Subject" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+        <TextField  id="content" name="content" label="Enter message:" value={formData.content} multiline rows={6}
+          onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+        <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
+      </form>
+    </section>
+  </>
 }
 
 export default EmailPage

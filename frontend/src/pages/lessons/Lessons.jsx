@@ -1,39 +1,32 @@
-import {useEffect} from "react"
 import {Link} from "react-router-dom"
-import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../../components/Spinner"
-import {deleteLesson, getLessons} from "../../features/lessons/lessonSlice"
-import Card from "../../components/Card"
+import {useSelector} from "react-redux"
+import {deleteLesson, getLessons, reset as resetLessons} from "../../features/lessons/lessonSlice"
+import CustomCard from "../../components/CustomCard"
 import { Status } from "../../features/Status"
+import useGetData from "../../hooks/useGetData"
+import Typography from "@mui/material/Typography"
+import CircularProgress from "@mui/material/CircularProgress"
 
 function Lessons() {
-  const dispatch = useDispatch()
-
   const { user } = useSelector((state) => state.auth)
-  const { lessons, status } = useSelector((state) => state.lessons)
-
-  useEffect(() => {
-    if (status === Status.Idle) {
-      dispatch(getLessons())
-    }
-  }, [user, status, dispatch])
+  const { lessons, status } = useGetData("lessons", getLessons, resetLessons)
 
   return (
     <>
       <section className="heading">
-        <h1>Lessons Dashboard</h1>
+        <Typography variant="h2">Lessons Dashboard</Typography>
       </section>
 
       <section className="content">
         {user.roles.includes("admin") || user.roles.includes("lector") ? <Link to={"/lessons/create"}>Create new Lesson</Link> : null}
-        {status === Status.Loading ? <Spinner /> : lessons.length > 0 ? (
+        {status === Status.Loading ? <CircularProgress /> : lessons.length > 0 ? (
           <div className="cards">
             {lessons.map((lesson) => (
-              <Card key={lesson._id} data={lesson} link="/lessons/" currentData={{currentLesson: lesson}} deleteAction={deleteLesson} />
+              <CustomCard key={lesson._id} data={lesson} link="/lessons/" deleteAction={deleteLesson} />
             ))}
           </div>
         ) : ( 
-          <h3>You haven't set any lesson</h3> 
+          <Typography variant="h3">You haven't set any lesson</Typography> 
         )}
       </section>
     </>

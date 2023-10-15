@@ -598,11 +598,6 @@
 								{
 									"key": "id",
 									"value": "{{userId}}"
-								},
-								{
-									"key": "detail",
-									"value": "true",
-									"disabled": true
 								}
 							]
 						}

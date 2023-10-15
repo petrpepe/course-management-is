@@ -16,7 +16,7 @@ function UserDetail() {
     if(isError) {
     }
 
-    if(id) dispatch(getUsers({ids: id, detail: true}))
+    if(id) dispatch(getUsers({ids: id}))
 
     return () => {
       dispatch(reset())

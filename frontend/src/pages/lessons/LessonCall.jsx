@@ -3,14 +3,16 @@ import {useLocation} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
 import Spinner from "../../components/Spinner"
 import AttendanceTable from "../../components/table/AttendanceTable"
-import {getLessons} from "../../features/lessons/lessonSlice"
+import {getLessons, reset as resetLessons} from "../../features/lessons/lessonSlice"
 import { JaaSMeeting } from "@jitsi/react-sdk"
 import { Status } from "../../features/Status"
+import useGetData from "../../hooks/useGetData"
+import Typography from "@mui/material/Typography"
 
 function LessonCall() {
   const dispatch = useDispatch()
 
-  const { lessons, status } = useSelector((state) => state.lessons)
+  const { lessons, status } = useGetData("lessons", getLessons, resetLessons)
   const user = useSelector(state => state.auth.user)
   const location = useLocation()
 
@@ -31,12 +33,12 @@ function LessonCall() {
       <section className="lesson-content content">
         <div className="lesson-info">
           <div className="lesson-text">
-            <h1>{location.state.lessonId[0] + " " + (lesson ? lesson.title : "" )}</h1>
-            <p>{lesson ? "Odkaz: " + lesson.materials : ""}</p>
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</p>
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</p>
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</p>
-            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</p>
+            <Typography variant="h2">{location.state.lessonId[0] + " " + (lesson ? lesson.title : "" )}</Typography>
+            <Typography variant="body1">{lesson ? "Odkaz: " + lesson.materials : ""}</Typography>
+            <Typography variant="body1">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</Typography>
+            <Typography variant="body1">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</Typography>
+            <Typography variant="body1">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</Typography>
+            <Typography variant="body1">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cupiditate enim quas ipsa, accusamus ratione similique tempore totam quibusdam eligendi molestiae perspiciatis illo quia optio facilis? Aut minima voluptatum maiores repellendus.</Typography>
           </div>
           {location.state.attendees && (user.roles.includes("lector") || user.roles.includes("admin")) ? 
             <AttendanceTable data={location.state.attendees} user={user} attendeesOnly={true}/>

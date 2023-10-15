@@ -26,10 +26,9 @@ const updateUser = async (userId, userData, token) => {
     return response.data
 }
 
-const getUsers = async (ids, detail, token) => {
+const getUsers = async (ids, token) => {
     let params = new URLSearchParams()
     if(ids) typeof ids === "string" ? params.append("id", ids) : ids.map((id) => params.append("id", id))
-    params.append("detail", detail ? detail : false)
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
