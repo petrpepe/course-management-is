@@ -33,7 +33,7 @@ export const updateLesson = createAsyncThunk("lessons/update", async (lessonData
 export const getLessons = createAsyncThunk("lessons/get", async (lessonData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await lessonService.getLessons(lessonData.ids ? lessonData.ids : [], lessonData.detail ? true : false, token)
+        return await lessonService.getLessons(lessonData.ids || [], lessonData.detail || false, lessonData.keyword, lessonData.courseId, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()

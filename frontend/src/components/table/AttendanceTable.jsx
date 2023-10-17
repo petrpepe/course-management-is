@@ -1,34 +1,8 @@
+import CircularProgress from "@mui/material/CircularProgress"
 import CheckBox from "../form/CheckBox"
-import Spinner from "../Spinner"
 
-function AttendanceTable({data = [], user = [], attendeesOnly = false, isLoading = false}) {
+function AttendanceTable({data = [], user = []}) {
   return (
-    <>
-      {data.length > 0 && attendeesOnly && (
-      <div className="table-wrapper">
-      <table className="res-table">
-      <thead>
-          <tr>
-              <th>Attendee</th>
-              <th>#</th>
-          </tr>
-      </thead>
-      <tbody>
-        {isLoading ? <Spinner /> : data.map(attendance => {
-          return (
-            <tr key={attendance.user}>
-              <td>{attendance.name}</td>
-              <td><CheckBox id="attType" defaultValue={attendance.attType === "true" ? true : false} 
-              attId={attendance._id} userId={attendance.user} /></td>
-            </tr>
-          )
-          })}
-      </tbody>
-      </table>
-      </div>
-      )}
-      {data.length > 0 && !attendeesOnly && (
-      <div className="table-wrapper">
       <table className="res-table">
         <thead>
           <tr>
@@ -39,7 +13,7 @@ function AttendanceTable({data = [], user = [], attendeesOnly = false, isLoading
           </tr>
         </thead>
         <tbody>
-          {isLoading ? <Spinner /> : data.map(attendance => (
+          {data.map(attendance => (
             <tr key={attendance._id} >
               <td>{attendance.classId}</td>
               <td>{attendance.datetime}</td>
@@ -62,9 +36,6 @@ function AttendanceTable({data = [], user = [], attendeesOnly = false, isLoading
           ))}
         </tbody>
       </table>
-      </div>
-      )}
-    </>
   )
 }
 

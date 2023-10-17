@@ -3,19 +3,17 @@ import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate, useParams} from "react-router-dom"
 import KeyIcon from '@mui/icons-material/Key'
 import {setNewPassword, reset} from "../../features/auth/authSlice"
-import Spinner from "../../components/Spinner"
 import { Status } from "../../features/Status"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
 
 function ForgottenPassword() {
   const [formData, setFormData] = useState({
     password: "",
     password1: "",
   })
-
-  const {password, password1} = formData
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -42,32 +40,27 @@ function ForgottenPassword() {
     e.preventDefault()
 
     const userData = {
-        userId,
-        password,
-        password1,
+      ...formData,
+      userId
     }
 
     dispatch(setNewPassword(userData))
   }
 
   if (status === Status.Loading) {
-    return <Spinner />
+    return <CircularProgress />
   }
 
-  return <>
-    <section className="heading">
-      <Typography variant="h2"><KeyIcon fontSize="large" /> Set new password</Typography>
-    </section>
-    <section className="form">
-      <form onSubmit={onSubmit}>
-        <TextField id="password" name="password" label="Enter your password" type="password" value={password} 
-          onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <TextField id="password1" name="password1" label="Enter your password" type="password" value={password1} 
-          onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Set new password</Button>
-      </form>
-    </section>
-  </>
+  return (<>
+    <Typography variant="h2"><KeyIcon fontSize="large" /> Set new password</Typography>
+    <form onSubmit={onSubmit}>
+      <TextField id="password" name="password" label="Enter your password" type="password" value={formData.password} 
+        onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="password1" name="password1" label="Enter your password" type="password" value={formData.password1} 
+        onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
+      <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Set new password</Button>
+    </form>
+  </>)
 }
 
 export default ForgottenPassword

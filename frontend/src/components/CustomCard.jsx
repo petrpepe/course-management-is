@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Button from "@mui/material/Button";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-function CustomCard({data, title = "", link = "", imgSrc = "", deleteAction}) {
+function CustomCard({data, title = "", desc = "", link = "", imgSrc = "", deleteAction}) {
   const dispatch = useDispatch()
   const {user} = useSelector(state => state.auth)
   const location = useLocation()
@@ -27,7 +27,7 @@ function CustomCard({data, title = "", link = "", imgSrc = "", deleteAction}) {
           {title ? title : data.title}
         </Typography> 
         <Typography variant="body2" color="text.secondary" sx={{minHeight: "0.875rem"}}>
-          {data.description}
+          {desc ? desc : data.description}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>

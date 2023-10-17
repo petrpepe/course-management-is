@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography"
 import useGetData from "../../hooks/useGetData"
 import CircularProgress from "@mui/material/CircularProgress"
 import { Status } from "../../features/Status"
+import Paper from "@mui/material/Paper"
 
 function LessonAction() {
   const [isCreated, setIsCreated] = useState(false)
@@ -21,6 +22,7 @@ function LessonAction() {
     materials: "",
     duration: 60,
     course: "",
+    content: "",
   })
 
   const navigate = useNavigate()
@@ -43,14 +45,15 @@ function LessonAction() {
 
   const onSubmit = (e) => {
     e.preventDefault()
-
+    const lessonData = {
+      ...formData,
+      content: formData.content.replace(/\n/g, "\\n")
+    }
     if(id){
-      formData._id = id
-      dispatch(updateLesson(formData))
-      setFormData({})
+      dispatch(updateLesson(lessonData))
       navigate("/lessons/" + id)
     } else {
-      dispatch(createLesson(formData))
+      dispatch(createLesson(lessonData))
       setIsCreated(true)
     }
   }
@@ -63,30 +66,30 @@ function LessonAction() {
     return <CircularProgress />
   }
 
-  return <>
-      <section className="heading">
-        <Typography variant="h2">
-            <SchoolIcon fontSize="large" /> {id ? "Editing lesson: " + formData.title : "Create lesson"}
-        </Typography>
-      </section>
-      <section className="form">
-        <form onSubmit={onSubmit}>
-          <TextField  id="lessonNum" name="lessonNum" label="lessonNum:" value={formData.lessonNum} type="number" 
-          onChange={(e) => onChange(e)} required={true} InputProps={{ inputProps: { min: 1 } }} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="title" name="title" label="Title:" value={formData.title} 
-          placeholder="Enter title" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="description" name="description" label="Description:" value={formData.description} 
-          placeholder="Enter description" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="materials" name="materials" label="Materials:" value={formData.materials} 
-          placeholder="Enter materials" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <TextField  id="duration" name="duration" label="Duration:" value={formData.duration} type="number"
-          InputProps={{ inputProps: { min: 1 } }}onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-          <CustomSelect id="course" label="Select course" items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} getItems={getCourses} itemsStatus={courses.status}
-          formData={formData} setFormData={setFormData} multiple={false} selectedItems={formData.course} />
-          <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
-        </form>
-      </section>
-    </>
+  return (
+  <Paper elevation={0} sx={{my: 5, mx: "auto", maxWidth: "1000px"}}>
+    <Typography variant="h2">
+        <SchoolIcon fontSize="large" /> {id ? "Editing lesson: " + formData.title : "Create lesson"}
+    </Typography>
+    <form onSubmit={onSubmit}>
+      <TextField id="lessonNum" name="lessonNum" label="lessonNum:" value={formData.lessonNum} type="number" 
+      onChange={(e) => onChange(e)} required={true} InputProps={{ inputProps: { min: 1 } }} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="title" name="title" label="Title:" value={formData.title} 
+      placeholder="Enter title" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="description" name="description" label="Description:" value={formData.description} 
+      placeholder="Enter description" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="materials" name="materials" label="Materials:" value={formData.materials} 
+      placeholder="Enter materials" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="duration" name="duration" label="Duration:" value={formData.duration} type="number"
+      InputProps={{ inputProps: { min: 1 } }}onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <CustomSelect id="course" label="Select course" items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} getItems={getCourses} itemsStatus={courses.status}
+      formData={formData} setFormData={setFormData} multiple={false} selectedItems={formData.course} />
+      <TextField id="content" name="content" label="Content:" value={formData.content.replace(/\\n/g, "\n")} multiline minRows={10} maxRows={30}
+      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
+    </form>
+  </Paper>
+  )
 }
 
 export default LessonAction

@@ -43,55 +43,49 @@ function Permissions() {
     }))
   }
 
-  if (status === Status.Loading) {
+  if (status === Status.Loading || status === Status.Idle) {
     return <CircularProgress />
   }
 
-  return (
-    <>
-      <section className="heading">
-        <Typography variant="h2">Permissions Dashboard</Typography>
-      </section>
+  return (<>
+    <Typography variant="h2">Permissions Dashboard</Typography>
 
-      <section className="content">
-        {status === Status.Success ? (
-          <TableContainer component={Paper} sx={{mx: 3, width: "auto"}} >
-          <Table sx={{ overflowX: "auto" }} size="small" aria-label="permissions table">
-            <TableHead>
-              <TableRow>
-                {headers.map((headCell) => (
-                <TableCell key={headCell.id} sortDirection={orderBy === headCell.id ? order : false}>
-                  <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : 'asc'}
-                    onClick={setSortOrderBy(headCell.id)}
-                  >
-                    {headCell.label}
-                    {orderBy === headCell.id && (
-                      <Box component="span" sx={visuallyHidden}>
-                        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                      </Box>
-                    )}
-                  </TableSortLabel>
-                </TableCell>))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {sortedPermissions.map((perm) => (
-                <TableRow key={perm.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell scope="row">{perm.name}</TableCell>
-                  <TableCell>{perm.description}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        ) : ( 
-          <Typography variant="h3">You haven't set any permission</Typography> 
-        )}
-      </section>
-    </>
-  )
+    {permissions.length > 0 ? (
+      <TableContainer component={Paper} sx={{mx: 3, width: "auto"}} >
+      <Table sx={{ overflowX: "auto" }} size="small" aria-label="permissions table">
+        <TableHead>
+          <TableRow>
+            {headers.map((headCell) => (
+            <TableCell key={headCell.id} sortDirection={orderBy === headCell.id ? order : false}>
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={setSortOrderBy(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id && (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  </Box>
+                )}
+              </TableSortLabel>
+            </TableCell>))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {sortedPermissions.map((perm) => (
+            <TableRow key={perm.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+              <TableCell scope="row">{perm.name}</TableCell>
+              <TableCell>{perm.description}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+    ) : ( 
+      <Typography variant="h3">You haven't set any permission</Typography> 
+    )}
+  </>)
 }
 
 export default Permissions

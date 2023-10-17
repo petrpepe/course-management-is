@@ -21,10 +21,10 @@ const getClasses = asyncHandler(async (req, res) => {
             arg = {students: req.user._id}
         }
     }
-
+//zápis enrollments
     if(req.query.id && req.query.id != null) {
-        const ids = typeof req.query.id == "string" ? mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => mongoose.Types.ObjectId(id))
+        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
         arg = {...arg, _id: {$in: ids}}
     }
 
@@ -54,13 +54,13 @@ const getClasses = asyncHandler(async (req, res) => {
  * }
  */
 const setClass = asyncHandler(async (req, res) => {
-    const {title, startDateTime, lectors} = req.body
+    const {title, lectors} = req.body
     if(!title){
         res.status(400)
-        throw new Error("Please add datetime")
+        throw new Error("Please add title")
     }
 
-    req.body.course = mongoose.Types.ObjectId(req.body.course)
+    req.body.course = new mongoose.Types.ObjectId(req.body.course)
     const lessons = await Lesson.find({course: req.body.course})
     const classVar = await Class.create(req.body)
 
@@ -74,7 +74,7 @@ const setClass = asyncHandler(async (req, res) => {
 
     await Timetable.create(timetables)
 
-    /*const users = await User.find({_id: {$in: [lectors, students].flat()}})
+    const users = await User.find({_id: {$in: lectors}})
     
     for (const user of users) {
         try {
@@ -90,7 +90,7 @@ const setClass = asyncHandler(async (req, res) => {
             res.status(500);
             throw new Error(error)
         }
-    }*/
+    }
 
     res.status(200).json(classVar)
 })
@@ -111,21 +111,19 @@ const updateClass = asyncHandler(async (req, res) => {
     const updatedClass = await Class.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
     })
-// Replace Zvětšit počet a změna datumu a uživatelů
-    if (classVar.repeatCount !== req.repeatCount) {
-        let attendances = []
-        for (let i = 0; i < req.repeatCount - classVar.repeatCount; i++) {
-            const attendance = {datetime: "", classId: classVar._id, lessonId: null, attendees: []}
-            const attDatetime = new Date(classVar.startDateTime)
-            attendance.datetime = attDatetime.setDate(attDatetime.getDate() + 7 * i + req.repeatCount)
-            attendance.attendees = updatedClass.students.map(student => ({user: student.toString(), attType: ""}))
-            attendance.lessonId = lessons ? lessons.filter(l => l.orderNumber === i + 1)[0]._id : null
-    
-            attendances.push(attendance)
-        }
 
-        //await Attendance.updateMany({classId: updatedClass._id})
+    req.body.course = mongoose.Types.ObjectId(req.body.course)
+    const lessons = await Lesson.find({course: req.body.course})
+
+    let timetables = []
+    for (let i = 0; i < lessons.length; i++) {
+        const timetable = {dateTime: updatedClass.startDateTime, classId: updatedClass._id, lesson: lessons[i]._id, lector: updatedClass.lectors}
+        const dateTime = new Date(updatedClass.startDateTime)
+        timetable.dateTime = dateTime.setDate(dateTime.getDate() + 7 * i)
+        timetables.push(timetable)
     }
+
+    await Timetable.create(timetables)
 
     res.status(200).json(updatedClass)
 })
@@ -143,7 +141,7 @@ const deleteClass = asyncHandler(async (req, res) => {
         throw new Error("Class not find")
     }
 
-    await Attendance.deleteMany({classId: classVar._id.toString()})
+    await Timetable.deleteMany({classId: classVar._id.toString()})
 
     await classVar.deleteOne()
 

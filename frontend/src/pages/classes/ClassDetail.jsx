@@ -1,83 +1,32 @@
-import {useEffect} from "react"
-import {Link, useNavigate, useParams} from "react-router-dom"
-import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../../components/Spinner"
-import FullCalendar from '@fullcalendar/react'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import {getClasses, reset as classReset} from "../../features/classes/classSlice"
-import { getAttendances, reset as attReset } from "../../features/attendances/attendanceSlice"
+import {Link as ReactLink, useParams} from "react-router-dom"
+import {getClasses, reset as resetClasses} from "../../features/classes/classSlice"
+import { Status } from "../../features/Status"
+import Typography from "@mui/material/Typography"
+import useGetData from "../../hooks/useGetData"
+import CourseTitleLink from "../../components/CourseTitleLink"
+import CircularProgress from "@mui/material/CircularProgress"
+import LessonsList from "../../components/LessonsList"
+import Button from "@mui/material/Button"
+import { getEnrollments, reset as resetEnrollments } from "../../features/enrollments/enrollmentSlice"
+import UsersList from "../../components/UsersList"
 
 function ClassDetail() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const {id} = useParams()
+  const {classes, status} = useGetData("classes", getClasses, resetClasses, id, true)
+  const enrollments = useGetData("enrollments", getEnrollments, resetEnrollments, id)
 
-  const id = useParams().id
-  const { classes, isLoading, isError, message } = useSelector((state) => state.classes)
-  const attendances = useSelector((state) => state.attendances)
-  //const user = useSelector(state => state.auth.user)
-  
-  useEffect(() => {
-    if(isError || attendances.isError) {
-    }
-
-    dispatch(getClasses({ids: id}))
-
-    if (id) {
-      dispatch(getAttendances({names: true, classId: id}))
-    }
-
-    return () => {
-      dispatch(classReset())
-      dispatch(attReset())
-    }
-  }, [id, navigate, isError, attendances.isError, message, attendances.message, dispatch])
-
-  if (isLoading || !classes[0]) {
-    return <Spinner />
+  if (status === Status.Loading || status === Status.Idle || enrollments.status === Status.Loading || enrollments.status === Status.Idle) {
+    return <CircularProgress sx={{position: "absolute", top: "50%"}} />
   }
 
-  const classVar = classes[0]
-  const events = []
-  if (attendances.attendances.length > 0) {
-    attendances.attendances.map(att => {
-      let end = new Date(att.datetime)
-      end.setTime(end.getTime() + (att.lessonId && att.lessonId.duration ? att.lessonId.duration : 60) * 60000)
-      events.push({title: classVar.title + (att.lessonId && att.lessonId.title ? " lesson: " + att.lessonId.title : ""), 
-      start: att.datetime, end: end.toISOString(), 
-      lessonId: (att.lessonId && att.lessonId.id) ? [classVar.title, att.lessonId.id] : [classVar.title],
-      attendees: att.attendees, attId: att._id})
-      return att
-    })
-  }
-
-  const eventClicked = (e) => {
-    const extprops = e.event._def.extendedProps
-    navigate("/lessons/call", {state: {lessonId: extprops.lessonId, roomName: classVar.title, 
-      attendees: extprops.attendees, attId: extprops.attId}})
-  }
-
-  return (
-    <>
-      <section className="heading">
-        <h1>Class: {classVar.title}</h1>
-        <p>{classVar.desctiption}</p>
-      </section>
-
-      <section className="content calendar-wrapper">
-        <FullCalendar
-          plugins={[ timeGridPlugin ]}
-          initialView="timeGridWeek"
-          nowIndicator={true}
-          locale={window.navigator.language}
-          firstDay={1}
-          events={events}
-          eventClick={eventClicked}
-          height={"75vh"}
-        />
-        <Link to={"/classes/" + classVar._id + "/edit"} state={{currentClass: classVar}}>Edit</Link>
-      </section>
-    </>
-  )
+  return (<>
+    <Typography variant="h2">Class: {classes[0].title}</Typography>
+    <Typography variant="h3">{classes[0].description}</Typography>
+    <CourseTitleLink courseId={classes[0].course}/>
+    <LessonsList courseId={classes[0].course} />
+    <UsersList usersIds={enrollments.enrollments.map(e => e.student)} />
+    <Button component={ReactLink} to={"/classes/" + classes[0]._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
+  </>)
 }
 
 export default ClassDetail

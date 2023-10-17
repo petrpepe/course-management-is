@@ -1,55 +1,33 @@
-import {useEffect} from "react"
-import {useNavigate, useParams, Link} from "react-router-dom"
-import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../../components/Spinner"
-import {getUsers, reset} from "../../features/users/userSlice"
+import {useParams, Link as ReactLink} from "react-router-dom"
+import {getUsers, reset as resetUsers} from "../../features/users/userSlice"
+import CircularProgress from "@mui/material/CircularProgress"
+import useGetData from "../../hooks/useGetData"
+import { Status } from "../../features/Status"
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
 
 function UserDetail() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-
-  const { user } = useSelector((state) => state.auth)
-  const { users, isLoading, isError, message } = useSelector((state) => state.users)
   const { id } = useParams()
+  const { users, status, message } = useGetData("users", getUsers, resetUsers, id, true)
 
-  useEffect(() => {
-    if(isError) {
-    }
-
-    if(id) dispatch(getUsers({ids: id}))
-
-    return () => {
-      dispatch(reset())
-    }
-  }, [user, id, navigate, isError, message, dispatch])
-
-  if (isLoading || (id && !users[0])) {
-    return <Spinner />
+  if (status === Status.Loading || status === Status.Idle) {
+    return <CircularProgress />
   }
 
-  let currentUser = user
-  if(id) currentUser = users[0]
+  if (status === Status.Error) {
+    return console.log(message);
+  }
 
-  return (
-    <>
-    {currentUser != null ?
-      <>
-        <section className="heading">
-          <h1>{id ? "Profile: " + currentUser.firstName + " " + currentUser.lastName : "Your profile"}</h1>
-        </section>
+  const currentUser = users[0]
 
-        <section className="content">
-          <div><p>Whole name: {currentUser.firstName + (currentUser.otherNames ? " " + currentUser.otherNames.join(" ") + " " : " ") + currentUser.lastName}</p></div>
-          <div><p>Email: {currentUser.email}</p></div>
-          <div><p>{currentUser.phone.length > 0 && <>Phone:
-            {currentUser.phone.map(phone => " " + phone.type + ": " + phone.number)}
-          </>}</p></div>
-          <Link to={"/users/" + currentUser._id + "/edit"} state={{currentUser: currentUser}}>Edit</Link>
-        </section>
-      </>
-    : "No such an user"}
-    </>
-  )
+  return (<>
+    <Typography variant="h2">{id ? "Profile: " + currentUser.firstName + " " + currentUser.lastName : "Your profile"}</Typography>
+    <Typography variant="h3">Whole name: {currentUser.firstName + (currentUser.otherNames && " " + currentUser.otherNames.join(" ") + " ") + currentUser.lastName}</Typography>
+    <Typography variant="h4">Email: {currentUser.email}</Typography>
+    <Typography variant="body1">Phones</Typography>
+    {currentUser.phone.map(phone => <Typography variant="body1" key={phone._id}>{" " + phone.type + ": " + phone.number}</Typography>)}
+    <Button component={ReactLink} to={"/users/" + currentUser._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
+  </>)
 }
 
 export default UserDetail

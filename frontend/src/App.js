@@ -2,6 +2,7 @@ import {BrowserRouter as Router, Routes, Route, Outlet} from "react-router-dom"
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Header from "./components/Header"
+import Footer from "./components/Footer"
 import Dashboard from './pages/Dashboard'
 import AuthVerify from "./app/auth-verify"
 import Login from './pages/auth/Login'
@@ -28,7 +29,9 @@ import Page404 from "./pages/Page404"
 import { useSelector } from "react-redux"
 import Timetable from "./pages/Timetable"
 import { useMediaQuery } from "@mui/material";
+import Paper from "@mui/material/Paper"
 import { useMemo } from "react";
+import Profile from "./pages/users/Profile";
 
 export const ProtectedRoute = ({
   isAllowed,
@@ -56,7 +59,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <main className="container">
+        <Paper elevation={0} sx={{m: 5, textAlign: "center"}}>
           <Header />
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -99,7 +102,7 @@ function App() {
               <Route path=":id/edit" element={<ClassAction />} />
             </Route>
             <Route element={<ProtectedRoute isAllowed={user.roles} />}>
-              <Route path="/me" element={<UserDetail />} />
+              <Route path="/me" element={<Profile />} />
               <Route path="/attendances" element={<Attendances />} />
               <Route path="/timetable" element={<Timetable />} />
             </Route>
@@ -112,7 +115,8 @@ function App() {
             </>}
             <Route path="*" element={<Page404 />} />
           </Routes>
-        </main>
+          <Footer />
+        </Paper>
         <AuthVerify />
       </Router>
     </ThemeProvider>

@@ -1,13 +1,13 @@
 import {useEffect} from "react"
 import {useLocation} from "react-router-dom"
 import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../../components/Spinner"
 import AttendanceTable from "../../components/table/AttendanceTable"
 import {getLessons, reset as resetLessons} from "../../features/lessons/lessonSlice"
 import { JaaSMeeting } from "@jitsi/react-sdk"
 import { Status } from "../../features/Status"
 import useGetData from "../../hooks/useGetData"
 import Typography from "@mui/material/Typography"
+import CircularProgress from "@mui/material/CircularProgress"
 
 function LessonCall() {
   const dispatch = useDispatch()
@@ -23,7 +23,7 @@ function LessonCall() {
   }, [location.state.lessonId, dispatch])
 
   if (status === Status.Loading) {
-    return <Spinner />
+    return <CircularProgress />
   }
 
   const lesson = lessons.filter(les => les._id === location.state.lessonId[1])[0]

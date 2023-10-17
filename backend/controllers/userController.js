@@ -16,9 +16,9 @@ const {sendEmail} = require("./emailController")
  */
 const getUsers = asyncHandler(async (req, res) => {
     let arg = {}
-    if(req.query.id && req.query.id != null) {
-        const ids = typeof req.query.id == "string" ? mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => mongoose.Types.ObjectId(id))
+    if(req.query.id) {
+        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
         arg = {_id: {$in: ids}}
     }
 

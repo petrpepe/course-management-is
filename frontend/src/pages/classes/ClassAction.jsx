@@ -14,6 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress"
 import Typography from "@mui/material/Typography"
 import useGetData from "../../hooks/useGetData"
 import { getRoles, reset as resetRoles } from "../../features/roles/roleSlice"
+import Paper from "@mui/material/Paper"
 
 function ClassAction() {
   const [isCreated, setIsCreated] = useState(false)
@@ -72,38 +73,37 @@ function ClassAction() {
 
   if (isCreated && classes.status === Status.Success) {
     currentClassId = classes.classes[classes.classes.length-1]._id;
+    console.log(currentClassId);
   }
 
   if((id && classes.status === Status.Loading) || roles.status === Status.Loading || roles.status === Status.Idle) {
     return <CircularProgress />
   }
   const lectorsOptions = users.users.filter(u => u.roles.includes(roles.roles.filter(r => r.name === "lector")[0]._id))
-  return <>
-    <section className="heading">
-      <Typography variant="h2">
-          <CoPresentIcon fontSize="large" /> {id ? "Editing class: " + formData.title : "Create class"}
-      </Typography>
-    </section>
-    <section className="form">
-      <form onSubmit={onSubmit}>
-        <TextField id="title" name="title" label="Title:" value={formData.title} 
-        onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <TextField id="description" name="description" label="Description" value={formData.description} 
-        onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-        <TextField id="startDateTime" name="startDateTime" label="First lesson:" value={formData.startDateTime} 
-        onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} type="datetime-local" InputLabelProps={{shrink: true,}} />
-        <TextField id="place" name="place" label="Place (address or online url)" value={formData.place}
-        onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-        <CustomSelect id="course" label="Select course" selectedItems={formData.course} items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} 
-        getItems={getCourses} itemsStatus={courses.status} formData={formData} setFormData={setFormData} multiple={false} />
-        <CustomSelect id="lectors" label="Select lectors" selectedItems={formData.lectors}
-        items={lectorsOptions.map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
-        getItems={getUsers} itemsStatus={users.status} formData={formData} setFormData={setFormData} multiple={true} />
-        <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Submit</Button>
-      </form>
-      <StudentModal users={users} defaultOpened={openModal} setOpenModal={setOpenModal} classId={currentClassId} />
-    </section>
-  </>
+  return (
+  <Paper elevation={0} sx={{my: 5, mx: "auto", maxWidth: "1000px"}}>
+    <Typography variant="h2">
+        <CoPresentIcon fontSize="large" /> {id ? "Editing class: " + formData.title : "Create class"}
+    </Typography>
+    <form onSubmit={onSubmit}>
+      <TextField id="title" name="title" label="Title:" value={formData.title} 
+      onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="description" name="description" label="Description" value={formData.description} 
+      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="startDateTime" name="startDateTime" label="First lesson:" value={formData.startDateTime} 
+      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} type="datetime-local" InputLabelProps={{shrink: true,}} />
+      <TextField id="place" name="place" label="Place (address or online url)" value={formData.place}
+      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <CustomSelect id="course" label="Select course" selectedItems={formData.course} items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} 
+      getItems={getCourses} itemsStatus={courses.status} formData={formData} setFormData={setFormData} multiple={false} />
+      <CustomSelect id="lectors" label="Select lectors" selectedItems={formData.lectors}
+      items={lectorsOptions.map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
+      getItems={getUsers} itemsStatus={users.status} formData={formData} setFormData={setFormData} multiple={true} />
+      <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Submit</Button>
+    </form>
+    <StudentModal users={users} defaultOpened={openModal} setOpenModal={setOpenModal} classId={currentClassId} />
+  </Paper>
+  )
 }
 
 export default ClassAction

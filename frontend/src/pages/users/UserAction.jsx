@@ -13,7 +13,8 @@ import { Status } from "../../features/Status"
 import CircularProgress from "@mui/material/CircularProgress"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
-import { Typography } from "@mui/material";
+import { Typography } from "@mui/material"
+import Paper from "@mui/material/Paper"
 
 function UserAction() {
   const [isCreated, setIsCreated] = useState(false)
@@ -99,39 +100,37 @@ function UserAction() {
 
   const phones = JSON.parse(JSON.stringify(formData.phone))
 
-  return <>
-    <section className="heading">
-        <Typography variant="h2">
-            <PersonIcon fontSize="large" /> {!id ? "Create user" : (id === user._id ? "Edit your profile" : "Editing user: " + formData.firstName + " " + formData.lastName )}
-        </Typography>
-    </section>
-    <section className="form">
-      <form onSubmit={onSubmit}>
-        <TextField  id="firstName" name="firstName" label="First name:" value={formData.firstName} 
-          placeholder="Enter first name" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <TextField  id="otherNames" name="otherNames" label="Middle names:" value={formData.otherNames} 
-          placeholder="Enter middle names" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-        <TextField  id="lastName" name="lastName" label="Last name:" value={formData.lastName} 
-          placeholder="Enter last name" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <TextField  id="email" name="email" label="Email:" value={formData.email} type="email" 
-          placeholder="Enter email" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <PhoneInputs name="number" placeholder="Enter phone number" listName="type" 
-          phones={phones} formData={formData} setFormData={setFormData} />
-        <TextField  id="password" name="password" label="Password:" value={formData.password} type="password"
-          placeholder="Enter password" onChange={(e) => onChange(e)} required={id === user._id ? true : false} size="medium" fullWidth sx={{my: 1}} />
-        <TextField  id="password1" name="password1" label="Confirm password:" value={formData.password1}  type="password"
-          placeholder="Confirm password" onChange={(e) => onChange(e)} required={id === user._id ? true : false} size="medium" fullWidth sx={{my: 1}} />
-        { (user.roles.includes("admin")) &&
-        <>
-          <CustomSelect id="roles" label="Select roles" items={roles.roles.map(r => {return {_id: r._id, title: r.name}})} getItems={getRoles} itemsStatus={roles.status}
-            formData={formData} selectedItems={formData.roles} setFormData={setFormData} multiple={true} />
-          <CustomSelect id="extraPerms" label="Select extra permissions" items={avaiblePermissions.map(p => {return {_id: p._id, title: p.name}})} 
-          getItems={getPermissions} itemsStatus={permissions.status} formData={formData} selectedItems={formData.extraPerms} setFormData={setFormData} multiple={true} />
-        </>}
-        <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
-      </form>
-    </section>
-  </>
+  return (
+  <Paper elevation={0} sx={{my: 5, mx: "auto", maxWidth: "1000px"}}>
+    <Typography variant="h2">
+        <PersonIcon fontSize="large" /> {!id ? "Create user" : (id === user._id ? "Edit your profile" : "Editing user: " + formData.firstName + " " + formData.lastName )}
+    </Typography>
+    <form onSubmit={onSubmit}>
+      <TextField  id="firstName" name="firstName" label="First name:" value={formData.firstName} 
+        placeholder="Enter first name" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+      <TextField  id="otherNames" name="otherNames" label="Middle names:" value={formData.otherNames} 
+        placeholder="Enter middle names" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <TextField  id="lastName" name="lastName" label="Last name:" value={formData.lastName} 
+        placeholder="Enter last name" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+      <TextField  id="email" name="email" label="Email:" value={formData.email} type="email" 
+        placeholder="Enter email" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+      <PhoneInputs name="number" placeholder="Enter phone number" listName="type" 
+        phones={phones} formData={formData} setFormData={setFormData} />
+      <TextField  id="password" name="password" label="Password:" value={formData.password} type="password"
+        placeholder="Enter password" onChange={(e) => onChange(e)} required={id === user._id ? true : false} size="medium" fullWidth sx={{my: 1}} />
+      <TextField  id="password1" name="password1" label="Confirm password:" value={formData.password1}  type="password"
+        placeholder="Confirm password" onChange={(e) => onChange(e)} required={id === user._id ? true : false} size="medium" fullWidth sx={{my: 1}} />
+      { (user.roles.includes("admin")) &&
+      <>
+        <CustomSelect id="roles" label="Select roles" items={roles.roles.map(r => {return {_id: r._id, title: r.name}})} getItems={getRoles} itemsStatus={roles.status}
+          formData={formData} selectedItems={formData.roles} setFormData={setFormData} multiple={true} />
+        <CustomSelect id="extraPerms" label="Select extra permissions" items={avaiblePermissions.map(p => {return {_id: p._id, title: p.name}})} 
+        getItems={getPermissions} itemsStatus={permissions.status} formData={formData} selectedItems={formData.extraPerms} setFormData={setFormData} multiple={true} />
+      </>}
+      <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
+    </form>
+  </Paper>
+  )
 }
 
 export default UserAction

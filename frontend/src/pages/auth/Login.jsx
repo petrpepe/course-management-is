@@ -3,12 +3,12 @@ import {useSelector, useDispatch} from 'react-redux'
 import {useNavigate, useParams} from "react-router-dom"
 import LoginIcon from '@mui/icons-material/Login'
 import {login, forgotPassword} from "../../features/auth/authSlice"
-import Spinner from "../../components/Spinner"
 import { Status } from "../../features/Status"
 import { Alert, AlertTitle, Snackbar } from "@mui/material"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -16,8 +16,6 @@ function Login() {
     password: "",
   })
   const [isForgotPassword, setforgotPassword] = useState(false)
-
-  const {email, password} = formData
 
   const {userEmail} = useParams()
   const navigate = useNavigate()
@@ -53,45 +51,39 @@ function Login() {
   const onSubmitForgotPassword = (e) => {
     e.preventDefault()
 
-    const userData = {
-      email
-    }
+    const userData = formData.email
 
     dispatch(forgotPassword(userData))
   }
 
   if (status === Status.Loading) {
-    return <Spinner />
+    return <CircularProgress />
   }
 
-  return <>
+  return (<>
     <Snackbar open autoHideDuration={1000} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
       <Alert severity="error" sx={{textAlign: "left"}} >
         <AlertTitle><strong>Error</strong></AlertTitle>
           This is an error alert
       </Alert>
     </Snackbar>
-    <section className="heading">
-      <Typography variant="h2">
-        <LoginIcon fontSize="large" /> {isForgotPassword ? "Forgot password?" : "Login"}
-      </Typography>
-      <Typography variant="subtitle1">
-        {isForgotPassword ? "Write your email and check your mailbox" : "Please sign in"}
-      </Typography>
-    </section>
-    <section className="form">
-      <form onSubmit={isForgotPassword ? onSubmitForgotPassword : onSubmitLogin}>
-        <TextField id="email" name="email" label="Your email" type="email" value={email} 
+    <Typography variant="h2">
+      <LoginIcon fontSize="large" /> {isForgotPassword ? "Forgot password?" : "Login"}
+    </Typography>
+    <Typography variant="subtitle1">
+      {isForgotPassword ? "Write your email and check your mailbox" : "Please sign in"}
+    </Typography>
+    <form onSubmit={isForgotPassword ? onSubmitForgotPassword : onSubmitLogin}>
+      <TextField id="email" name="email" label="Your email" type="email" value={formData.email} 
+      onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
+      {isForgotPassword ? "" :
+        <TextField id="password" name="password" label="Enter your password" type="password" value={formData.password} 
         onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
-        {isForgotPassword ? "" :
-          <TextField id="password" name="password" label="Enter your password" type="password" value={password} 
-          onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
-        }
-        <Button variant="text" onClick={() => setforgotPassword(!isForgotPassword)}>{isForgotPassword ? "Back to login" : "Forgot password?"}</Button>
-        <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>{isForgotPassword ? "Send " : "Submit"}</Button>
-      </form>
-    </section>
-  </>
+      }
+      <Button variant="text" onClick={() => setforgotPassword(!isForgotPassword)}>{isForgotPassword ? "Back to login" : "Forgot password?"}</Button>
+      <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>{isForgotPassword ? "Send " : "Submit"}</Button>
+    </form>
+  </>)
 }
 
 export default Login

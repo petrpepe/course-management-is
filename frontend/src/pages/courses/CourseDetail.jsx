@@ -1,45 +1,34 @@
-import {useEffect} from "react"
-import {useNavigate, useParams} from "react-router-dom"
-import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../../components/Spinner"
-import {getCourses, reset} from "../../features/courses/courseSlice"
+import {Link as ReactLink, useParams} from "react-router-dom"
+import {getCourses, reset as resetCourses} from "../../features/courses/courseSlice"
+import useGetData from "../../hooks/useGetData"
+import { Status } from "../../features/Status"
+import CircularProgress from "@mui/material/CircularProgress"
+import Typography from "@mui/material/Typography"
+import UserNameLink from "../../components/UserNameLink"
+import LessonsList from "../../components/LessonsList"
+import { Button } from "@mui/material"
 
 function CourseDetail() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const {id} = useParams()
+  const { courses, status, message } = useGetData("courses", getCourses, resetCourses, id)
 
-  const id = useParams().id
-  const { courses, isLoading, isError, message } = useSelector((state) => state.courses)
-
-  useEffect(() => {
-    if(isError) {
-    }
-
-    dispatch(getCourses({ids: id}))
-
-    return () => {
-      dispatch(reset())
-    }
-  }, [id, navigate, isError, message, dispatch])
-
-  if (isLoading || !courses[0]) {
-    return <Spinner />
+  if (status === Status.Loading || status === Status.Idle) {
+    return <CircularProgress />
   }
 
+  if (status === Status.Error) {
+    console.log(message);
+  }
   const course = courses[0]
 
-  return (
-    <>
-      <section className="heading">
-        <h1>Course: {course.title}</h1>
-        <p>{course.desctiption}</p>
-      </section>
-
-      <section className="content">
-        <p></p>
-      </section>
-    </>
-  )
+  return (<>
+    <Typography variant="h2">Course {course.title}</Typography>
+    <Typography variant="subtitle1">Academic term {course.academicTerm}</Typography>
+    <Typography variant="subtitle1">{course.description}</Typography>
+    <UserNameLink userId={course.owner} />
+    <LessonsList courseId={course._id} />
+    <Button component={ReactLink} to={"/courses/" + course._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
+  </>)
 }
 
 export default CourseDetail

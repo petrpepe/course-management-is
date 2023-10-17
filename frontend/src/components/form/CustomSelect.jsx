@@ -31,7 +31,7 @@ const MenuProps = {
     },
 };
 
-const CustomSelect = ({ id, label, items, selectedItems, getItems, itemsStatus, formData, setFormData, multiple}) => {
+const CustomSelect = ({ id, label, items, selectedItems = [], getItems, itemsStatus, formData, setFormData, multiple}) => {
     const [selected, setSelected] = React.useState(multiple ? [] : "")
     const dispatch = useDispatch()
 

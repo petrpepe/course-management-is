@@ -11,6 +11,7 @@ import useGetData from "../../hooks/useGetData"
 import Typography from "@mui/material/Typography"
 import { Status } from "../../features/Status"
 import CircularProgress from "@mui/material/CircularProgress"
+import Paper from "@mui/material/Paper"
 
 function CourseAction() {
   const [isCreated, setIsCreated] = useState(false)
@@ -43,9 +44,7 @@ function CourseAction() {
     e.preventDefault()
 
     if(id){
-      formData._id = id
       dispatch(updateCourse(formData))
-      setFormData({})
       navigate("/courses/" + id)
     } else {
       dispatch(createCourse(formData))
@@ -61,26 +60,24 @@ function CourseAction() {
     return <CircularProgress />
   }
 
-  return <>
-    <section className="heading">
-      <Typography variant="h2">
-          <SchoolIcon fontSize="large" /> {id ? "Editing course: " + formData.title : "Create course"}
-      </Typography>
-    </section>
-    <section className="form">
-      <form onSubmit={onSubmit} >
-        <TextField id="title" name="title" label="Title" value={formData.title} 
-        onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <TextField id="description" name="description" label="Description" value={formData.description} 
-        onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-        <TextField id="academicTerm" name="academicTerm" label="Academic Term" value={formData.academicTerm} 
-        onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-        <CustomSelect id="owner" label="Select owner" items={providers.providers.map(p => {return {_id: p._id, title: p.name}})} getItems={getProviders} itemsStatus={providers.status}
-        formData={formData} setFormData={setFormData} multiple={false} selectedItems={formData.owner} />
-        <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
-      </form>
-    </section>
-  </>
+  return (
+  <Paper elevation={0} sx={{my: 5, mx: "auto", maxWidth: "1000px"}}>
+    <Typography variant="h2">
+        <SchoolIcon fontSize="large" /> {id ? "Editing course: " + formData.title : "Create course"}
+    </Typography>
+    <form onSubmit={onSubmit} >
+      <TextField id="title" name="title" label="Title" value={formData.title} 
+      onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="description" name="description" label="Description" value={formData.description} 
+      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <TextField id="academicTerm" name="academicTerm" label="Academic Term" value={formData.academicTerm} 
+      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+      <CustomSelect id="owner" label="Select owner" items={providers.providers.map(p => {return {_id: p._id, title: p.name}})} getItems={getProviders} itemsStatus={providers.status}
+      formData={formData} setFormData={setFormData} multiple={false} selectedItems={formData.owner} />
+      <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
+    </form>
+  </Paper>
+  )
 }
 
 export default CourseAction

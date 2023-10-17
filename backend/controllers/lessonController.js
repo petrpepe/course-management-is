@@ -9,18 +9,24 @@ const mongoose = require("mongoose");
  */
 const getLessons = asyncHandler(async (req, res) => {
     let arg = {}
-    if(req.query.id && req.query.id != null) {
-        const ids = typeof req.query.id == "string" ? mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => mongoose.Types.ObjectId(id))
-        arg = {_id: {$in: ids}}
+
+    if(req.query.id) {
+        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+        arg = {...arg, _id: {$in: ids}}
     }
-    
-    let select = "title description createdAt";
-    if(req.query.detail == "true") {
+
+    let select = "-content";
+    if(req.query.detail === "true") {
         select = ""
     }
-    
-    const lessons = await Lesson.find({arg}).select(select)
+
+    if(req.query.keyword && req.query.keyword != null) {
+        const keyword = new RegExp(".*" + req.query.keyword + ".*", "i")
+        arg = {...arg, title: {$regex: keyword}}
+    }
+
+    const lessons = await Lesson.find(arg).select(select)
 
     res.status(200).json(lessons)
 })

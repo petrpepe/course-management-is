@@ -1,38 +1,34 @@
-import {useEffect} from "react"
-import {useParams} from "react-router-dom"
-import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../../components/Spinner"
-import {getLessons} from "../../features/lessons/lessonSlice"
+import {Link as ReactLink, useParams} from "react-router-dom"
+import {getLessons, reset as resetLessons} from "../../features/lessons/lessonSlice"
 import { Status } from "../../features/Status"
+import Typography from "@mui/material/Typography"
+import useGetData from "../../hooks/useGetData"
+import CourseTitleLink from "../../components/CourseTitleLink"
+import CircularProgress from "@mui/material/CircularProgress"
+import Button from "@mui/material/Button"
 
 function LessonDetail() {
-  const dispatch = useDispatch()
+  const {id} = useParams()
+  const {lessons, status} = useGetData("lessons", getLessons, resetLessons, id, true)
 
-  const id = useParams().id
-  const { lessons, status } = useSelector((state) => state.lessons)
-
-  useEffect(() => {
-    if (status === Status.Idle) {
-      dispatch(getLessons({ids: id, detail: true}))
-    }
-  }, [id, status, dispatch])
-
-  if (status === Status.Loading || !lessons[0]) {
-    return <Spinner />
+  if (status === Status.Loading || status === Status.Idle) {
+    return <CircularProgress />
   }
 
-  const lesson = lessons.filter(les => les._id === id)[0]
+  if (status === Status.Success && lessons[0].content === undefined) {
+    return <CircularProgress />
+  }
 
-  return (
-    <>
-      <section className="heading">
-        <h1>Lesson: {lesson.title}</h1>
-        <p>{lesson.materials}</p>
-        <p>{lesson.description}</p>
-        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam delectus rem quae deserunt consequuntur officia atque qui in cumque eius reprehenderit, quas id iste minima accusamus aspernatur. Pariatur, unde animi!</p>
-      </section>
-    </>
-  )
+  return (<>
+    <Typography variant="h2">Lesson {lessons[0].lessonNum}: {lessons[0].title}</Typography>
+    <Typography variant="h3">{lessons[0].description}</Typography>
+    <CourseTitleLink courseId={lessons[0].course} />
+    <Typography variant="body1" fontSize="large">{lessons[0].materials}</Typography>
+    {lessons[0].content.split("\\n").map((c, i) =>
+      <Typography key={i} variant="body1" fontSize="large" textAlign="left" sx={{ m: 1.5 }}>{c}</Typography>
+    )}
+    <Button component={ReactLink} to={"/lessons/" + lessons[0]._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
+  </>)
 }
 
 export default LessonDetail

@@ -1,76 +1,23 @@
-import {useEffect} from "react"
-import { useNavigate, useParams} from "react-router-dom"
-import {useSelector, useDispatch} from "react-redux"
-import Spinner from "../components/Spinner"
-import FullCalendar from '@fullcalendar/react'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import { getAttendances, reset as attReset } from "../features/attendances/attendanceSlice"
+import {useParams} from "react-router-dom"
+import {useSelector} from "react-redux"
+//import { getAttendances, reset as resetAttendances } from "../features/attendances/attendanceSlice"
+//import { getTimetables, reset as resetTimetables } from "../features/timetables/timetableSlice"
+import { getEnrollments, reset as resetEnrollments } from "../features/enrollments/enrollmentSlice"
+import useGetData from "../hooks/useGetData"
+import Typography from "@mui/material/Typography"
 
 function Timetable() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-
-  const id = useParams().id
-  const { attendances, isLoading, isError, message } = useSelector((state) => state.attendances)
+  const {id} = useParams()
   const user = useSelector(state => state.auth.user)
+  //const {classes, status} = useGetData("classes", getClasses, resetClasses, id, true)
+  //const { users } = useGetData("users", getUsers, resetUsers)
+  const {enrollments} = useGetData("enrollments", getEnrollments, resetEnrollments, id || user._id)
+  //const {timetables, status} = useGetData("timetables", getTimetables, resetTimetables, id || user._id)
 
-  useEffect(() => {
-    if(isError) {
-    }
-
-    if (user && (!id || id === user._id)) {
-      dispatch(getAttendances({names: true}))
-    }
-
-    if (id) {
-      dispatch(getAttendances({names: true, itemId: id}))
-    }
-
-    return () => {
-      dispatch(attReset())
-    }
-  }, [user, id, navigate, isError, message, dispatch])
-
-  const events = []
-  if (attendances.length > 0) {
-    attendances.map(att => {
-      let end = new Date(att.datetime)
-      end.setTime(end.getTime() + (att.lessonId && att.lessonId.duration ? att.lessonId.duration : 60) * 60000)
-      events.push({title: att.classId + (att.lessonId && att.lessonId.title ? " lesson: " + att.lessonId.title : ""), 
-      start: att.datetime, end: end.toISOString(), 
-      lessonId: (att.lessonId && att.lessonId.id) ? [att.classId, att.lessonId.id] : [att.classId],
-      attendees: att.attendees, attId: att._id})
-      return att
-    })
-  }
-
-  const eventClicked = (e) => {
-    const extprops = e.event._def.extendedProps
-    navigate("/lessons/call", {state: {lessonId: extprops.lessonId, roomName: extprops.lessonId[0], 
-      attendees: extprops.attendees, attId: extprops.attId}})
-  }
-
-  return (
-    <>
-      <section className="heading">
-        <h1>Rozvrh {(id && id !== user._id) ? "" : ": " + user.lastName + " " + user.firstName}</h1>
-      </section>
-
-      <section className="content">
-        {isLoading ? <Spinner /> :
-          <FullCalendar
-            plugins={[ timeGridPlugin ]}
-            initialView="timeGridWeek"
-            nowIndicator={true}
-            locale={window.navigator.language}
-            firstDay={1}
-            events={events}
-            eventClick={eventClicked}
-          />
-        }
-      </section>
-    </>
-  )
+  return (<>
+    <Typography variant="h2">Rozvrh {(id && id !== user._id) ? "" : ": " + user.lastName + " " + user.firstName}</Typography>
+    <div>{enrollments[0].student}</div>
+  </>)
 }
 
 export default Timetable

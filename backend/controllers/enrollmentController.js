@@ -31,6 +31,24 @@ const setEnrollment = asyncHandler(async (req, res) => {
         enrollments.push(enrollment)
     }
 
+    const users = await User.find({_id: {$in: students}})
+    
+    for (const user of users) {
+        try {
+            await sendEmail("no-reply@noreplycris.com", user.email, "", "New account",
+            "<div>" +
+            "<p>Dear " + user.firstName + " " + user.lastName + ",</p>" +
+            "<p>you have been assigned to class " + classVar.title + "</p>" +
+            "</ br>" +
+            "<p>You can <a href='" + process.env.FRONTEND_URL + "/login'>login</a> and see it in the list.</p>" +
+            "<p>crsis</p>", res, false
+            )
+        } catch(error) {
+            res.status(500);
+            throw new Error(error)
+        }
+    }
+
     res.status(200).json(enrollments)
 })
 

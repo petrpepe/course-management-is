@@ -12,9 +12,9 @@ const getCourses = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(req.query.id && req.query.id != null) {
-        const ids = typeof req.query.id == "string" ? mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => mongoose.Types.ObjectId(id))
-        arg = {_id: {$in: ids}}
+        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+        arg = {...arg, _id: {$in: ids}}
     }
 
     if(req.query.keyword && req.query.keyword != null) {

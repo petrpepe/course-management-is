@@ -1,38 +1,33 @@
-import {Link} from "react-router-dom"
+import {Link as ReactLink} from "react-router-dom"
 import {useSelector} from "react-redux"
-import Spinner from "../../components/Spinner"
 import {deleteClass, getClasses, reset as resetClasses} from "../../features/classes/classSlice"
 import CustomCard from "../../components/CustomCard"
 import Search from "../../components/Search"
 import { Status } from "../../features/Status"
 import useGetData from "../../hooks/useGetData"
 import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+import CircularProgress from "@mui/material/CircularProgress"
 
 function Classes() {
   const { user } = useSelector((state) => state.auth)
   const { classes, status } = useGetData("classes", getClasses, resetClasses)
 
-  return (
-    <>
-      <section className="heading">
-        <Typography variant="h2">Classes Dashboard</Typography>
-      </section>
+  return (<>
+    <Typography variant="h2">Classes Dashboard</Typography>
+    <Search getData={getClasses} />
+    {user.roles.includes("admin") && <Button component={ReactLink} to="/classes/create" sx={{ color: '#fff' }}>Create new Lesson</Button>}
 
-      <section className="content">
-        <Search getData={getClasses} reset={resetClasses} />
-        {user.roles.includes("admin") && <Link to={"/classes/create"}>Create new Class</Link>}
-        {status === Status.Loading ? <Spinner /> : classes.length > 0 ? (
-          <div className="cards">
-            {classes.map((classVar) => (
-              <CustomCard key={classVar._id} data={classVar} link="/classes/" deleteAction={deleteClass} />
-            ))}
-          </div>
-        ) : ( 
-          <Typography variant="h4">You haven't set any class</Typography> 
-        )}
-      </section>
-    </>
-  )
+    {status === Status.Loading ? <CircularProgress /> : classes.length > 0 ? (
+      <div className="cards">
+        {classes.map((classVar) => (
+          <CustomCard key={classVar._id} data={classVar} link="/classes/" deleteAction={deleteClass} />
+        ))}
+      </div>
+    ) : ( 
+      <Typography variant="h3">You are not enrolled in any classes</Typography> 
+    )}
+  </>)
 }
 
 export default Classes

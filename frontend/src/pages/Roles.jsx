@@ -7,17 +7,10 @@ function Roles() {
 
   const { roles, status } = useGetData("roles", getRoles, resetRoles)
 
-  return (
-    <>
-      <section className="heading">
-        <Typography variant="h2" >Roles</Typography>
-      </section>
-
-      <section className="content">
-        <RoleTable roles={roles} rolesStatus={status}/>
-      </section>
-    </>
-  )
+  return (<>
+    <Typography variant="h2" >Roles</Typography>
+    <RoleTable roles={roles} rolesStatus={status}/>
+  </>)
 }
 
 export default Roles

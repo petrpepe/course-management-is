@@ -38,6 +38,7 @@ const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
     if (roles.status === Status.Loading || roles.status === Status.Idle) {
         return <CircularProgress />
     }
+
     return (
     <Dialog open={defaultOpened} onClose={handleClose}>
         <DialogTitle>Subscribe</DialogTitle>
@@ -47,7 +48,7 @@ const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
                 will send updates occasionally.
             </DialogContentText>
             <CustomSelect id="students" label="Select students" items={studentsOptions.map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
-            getItems={getUsers} itemsStatus={users.status} formData={formData.students} setFormData={setFormData} multiple={true} />
+            getItems={getUsers} itemsStatus={users.status} formData={formData.students} setFormData={setFormData} multiple={true} selectedItems={formData.students} />
         </DialogContent>
         <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>

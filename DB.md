@@ -22,6 +22,7 @@ Docházka:
   neomluven, pozdní příchod (víc než 15 minut)
  Student
  Kdo zapsal
+ RozvrhId
 
 Rozvrh:
  Třída

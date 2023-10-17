@@ -4,7 +4,6 @@ import { createRole, deleteRole, updateRole} from "../../features/roles/roleSlic
 import { getPermissions, reset as resetPermissions } from "../../features/permissions/permissionSlice"
 import ReadOnlyRow from "./ReadOnlyRow"
 import EditableRow from "./EditableRow"
-import Spinner from "../Spinner"
 import { Status } from "../../features/Status"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
@@ -21,6 +20,7 @@ import Box from "@mui/material/Box"
 import { visuallyHidden } from '@mui/utils'
 import Typography from "@mui/material/Typography"
 import useGetData from "../../hooks/useGetData"
+import CircularProgress from "@mui/material/CircularProgress"
 
 function RoleTable({roles, rolesStatus}) {
   const dispatch = useDispatch()
@@ -30,7 +30,7 @@ function RoleTable({roles, rolesStatus}) {
   const { permissions, status } = useGetData("permissions", getPermissions, resetPermissions)
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
-  const [sortedRoles, setSortedRoles] = useState(permissions);
+  const [sortedRoles, setSortedRoles] = useState(roles);
   const headers = [{id: "name", label: "Name"}, {id: "description", label: "Description"}]
 
   const onSubmitAdd = e => {
@@ -87,8 +87,8 @@ function RoleTable({roles, rolesStatus}) {
     }))
   }
 
-  if (status === Status.Loading) {
-    return <Spinner />
+  if (status === Status.Loading || status === Status.Idle) {
+    return <CircularProgress />
   }
 
   return (
@@ -120,7 +120,7 @@ function RoleTable({roles, rolesStatus}) {
             </TableHead>
             <TableBody>
               {sortedRoles.map((role) => <>
-                {editRole.isEdited && editRole._id === role._id ? (
+                {editRole.isEdited && editRole._id === role._id ? ( 
                   <EditableRow key={role._id} role={role} permissions={permissions} getPermissions={getPermissions} 
                   setEdit={setEdit} handleCancelClick={handleCancelClick} />
                 ) : (

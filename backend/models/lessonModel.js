@@ -25,7 +25,10 @@ const lessonSchema = mongoose.Schema(
         aprrovedBy: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-        }]
+        }],
+        content: {
+            type: String
+        },
     }, {
         timestamps: true,
     }

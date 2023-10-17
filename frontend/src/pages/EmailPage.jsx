@@ -1,12 +1,12 @@
 import { useState } from "react"
 import {useSelector, useDispatch} from 'react-redux'
 import EmailIcon from '@mui/icons-material/Email'
-import Spinner from "../components/Spinner"
 import {sendEmail} from "../features/email/emailSlice"
 import { Status } from "../features/Status"
 import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
-import { Typography } from "@mui/material"
+import CircularProgress from "@mui/material/CircularProgress"
+import Typography from "@mui/material/Typography"
 
 function EmailPage() {
   const [formData, setFormData] = useState({
@@ -33,7 +33,7 @@ function EmailPage() {
   }
 
   if (status === Status.Loading) {
-    return <Spinner />
+    return <CircularProgress />
   }
 
   return <>
@@ -53,7 +53,7 @@ function EmailPage() {
           placeholder="example@domain.com" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
         <TextField  id="subject" name="subject" label="Enter email subject:" value={formData.subject} 
           placeholder="Subject" onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-        <TextField  id="content" name="content" label="Enter message:" value={formData.content} multiline rows={6}
+        <TextField  id="content" name="content" label="Enter message:" value={formData.content} multiline minRows={6}
           onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
         <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
       </form>

@@ -2,9 +2,8 @@ import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import TextField from "@mui/material/TextField"
 
-function Search({getData = () => {}}) {
+function Search({getData}) {
     const dispatch = useDispatch()
-
     const [keyword, setKeyword] = useState("")
 
     useEffect(() => {

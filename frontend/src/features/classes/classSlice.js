@@ -4,7 +4,7 @@ import { Status } from "../Status"
 
 const initialState = {
     classes: [],
-    status: Status.Loading,
+    status: Status.Idle,
     message: "",
 }
 
