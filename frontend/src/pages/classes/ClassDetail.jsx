@@ -24,7 +24,8 @@ function ClassDetail() {
     <Typography variant="h3">{classes[0].description}</Typography>
     <CourseTitleLink courseId={classes[0].course}/>
     <LessonsList courseId={classes[0].course} />
-    <UsersList usersIds={enrollments.enrollments.map(e => e.student)} />
+    <UsersList usersIds={enrollments.enrollments.flatMap(e => e.student)} heading="students" />
+    <UsersList usersIds={classes[0].lectors} heading="lectors" />
     <Button component={ReactLink} to={"/classes/" + classes[0]._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
   </>)
 }

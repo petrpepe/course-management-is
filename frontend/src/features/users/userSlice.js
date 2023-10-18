@@ -89,7 +89,7 @@ export const userSlice = createSlice({
         })
         .addCase(getUsers.fulfilled, (state, action) => {
             state.status = Status.Success
-            state.users = action.payload
+            state.users = [...state.users, ...action.payload]
         })
         .addCase(getUsers.rejected, (state, action) => {
             state.status = Status.Error

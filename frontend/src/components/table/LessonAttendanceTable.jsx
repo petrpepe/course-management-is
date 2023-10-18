@@ -1,17 +1,42 @@
-import CircularProgress from "@mui/material/CircularProgress"
 import CheckBox from "../form/CheckBox"
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableSortLabel from "@mui/material/TableSortLabel"
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Paper from "@mui/material/Paper"
+import Box from "@mui/material/Box"
+import { visuallyHidden } from '@mui/utils'
+import Typography from "@mui/material/Typography"
+import { Status } from "../../features/Status"
 
-function LessonAttendanceTable({user = [], isAdmin = []}) {
+function LessonAttendanceTable({atts = [], isAdmin = []}) {
   return (
-      <table className="res-table">
-      <thead>
-          <tr>
-              <th>Attendee</th>
-              <th>#</th>
-          </tr>
-      </thead>
-      <tbody>
-        {data.map(attendance => {
+  <TableContainer component={Paper} sx={{mx: 3, width: "auto"}} >
+    <Table sx={{ overflowX: "auto" }} size="small" aria-label="permissions table">
+      <TableHead>
+        <TableRow>
+          <TableCell>Attendee</TableCell>
+          <TableCell>Note</TableCell>
+          <TableCell align="center" >#</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {atts.map((perm) => (
+          <TableRow key={perm.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+            <TableCell scope="row">{perm.name}</TableCell>
+            <TableCell>{perm.description}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+  )
+/*
+<tbody>
+        {atts.map(attendance => {
           return (
             <tr key={attendance.user}>
               <td>{attendance.name}</td>
@@ -22,7 +47,7 @@ function LessonAttendanceTable({user = [], isAdmin = []}) {
           })}
       </tbody>
       </table>
-  )
+*/
 }
 
 export default LessonAttendanceTable

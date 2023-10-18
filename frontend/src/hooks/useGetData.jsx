@@ -6,18 +6,19 @@ const useGetData = (dataKey, getData, resetData, ids, detail, courseId) => {
   const dispatch = useDispatch()
   const data = useSelector((state) => state[dataKey])
   const getTries = useRef(0)
-  const oldDetail = useRef({[dataKey]: ""})
+  const oldDetail = useRef({[dataKey]: {detail: '', length: data.length}})
 // courseId univerzálně?
   useEffect(() => {
     if (data.status === Status.Idle) {
       dispatch(getData({ids: ids, detail: detail, courseId: courseId}))
     }
 
-    if (data.status === Status.Success && oldDetail.current[dataKey] !== detail) {
-      dispatch(resetData())
+    if (data.status === Status.Success && (oldDetail.current[dataKey].detail !== detail || oldDetail.current[dataKey].length !== data.length)) {
       dispatch(getData({ids: ids, detail: detail, courseId: courseId}))
-      oldDetail.current[dataKey] = detail
-    } 
+      oldDetail.current[dataKey].detail = detail
+      oldDetail.current[dataKey].length = data.length
+      console.log("ahoj");
+    }
 
     if (data.status === Status.Error && getTries.current < 3) {
       setTimeout(() => {
@@ -25,7 +26,9 @@ const useGetData = (dataKey, getData, resetData, ids, detail, courseId) => {
         dispatch(resetData())
       }, "3000");
     }
-  }, [data.status, data.message, dataKey, ids, detail, courseId, dispatch, getData, resetData]);
+
+    return () => {resetData()}
+  }, [data.status, data.length, dataKey, ids, detail, courseId, dispatch, getData, resetData]);
 
   return data;
 };

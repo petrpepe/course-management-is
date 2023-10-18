@@ -10,16 +10,16 @@ const attendaceSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Class",
         },
-        lessonId: {
+        timetableId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Lesson",
         },
-        attendee: {
-            user: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-            },
-            attType: {type: String}
+        enroller: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+        attType: {
+            type: String
         }
     }
 )

@@ -15,19 +15,21 @@ function LessonDetail() {
     return <CircularProgress />
   }
 
-  if (status === Status.Success && lessons[0].content === undefined) {
+  const lesson = lessons.filter(l => l._id === id)[0];
+
+  if (status === Status.Success && lesson.content === undefined) {
     return <CircularProgress />
   }
 
   return (<>
-    <Typography variant="h2">Lesson {lessons[0].lessonNum}: {lessons[0].title}</Typography>
-    <Typography variant="h3">{lessons[0].description}</Typography>
-    <CourseTitleLink courseId={lessons[0].course} />
-    <Typography variant="body1" fontSize="large">{lessons[0].materials}</Typography>
-    {lessons[0].content.split("\\n").map((c, i) =>
+    <Typography variant="h2">Lesson {lesson.lessonNum}: {lessons.title}</Typography>
+    <Typography variant="h3">{lesson.description}</Typography>
+    <CourseTitleLink courseId={lesson.course} />
+    <Typography variant="body1" fontSize="large">{lesson.materials}</Typography>
+    {lesson.content.split("\\n").map((c, i) =>
       <Typography key={i} variant="body1" fontSize="large" textAlign="left" sx={{ m: 1.5 }}>{c}</Typography>
     )}
-    <Button component={ReactLink} to={"/lessons/" + lessons[0]._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
+    <Button component={ReactLink} to={"/lessons/" + lesson._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
   </>)
 }
 
