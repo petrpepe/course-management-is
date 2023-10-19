@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
 import CircularProgress from "@mui/material/CircularProgress"
+import Paper from "@mui/material/Paper"
 
 function ForgottenPassword() {
   const [formData, setFormData] = useState({
@@ -51,7 +52,7 @@ function ForgottenPassword() {
     return <CircularProgress />
   }
 
-  return (<>
+  return (<Paper elevation={0} sx={{my: 5, mx: "auto", maxWidth: "1000px"}}>
     <Typography variant="h2"><KeyIcon fontSize="large" /> Set new password</Typography>
     <form onSubmit={onSubmit}>
       <TextField id="password" name="password" label="Enter your password" type="password" value={formData.password} 
@@ -60,7 +61,7 @@ function ForgottenPassword() {
         onChange={onChange} required={true} size="medium" fullWidth sx={{my: 1}} />
       <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Set new password</Button>
     </form>
-  </>)
+  </Paper>)
 }
 
 export default ForgottenPassword

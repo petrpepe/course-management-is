@@ -28,7 +28,8 @@ Rozvrh:
  Třída
  Lekce (navíc jen u náhrad lze)
  Čas konání
- Lektor/Náhrada
+ Lektor
+ ?Náhrada
 
 Zápis:
  Třída

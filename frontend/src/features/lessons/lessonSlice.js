@@ -87,14 +87,11 @@ export const lessonSlice = createSlice({
         })
         .addCase(getLessons.fulfilled, (state, action) => {
             state.status = Status.Success
-            state.lessons = [...state.lessons]
-            if (state.lessons.length > 0) {
-                action.payload.map(l => {
-                    if (state.lessons.map(sl => sl._id).includes(l._id)) state.lessons[state.lessons.findIndex(obj => obj._id === l._id)] = l
-                    else {state.lessons.push(l)}
-                    return null
-                })
-            } else state.lessons = action.payload
+            action.payload.map(l => {
+                if (state.lessons.map(sl => sl._id).includes(l._id)) state.lessons[state.lessons.findIndex(obj => obj._id === l._id)] = l
+                else {state.lessons.push(l)}
+                return null
+            })
         })
         .addCase(getLessons.rejected, (state, action) => {
             state.status = Status.Error

@@ -27,7 +27,7 @@ import Permissions from "./pages/Permissions"
 import EmailPage from "./pages/EmailPage"
 import Page404 from "./pages/Page404"
 import { useSelector } from "react-redux"
-import Timetable from "./pages/Timetable"
+import TimetablePage from "./pages/TimetablePage"
 import { useMediaQuery } from "@mui/material";
 import Paper from "@mui/material/Paper"
 import { useMemo } from "react";
@@ -104,10 +104,10 @@ function App() {
             <Route element={<ProtectedRoute isAllowed={user.roles} />}>
               <Route path="/me" element={<Profile />} />
               <Route path="/attendances" element={<Attendances />} />
-              <Route path="/timetable" element={<Timetable />} />
+              <Route path="/timetable" element={<TimetablePage />} />
             </Route>
             <Route element={<ProtectedRoute isAllowed={user.roles && user.roles.includes("admin")} />}>
-              <Route path="/timetable/:id" element={<Timetable />} />
+              <Route path="/timetable/:id" element={<TimetablePage />} />
               <Route path="/roles" element={<Roles />} />
               <Route path="/permissions" element={<Permissions />} />
               <Route path="/email" element={<EmailPage />} />

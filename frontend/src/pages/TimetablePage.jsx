@@ -5,8 +5,9 @@ import {useSelector} from "react-redux"
 import { getEnrollments, reset as resetEnrollments } from "../features/enrollments/enrollmentSlice"
 import useGetData from "../hooks/useGetData"
 import Typography from "@mui/material/Typography"
+import Timetable from "../components/Timetable"
 
-function Timetable() {
+function TimetablePage() {
   const {id} = useParams()
   const user = useSelector(state => state.auth.user)
   //const {classes, status} = useGetData("classes", getClasses, resetClasses, id, true)
@@ -15,9 +16,8 @@ function Timetable() {
   //const {timetables, status} = useGetData("timetables", getTimetables, resetTimetables, id || user._id)
 
   return (<>
-    <Typography variant="h2">Rozvrh {(id && id !== user._id) ? "" : ": " + user.lastName + " " + user.firstName}</Typography>
-    <div>{enrollments[0].student}</div>
+    <Timetable />
   </>)
 }
 
-export default Timetable
+export default TimetablePage

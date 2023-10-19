@@ -8,6 +8,7 @@ import { Alert, AlertTitle, Snackbar } from "@mui/material"
 import TextField from "@mui/material/TextField"
 import Typography from "@mui/material/Typography"
 import Button from "@mui/material/Button"
+import Paper from "@mui/material/Paper"
 import CircularProgress from "@mui/material/CircularProgress"
 
 function Login() {
@@ -60,7 +61,7 @@ function Login() {
     return <CircularProgress />
   }
 
-  return (<>
+  return (<Paper elevation={0} sx={{my: 5, mx: "auto", maxWidth: "1000px"}}>
     <Snackbar open autoHideDuration={1000} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
       <Alert severity="error" sx={{textAlign: "left"}} >
         <AlertTitle><strong>Error</strong></AlertTitle>
@@ -83,7 +84,7 @@ function Login() {
       <Button variant="text" onClick={() => setforgotPassword(!isForgotPassword)}>{isForgotPassword ? "Back to login" : "Forgot password?"}</Button>
       <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>{isForgotPassword ? "Send " : "Submit"}</Button>
     </form>
-  </>)
+  </Paper>)
 }
 
 export default Login
