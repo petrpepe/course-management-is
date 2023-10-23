@@ -16,7 +16,7 @@ function Courses() {
   return (<>
     <Typography variant="h2">Courses Dashboard</Typography>
     <Search getData={getCourses} resetData={resetCourses} />
-    {user.roles.includes("admin") && <Button component={ReactLink} to="/courses/create" sx={{ color: '#fff' }}>Create new Lesson</Button>}
+    {user.roles.includes("admin") && <Button component={ReactLink} to="/courses/create" sx={{ color: '#fff' }}>Create new Course</Button>}
 
     {status === Status.Loading ? <CircularProgress /> : courses.length > 0 ? (
       <div className="cards">

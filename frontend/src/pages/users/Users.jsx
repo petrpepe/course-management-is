@@ -16,7 +16,7 @@ function Users() {
   return (<>
     <Typography variant="h2">Users Dashboard</Typography>
     <Search getData={getUsers} resetData={resetUsers} />
-    {user.roles.includes("admin") && <Button component={ReactLink} to="/users/create" sx={{ color: '#fff' }}>Create new Lesson</Button>}
+    {user.roles.includes("admin") && <Button component={ReactLink} to="/users/create" sx={{ color: '#fff' }}>Register new User</Button>}
 
     {status === Status.Loading ? <CircularProgress /> : users.length > 0 ? (
       <div className="cards">

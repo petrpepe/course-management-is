@@ -2,7 +2,6 @@ import * as React from 'react';
 import {useSelector} from "react-redux"
 import { getTimetables, reset as resetTimetables } from "../features/timetables/timetableSlice"
 import { getClasses, reset as resetClasses } from "../features/classes/classSlice"
-//import { getAttendances, reset as resetAttendances } from "../features/attendances/attendanceSlice"
 import useGetData from "../hooks/useGetData"
 import Typography from "@mui/material/Typography"
 import Paper from '@mui/material/Paper'
@@ -15,8 +14,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function Timetable({classIds}) {
   const user = useSelector(state => state.auth.user)
-  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: classIds, detail: true})
-  const {timetables, status: timetableStatus} = useGetData("timetables", getTimetables, resetTimetables, {ids: classIds, detail: false, userId: user._id})
+  const {timetables, status: timetableStatus} = useGetData("timetables", getTimetables, resetTimetables, {ids: classIds, userId: user._id})
+  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: classIds})
   const result = getLocale()
   const events = []
 
@@ -24,15 +23,12 @@ function Timetable({classIds}) {
     return <CircularProgress />
   }
 
-  if (timetableStatus === Status.Success && classStatus === Status.Success) {
-    
-  }
-
   return (<Paper elevation={0}>
     <Typography variant="h2">Rozvrh</Typography>
     <List sx={{mb: 1, width: '100%', bgcolor: 'background.paper', border: "1px solid" }}>
-      {events.map((event) => (
-        <TimetableEvent event={event} />
+      {timetables.map((t) => (
+        <TimetableEvent lessonId={t.lesson} timetableId={t._id} classTitle={classes.filter(c => c._id === t.classId)[0].title}
+        dateTime={t.dateTime} lectorIds={t.lector} isUser={user._id} />
       ))}
     </List>
   </Paper>)
