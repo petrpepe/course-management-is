@@ -5,6 +5,7 @@ const User = require('../models/userModel')
 const Role = require('../models/roleModel')
 const Permission = require('../models/permissionModel')
 const Class = require('../models/classModel')
+const Enrollment = require('../models/enrollmentModel')
 const e = require("express")
 const mongoose = require("mongoose")
 const {sendEmail} = require("./emailController")
@@ -20,6 +21,11 @@ const getUsers = asyncHandler(async (req, res) => {
         const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
         : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
         arg = {_id: {$in: ids}}
+    }
+
+    if(req.query.keyword) {
+        const keyword = new RegExp(".*" + req.query.keyword + ".*", "i")
+        arg = {...arg, $or: [{firstName: {$regex: keyword}},{lastName: {$regex: keyword}}]}
     }
 
     const users = await User.find(arg).select("-password")
@@ -326,7 +332,8 @@ const deleteUser = asyncHandler(async (req, res) => {
         throw new Error("Role not find")
     }
 
-    await Class.updateMany({$or: [{students: user._id}, {teachers: user._id}]}, {$pull: {students: user._id, teachers: user._id}}, {multi: true})
+    await Enrollment.updateMany({student: user._id}, {$pull: {student: user._id}}, {multi: true})
+    await Class.updateMany({lectors: user._id}, {$pull: {lectors: user._id}}, {multi: true})
 
     await user.remove()
 

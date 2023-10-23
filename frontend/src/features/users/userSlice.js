@@ -33,7 +33,7 @@ export const updateUser = createAsyncThunk("users/update", async (userData, thun
 export const getUsers = createAsyncThunk("users/get", async (userData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await userService.getUsers(userData.ids ? userData.ids : [], token)
+        return await userService.getUsers(userData.ids ? userData.ids : [], userData.keyword, token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
@@ -89,7 +89,11 @@ export const userSlice = createSlice({
         })
         .addCase(getUsers.fulfilled, (state, action) => {
             state.status = Status.Success
-            state.users = [...state.users, ...action.payload]
+            action.payload.map(u => {
+                if (state.users.map(su => su._id).includes(u._id)) state.users[state.users.findIndex(obj => obj._id === u._id)] = u
+                else {state.users.push(u)}
+                return null
+            })
         })
         .addCase(getUsers.rejected, (state, action) => {
             state.status = Status.Error

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {useParams} from "react-router-dom"
 import {useSelector} from "react-redux"
 import { getTimetables, reset as resetTimetables } from "../features/timetables/timetableSlice"
 import { getClasses, reset as resetClasses } from "../features/classes/classSlice"
@@ -7,55 +6,35 @@ import { getClasses, reset as resetClasses } from "../features/classes/classSlic
 import useGetData from "../hooks/useGetData"
 import Typography from "@mui/material/Typography"
 import Paper from '@mui/material/Paper'
-import { Scheduler } from "@aldabil/react-scheduler"
 import * as loc from "date-fns/locale"
-import {format} from "date-fns";
+//import {format} from "date-fns"
+import TimetableEvent from './TimetableEvent';
+import List from '@mui/material/List';
+import { Status } from '../features/Status';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function Timetable({classIds}) {
   const user = useSelector(state => state.auth.user)
   const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, classIds, true)
   const {timetables, status: timetableStatus} = useGetData("timetables", getTimetables, resetTimetables, classIds, user._id)
   const result = getLocale()
+  const events = []
+
+  if (timetableStatus === Status.Loading || classStatus === Status.Loading) {
+    return <CircularProgress />
+  }
+
+  if (timetableStatus === Status.Success && classStatus === Status.Success) {
+    
+  }
 
   return (<Paper elevation={0}>
     <Typography variant="h2">Rozvrh</Typography>
-    <Scheduler
-      view="week"
-      events={[
-        {
-          event_id: 1,
-          title: "Event 1",
-          start: new Date("2023/10/19 09:30"),
-          end: new Date("2023/10/19 10:30"),
-        },
-        {
-          event_id: 2,
-          title: "Event 2",
-          start: new Date("2021/5/4 10:00"),
-          end: new Date("2021/5/4 11:00"),
-        },
-      ]}
-      locale={result}
-      month={{
-        weekDays: [0, 1, 2, 3, 4, 5], 
-        weekStartOn: 1, 
-        startHour: 13, 
-        endHour: 21
-      }}
-      dialogMaxWidth
-      week={{
-        weekDays: [0, 1, 2, 3, 4, 5], 
-        weekStartOn: 1, 
-        startHour: 13, 
-        endHour: 21
-      }}
-      day={{
-        startHour: 13, 
-        endHour: 21
-      }}
-      hourFormat='24'
-      stickyNavigation
-    />
+    <List sx={{mb: 1, width: '100%', bgcolor: 'background.paper', border: "1px solid" }}>
+      {events.map((event) => (
+        <TimetableEvent event={event} />
+      ))}
+    </List>
   </Paper>)
 }
 
@@ -63,7 +42,7 @@ const getLocale = () => {
   const locale = navigator.language.replace("-", "");
   const rootLocale = locale.substring(0, 2);
 
-  return loc[locale] || loc[rootLocale];
+  return loc[locale] || loc[rootLocale] || loc.enUS;
 };
 
 export default Timetable

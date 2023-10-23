@@ -15,7 +15,7 @@ function Classes() {
 
   return (<>
     <Typography variant="h2">Classes Dashboard</Typography>
-    <Search getData={getClasses} />
+    <Search getData={getClasses} resetData={resetClasses} />
     {user.roles.includes("admin") && <Button component={ReactLink} to="/classes/create" sx={{ color: '#fff' }}>Create new Lesson</Button>}
 
     {status === Status.Loading ? <CircularProgress /> : classes.length > 0 ? (

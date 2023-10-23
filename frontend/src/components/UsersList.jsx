@@ -21,8 +21,8 @@ function UsersList({usersIds, heading}) {
   return (<>
     <Typography variant="h4" sx={{my: 1}}>List of {heading}</Typography>
     <List sx={{mb: 1, width: '100%', bgcolor: 'background.paper', border: "1px solid" }}>
-      {filtered.map(user => (
-        <ListItem key={user._id} sx={{width: {xs: "100%", md: "50%",lg: "33%"}, display: "inline-block"}}>
+      {filtered.map((user, i) => (
+        <ListItem key={user._id + i} sx={{width: {xs: "100%", md: "50%",lg: "33%"}, display: "inline-block"}}>
           <ListItemButton component={ReactLink} to={"/users/" + user._id} sx={{ color: '#fff' }}>
             <ListItemText primary={user.firstName + ". " + user.lastName} secondary={user.email} />
           </ListItemButton>

@@ -87,7 +87,6 @@ function App() {
             <Route path="lessons" element={<ProtectedRoute isAllowed={user.roles} />}>
                 <Route index element={<Lessons />} />
                 <Route path=":id" element={<LessonDetail />} />
-                <Route path="call" element={<LessonCall />} />
             </Route>
             <Route path="lessons" element={<ProtectedRoute isAllowed={user && user.roles && (user.roles.includes("admin") || user.roles.includes("lector"))} />}>
               <Route path="create" element={<LessonAction />} />
@@ -96,6 +95,7 @@ function App() {
             <Route path="classes" element={<ProtectedRoute isAllowed={user.roles} />}>
               <Route index element={<Classes />} />
               <Route path=":id" element={<ClassDetail />} />
+                <Route path="call" element={<LessonCall />} />
             </Route>
             <Route path="classes" element={<ProtectedRoute isAllowed={user.roles && user.roles.includes("admin")} />}>
               <Route path="create" element={<ClassAction />} />

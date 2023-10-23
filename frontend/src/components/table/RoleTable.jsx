@@ -98,7 +98,7 @@ function RoleTable({roles, rolesStatus}) {
         <TableContainer component={Paper} sx={{mx: 3, width: "auto"}} >
           <Table sx={{ overflowX: "auto" }} size="small" aria-label="permissions table">
             <TableHead>
-              <TableRow>
+              <TableRow key="head">
                 {headers.map((headCell) => (
                 <TableCell key={headCell.id} sortDirection={orderBy === headCell.id ? order : false}>
                   <TableSortLabel
@@ -119,14 +119,14 @@ function RoleTable({roles, rolesStatus}) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedRoles.map((role) => <>
+              {sortedRoles.map((role) => <TableRow key={role._id}>
                 {editRole.isEdited && editRole._id === role._id ? ( 
-                  <EditableRow key={role._id} role={role} permissions={permissions} getPermissions={getPermissions} 
+                  <EditableRow role={role} permissions={permissions} getPermissions={getPermissions} 
                   setEdit={setEdit} handleCancelClick={handleCancelClick} />
                 ) : (
-                  <ReadOnlyRow key={role._id} role={role} permissions={permissions} handleEditClick={handleEditClick} deleteAction={deleteRole} />
+                  <ReadOnlyRow role={role} permissions={permissions} handleEditClick={handleEditClick} deleteAction={deleteRole} />
                 )}
-              </>)}
+              </TableRow>)}
             </TableBody>
           </Table>
         </TableContainer>

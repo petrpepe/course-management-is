@@ -1,6 +1,5 @@
 import { useState } from "react";
 import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
 import CustomSelect from "../form/CustomSelect";
 import ClearIcon from '@mui/icons-material/Clear';
 import TextField from "@mui/material/TextField";
@@ -27,7 +26,7 @@ function EditableRow({ role, permissions, status, getPermissions, setEdit, handl
   }
 
   return (
-    <TableRow>
+    <>
       <TableCell>
         <TextField id="name" name="name" label="Name:" placeholder="Enter name" onChange={(e) => onChange(e)} 
         required={true} size="medium" fullWidth sx={{my: 1}} value={rowState.name} />
@@ -48,7 +47,7 @@ function EditableRow({ role, permissions, status, getPermissions, setEdit, handl
           <IconButton onClick={() => handleCancelClick()}><ClearIcon/></IconButton>
         </Box>
       </TableCell>
-    </TableRow>
+    </>
   );
 };
 

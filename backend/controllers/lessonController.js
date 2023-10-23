@@ -21,7 +21,7 @@ const getLessons = asyncHandler(async (req, res) => {
         select = ""
     }
 
-    if(req.query.keyword && req.query.keyword != null) {
+    if(req.query.keyword) {
         const keyword = new RegExp(".*" + req.query.keyword + ".*", "i")
         arg = {...arg, title: {$regex: keyword}}
     }
