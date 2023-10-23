@@ -10,7 +10,7 @@ import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
 
 function UsersList({usersIds, heading}) {
-  const {users, status} = useGetData("users", getUsers, resetUsers, usersIds)
+  const {users, status} = useGetData("users", getUsers, resetUsers, {ids: usersIds})
 
   if (status === Status.Loading || status === Status.Idle) {
     return <CircularProgress />

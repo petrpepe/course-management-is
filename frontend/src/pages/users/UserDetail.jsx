@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography"
 
 function UserDetail() {
   const { id } = useParams()
-  const { users, status, message } = useGetData("users", getUsers, resetUsers, id, true)
+  const { users, status, message } = useGetData("users", getUsers, resetUsers, {ids: id, detail: true})
 
   if (status === Status.Loading || status === Status.Idle) {
     return <CircularProgress />

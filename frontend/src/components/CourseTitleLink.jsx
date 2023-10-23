@@ -6,7 +6,7 @@ import Button from "@mui/material/Button"
 import {Link as ReactLink} from "react-router-dom"
 
 function CourseTitleLink({courseId}) {
-  const {courses, status} = useGetData("courses", getCourses, resetCourses, courseId)
+  const {courses, status} = useGetData("courses", getCourses, resetCourses, {ids: courseId})
 
   if (status === Status.Loading || status === Status.Idle) {
     return <CircularProgress />

@@ -6,7 +6,7 @@ import {Link as ReactLink} from "react-router-dom"
 import { getUsers, reset as resetUsers } from "../features/users/userSlice"
 
 function UserNameLink({userId}) {
-  const {users, status} = useGetData("users", getUsers, resetUsers, userId)
+  const {users, status} = useGetData("users", getUsers, resetUsers, {ids: userId})
 
   if (status === Status.Loading || status === Status.Idle) {
     return <CircularProgress />

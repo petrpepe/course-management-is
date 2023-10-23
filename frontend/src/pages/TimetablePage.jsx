@@ -10,10 +10,10 @@ import Timetable from "../components/Timetable"
 function TimetablePage() {
   const {id} = useParams()
   const user = useSelector(state => state.auth.user)
-  //const {classes, status} = useGetData("classes", getClasses, resetClasses, id, true)
+  //const {classes, status} = useGetData("classes", getClasses, resetClasses, {ids: id, detail: true})
   //const { users } = useGetData("users", getUsers, resetUsers)
-  const {enrollments} = useGetData("enrollments", getEnrollments, resetEnrollments, id || user._id)
-  //const {timetables, status} = useGetData("timetables", getTimetables, resetTimetables, id || user._id)
+  const {enrollments} = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id || user._id})
+  //const {timetables, status} = useGetData("timetables", getTimetables, resetTimetables, {ids: id || user._id})
 
   return (<>
     <Timetable />

@@ -35,7 +35,7 @@ function UserAction() {
 
   const { id } = useParams()
   const { user } = useSelector((state) => state.auth)
-  const users = useGetData("users", getUsers, resetUsers, id)
+  const users = useGetData("users", getUsers, resetUsers, {ids: id})
   const roles = useGetData("roles", getRoles, resetRoles)
   const permissions = useGetData("permissions", getPermissions, resetPermissions)
 

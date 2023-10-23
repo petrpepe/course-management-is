@@ -12,8 +12,8 @@ import UsersList from "../../components/UsersList"
 
 function ClassDetail() {
   const {id} = useParams()
-  const {classes, status} = useGetData("classes", getClasses, resetClasses, id, true)
-  const enrollments = useGetData("enrollments", getEnrollments, resetEnrollments, id)
+  const {classes, status} = useGetData("classes", getClasses, resetClasses, {ids: id, detail: true})
+  const enrollments = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id})
 
   if (status === Status.Loading || status === Status.Idle || enrollments.status === Status.Loading || enrollments.status === Status.Idle) {
     return <CircularProgress sx={{position: "absolute", top: "50%"}} />

@@ -10,7 +10,7 @@ import ListItemText from "@mui/material/ListItemText"
 import Typography from "@mui/material/Typography"
 
 function LessonsList({courseId}) {
-  const {lessons, status} = useGetData("lessons", getLessons, resetLessons, null, false, courseId)
+  const {lessons, status} = useGetData("lessons", getLessons, resetLessons, {courseId})
 
   if (status === Status.Loading || status === Status.Idle) {
     return <CircularProgress />

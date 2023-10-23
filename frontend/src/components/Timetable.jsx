@@ -15,8 +15,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function Timetable({classIds}) {
   const user = useSelector(state => state.auth.user)
-  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, classIds, true)
-  const {timetables, status: timetableStatus} = useGetData("timetables", getTimetables, resetTimetables, classIds, user._id)
+  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: classIds, detail: true})
+  const {timetables, status: timetableStatus} = useGetData("timetables", getTimetables, resetTimetables, {ids: classIds, detail: false, userId: user._id})
   const result = getLocale()
   const events = []
 

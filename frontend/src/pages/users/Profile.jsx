@@ -10,7 +10,6 @@ import { useSelector } from "react-redux"
 function Profile() {
   const { user } = useSelector(state => state.auth)
 
-console.log(user.phone);
   return (<>
     <Typography variant="h2">Your profile</Typography>
     <Typography variant="h3">Whole name: {user.firstName + (user.otherNames ? " " + user.otherNames.join(" ") + " " : " ") + user.lastName}</Typography>

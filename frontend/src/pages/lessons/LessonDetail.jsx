@@ -9,7 +9,7 @@ import Button from "@mui/material/Button"
 
 function LessonDetail() {
   const {id} = useParams()
-  const {lessons, status} = useGetData("lessons", getLessons, resetLessons, id, true)
+  const {lessons, status} = useGetData("lessons", getLessons, resetLessons, {ids: id, detail: true})
 
   if (status === Status.Loading || status === Status.Idle) {
     return <CircularProgress />

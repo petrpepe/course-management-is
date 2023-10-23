@@ -8,7 +8,7 @@ import { Typography } from "@mui/material"
 function Attendances() {
   const {id} = useParams()
   const { user } = useSelector((state) => state.auth)
-  const { attendances } = useGetData("attendances", getAttendances, resetAttendances, id || user.id)
+  const { attendances } = useGetData("attendances", getAttendances, resetAttendances, {ids: id || user.id})
 
   return (<>
     <Typography variant="h2">Attendances Dashboard</Typography>

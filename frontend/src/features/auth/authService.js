@@ -2,8 +2,8 @@ import axios from "axios"
 
 axios.interceptors.response.use((response) => {return response}, (error) => {
     if (error.response && error.response.status === 401) {
-        window.location.href = "/logout"
         console.error("401 unathorized");
+        //window.location.href = "/logout"
     }
 
     return Promise.reject(error)

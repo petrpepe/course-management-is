@@ -29,7 +29,7 @@ function LessonAction() {
   const dispatch = useDispatch()
 
   const { id } = useParams()
-  const lessons = useGetData("lessons", getLessons, resetLessons, id, true)
+  const lessons = useGetData("lessons", getLessons, resetLessons, {ids: id, detail: true})
   const courses = useGetData("courses", getCourses, resetCourses)
 
   useEffect(() => {

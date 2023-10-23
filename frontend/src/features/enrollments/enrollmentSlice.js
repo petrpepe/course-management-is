@@ -30,10 +30,10 @@ export const updateEnrollment = createAsyncThunk("enrollments/update", async (en
     }
 })
 
-export const getEnrollments = createAsyncThunk("enrollments/get", async (_, thunkAPI) => {
+export const getEnrollments = createAsyncThunk("enrollments/get", async (enrollmentData = {}, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await enrollmentService.getEnrollments(token)
+        return await enrollmentService.getEnrollments(enrollmentData.ids || [], token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()
