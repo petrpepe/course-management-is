@@ -14,11 +14,14 @@ const attendaceSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Lesson",
         },
-        enroller: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
-        attType: {
+        attended: {
+            type: Boolean
+        },
+        note: {
             type: String
         }
     }

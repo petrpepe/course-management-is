@@ -56,7 +56,8 @@ export const lessonSlice = createSlice({
     name: "lesson",
     initialState,
     reducers: {
-        reset: (state) => initialState
+        hardReset: (state) => {return {...initialState, lessons: state.lessons}},
+        reset: (state) => initialState,
     },
     extraReducers: (builder) => {
         builder
@@ -88,7 +89,7 @@ export const lessonSlice = createSlice({
         .addCase(getLessons.fulfilled, (state, action) => {
             state.status = Status.Success
             action.payload.map(l => {
-                if (state.lessons.map(sl => sl._id).includes(l._id)) state.lessons[state.lessons.findIndex(obj => obj._id === l._id)] = l
+                if (state.lessons.map(sl => sl._id).includes(l._id)) state.lessons[state.lessons.findIndex(obj => obj._id === l._id)] = {...l}
                 else {state.lessons.push(l)}
                 return null
             })

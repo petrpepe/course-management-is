@@ -17,7 +17,7 @@ import CourseAction from './pages/courses/CourseAction'
 import Lessons from "./pages/lessons/Lessons"
 import LessonDetail from "./pages/lessons/LessonDetail"
 import LessonAction from "./pages/lessons/LessonAction"
-import LessonCall from "./pages/lessons/LessonCall"
+import ClassCall from "./pages/classes/ClassCall"
 import Classes from "./pages/classes/Classes"
 import ClassDetail from "./pages/classes/ClassDetail"
 import ClassAction from "./pages/classes/ClassAction"
@@ -95,7 +95,7 @@ function App() {
             <Route path="classes" element={<ProtectedRoute isAllowed={user.roles} />}>
               <Route index element={<Classes />} />
               <Route path=":id" element={<ClassDetail />} />
-                <Route path="call" element={<LessonCall />} />
+              <Route path="call/:id" element={<ClassCall />} />
             </Route>
             <Route path="classes" element={<ProtectedRoute isAllowed={user.roles && user.roles.includes("admin")} />}>
               <Route path="create" element={<ClassAction />} />

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 function Footer() {
   const navigate = useNavigate()
   return (
-    <Button onClick={() => navigate("/lessons")} sx={{position: "fixed", bottom: "10px", right: "10px"}} >Go back</Button>
+    <Button onClick={() => navigate(-1)} sx={{position: "fixed", bottom: "10px", right: "10px"}} >Go back</Button>
   )
 }
 
