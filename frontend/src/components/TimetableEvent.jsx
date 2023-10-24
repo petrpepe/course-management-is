@@ -1,4 +1,4 @@
-import {Link as ReactLink} from "react"
+import {Link as ReactLink} from "react-router-dom"
 import { getLessons, reset as resetLessons } from "../features/lessons/lessonSlice"
 import { getAttendances, reset as resetAttendances } from "../features/attendances/attendanceSlice"
 import { getUsers, reset as resetUsers } from "../features/users/userSlice"
