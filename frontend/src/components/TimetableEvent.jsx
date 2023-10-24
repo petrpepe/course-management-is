@@ -47,7 +47,7 @@ function TimetableEvent({lessonId, timetableId, classTitle, dateTime, lectorIds,
     }
 
     return (
-    <ListItem key={timetableId} sx={{width: "100%", display: "block"}}>
+    <ListItem sx={{width: "100%", display: "block"}}>
         <ListItemButton component={ReactLink} to={"/classes/call/" + event._id} sx={{ color: '#fff' }}>
             <ListItemText primary={classTitle + ": " + event.lessonTitle} secondary={format(parseISO(event.dateTime),"P", {locale: locale})} />
         </ListItemButton>

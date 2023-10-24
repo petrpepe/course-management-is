@@ -35,7 +35,7 @@ function Timetable({classIds}) {
         <Typography>{classes.filter(c => c._id === ts.classId)[0].title}</Typography>
         <List sx={{bgcolor: 'background.paper', border: "1px solid"}}>
           {ts.timetables.map(t =>
-            <TimetableEvent lessonId={t.lesson} timetableId={t._id} classTitle={classes.filter(c => c._id === t.classId)[0].title}
+            <TimetableEvent key={t._id} lessonId={t.lesson} timetableId={t._id} classTitle={classes.filter(c => c._id === t.classId)[0].title}
             dateTime={t.dateTime} lectorIds={t.lector} isUser={user._id} />
           )}
         </List>
