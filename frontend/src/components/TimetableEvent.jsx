@@ -1,3 +1,4 @@
+import * as React from "react"
 import {Link as ReactLink} from "react-router-dom"
 import { getLessons, reset as resetLessons } from "../features/lessons/lessonSlice"
 import { getAttendances, reset as resetAttendances } from "../features/attendances/attendanceSlice"
@@ -17,7 +18,7 @@ const getLocale = () => {
     return loc[locale] || loc[rootLocale] || loc.enUS;
 };
 
-function TimetableEvent({lessonId, timetableId, classTitle, dateTime, lectorIds, isUser}) {
+function TimetableEvent(lessonId, timetableId, classTitle, dateTime, lectorIds, isUser) {
     const {lessons, status: lessonStatus} = useGetData("lessons", getLessons, resetLessons, {ids: lessonId})
     const {attendances, status: attendanceStatus} = useGetData("attendances", getAttendances, resetAttendances, {ids: timetableId})
     const {users, status: userStatus} = useGetData("users", getUsers, resetUsers, {ids: lectorIds})
@@ -38,7 +39,7 @@ function TimetableEvent({lessonId, timetableId, classTitle, dateTime, lectorIds,
                 <ListItemText primary={classTitle + ": " + event.lessonTitle} secondary={event.lectors} />
                 <ListItemText sx={{flex: "none"}} secondary={format(parseISO(event.dateTime),"P", {locale: locale})} />
             </ListItemButton>
-        </ListItem>)   
+        </ListItem>)
     }
 }
 

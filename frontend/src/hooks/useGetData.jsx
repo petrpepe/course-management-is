@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Status } from "../features/Status";
 
@@ -8,8 +8,8 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
   const getTries = useRef(0)
   const dataStatus = useRef(data.status)
   const getParamRef = useRef(getParam)
-
-  useMemo(() => {
+  
+  useEffect(() => {
     dispatch(getData(getParamRef.current))
 
     if (dataStatus.current === Status.Error && getTries.current < 3) {
@@ -20,14 +20,14 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
     }
 
     return () => {
-      dispatch(resetData())
+      if (dataStatus.current === Status.Idle || dataStatus.current === Status.Loading) {
+        dispatch(resetData())
+      }
     }
   }, [dispatch, getData, resetData]);
-
+//Vyzkoušet bez return data
   dataStatus.current = data.Status
   getParamRef.current = getParam
-
-  return data
 };
 
 export default useGetData;

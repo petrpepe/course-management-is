@@ -10,11 +10,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { compareAsc, parseISO } from "date-fns"
 import { Box } from '@mui/material';
 
-//const MChild = React.memo(Child); <--- Toto
-
 function Timetable({classIds, userIds, classes, byUser}) {
   const {timetables, status: timetableStatus} = useGetData("timetables", getTimetables, resetTimetables, {ids: classIds, userId: userIds})
-
   if (timetableStatus === Status.Loading) {
     return <CircularProgress />
   }
