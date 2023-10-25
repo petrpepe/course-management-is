@@ -12,23 +12,25 @@ function CourseDetail() {
   const {id} = useParams()
   const { courses, status, message } = useGetData("courses", getCourses, resetCourses, {ids: id})
 
-  if (status === Status.Loading || status === Status.Idle) {
+  if (status === Status.Loading) {
     return <CircularProgress />
   }
 
   if (status === Status.Error) {
     console.log(message);
   }
-  const course = courses[0]
 
-  return (<>
-    <Typography variant="h2">Course {course.title}</Typography>
-    <Typography variant="subtitle1">Academic term {course.academicTerm}</Typography>
-    <Typography variant="subtitle1">{course.description}</Typography>
-    <UserNameLink userId={course.owner} />
-    <LessonsList courseId={course._id} />
-    <Button component={ReactLink} to={"/courses/" + course._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
-  </>)
+  if (status === Status.Success) {
+    const course = courses[0]
+    return <>
+      <Typography variant="h2">Course {course.title}</Typography>
+      <Typography variant="subtitle1">Academic term {course.academicTerm}</Typography>
+      <Typography variant="subtitle1">{course.description}</Typography>
+      <UserNameLink userId={course.owner} />
+      <LessonsList courseId={course._id} />
+      <Button component={ReactLink} to={"/courses/" + course._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
+    </>
+  }
 }
 
 export default CourseDetail

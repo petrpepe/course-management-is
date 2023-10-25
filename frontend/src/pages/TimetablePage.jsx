@@ -11,7 +11,7 @@ import { CircularProgress } from "@mui/material"
 function TimetablePage() {
   const {id} = useParams()
   const user = useSelector(state => state.auth.user)
-  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: id, detail: true})
+  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: id})
   const {enrollments, status: enrollmentStatus} = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id || user._id})
 
   if(classStatus === Status.Loading || enrollmentStatus === Status.Loading) {

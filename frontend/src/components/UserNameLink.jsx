@@ -12,9 +12,11 @@ function UserNameLink({userId}) {
     return <CircularProgress />
   }
 
-  return (
-    <Button component={ReactLink} to={"/users/" + userId} sx={{ color: '#fff' }}>{users[0].firstName + " " + users[0].lastName}</Button>
-  )
+  if (status === Status.Success) {
+    return <Button component={ReactLink} to={"/users/" + userId} sx={{ color: '#fff' }}>
+      {users[0].firstName + " " + users[0].lastName}
+    </Button>
+  }
 }
 
 export default UserNameLink

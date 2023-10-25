@@ -12,11 +12,12 @@ import Typography from "@mui/material/Typography"
 function LessonsList({courseId}) {
   const {lessons, status} = useGetData("lessons", getLessons, resetLessons, {courseId})
 
-  if (status === Status.Loading || status === Status.Idle) {
+  if (status === Status.Loading) {
     return <CircularProgress />
   }
 
-  return (<>
+  if (status === Status.Success) {
+  return <>
     <Typography variant="h4" sx={{my: 1}}>List of lessons</Typography>
     <List sx={{ mb: 1, width: '100%', bgcolor: 'background.paper', border: "1px solid" }}>
       {lessons.map(lesson => (
@@ -27,7 +28,8 @@ function LessonsList({courseId}) {
         </ListItem>
       ))}
     </List>
-  </>)
+  </>
+  }
 }
 
 export default LessonsList

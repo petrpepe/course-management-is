@@ -6,7 +6,6 @@ import useGetData from "../hooks/useGetData"
 import ListItem from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemText from "@mui/material/ListItemText"
-import CircularProgress from '@mui/material/CircularProgress';
 import { Status } from "../features/Status"
 import * as loc from "date-fns/locale"
 import {format, parseISO} from "date-fns/esm"
@@ -26,33 +25,21 @@ function TimetableEvent({lessonId, timetableId, classTitle, dateTime, lectorIds,
     let event = {lessonTitle: "", classTitle: classTitle, dateTime: dateTime, lectors: [], background: "normal"}
     const locale = getLocale()
 
-    if (lessonStatus === Status.Success) {
+    if (lessonStatus === Status.Success && userStatus === Status.Success && attendanceStatus === Status.Success) {
         const lesson = lessons.filter(l => l._id === lessonId)[0]
         event.lessonTitle = lesson && lesson.title
-    }
-
-    if (userStatus === Status.Success) {
         event.lectors = users.filter(u => lectorIds.includes(u._id)).map(u => u.email).join(", ")
-    }
-
-    if (attendanceStatus === Status.Success) {
         userAttendance.current = attendances.filter(a => a.timetableId === timetableId)[0]
         event.background = isUser ? (userAttendance ? ((userAttendance.attended === "true") ? "green" : "red" ) : "future/nezapsano") : "normal"
+
+        return (
+        <ListItem sx={{width: "100%", display: "block"}}>
+            <ListItemButton component={ReactLink} to={"/classes/call/" + timetableId} sx={{ color: '#fff' }}>
+                <ListItemText primary={classTitle + ": " + event.lessonTitle} secondary={event.lectors} />
+                <ListItemText sx={{flex: "none"}} secondary={format(parseISO(event.dateTime),"P", {locale: locale})} />
+            </ListItemButton>
+        </ListItem>)   
     }
-
-
-    if (lessonStatus === Status.Loading || attendanceStatus === Status.Loading || lessonStatus === Status.Idle || attendanceStatus === Status.Idle) {
-        return <CircularProgress />
-    }
-
-    return (
-    <ListItem sx={{width: "100%", display: "block"}}>
-        <ListItemButton component={ReactLink} to={"/classes/call/" + timetableId} sx={{ color: '#fff' }}>
-            <ListItemText primary={classTitle + ": " + event.lessonTitle} secondary={event.lectors} />
-            <ListItemText sx={{flex: "none"}} secondary={format(parseISO(event.dateTime),"P", {locale: locale})} />
-        </ListItemButton>
-    </ListItem>
-    )
 }
 
 export default TimetableEvent

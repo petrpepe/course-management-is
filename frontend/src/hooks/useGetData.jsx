@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Status } from "../features/Status";
 
@@ -9,7 +9,7 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
   const dataStatus = useRef(data.status)
   const getParamRef = useRef(getParam)
 
-  useEffect(() => {
+  useMemo(() => {
     dispatch(getData(getParamRef.current))
 
     if (dataStatus.current === Status.Error && getTries.current < 3) {
@@ -24,9 +24,10 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
     }
   }, [dispatch, getData, resetData]);
 
-  dataStatus.current = data.status
+  dataStatus.current = data.Status
+  getParamRef.current = getParam
 
-  return data;
+  return data
 };
 
 export default useGetData;
