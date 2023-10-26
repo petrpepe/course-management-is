@@ -28,6 +28,8 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
 //Vyzkoušet bez return data
   dataStatus.current = data.Status
   getParamRef.current = getParam
+
+  return data
 };
 
 export default useGetData;
