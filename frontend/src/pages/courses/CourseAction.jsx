@@ -72,7 +72,7 @@ function CourseAction() {
       onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
       <TextField id="academicTerm" name="academicTerm" label="Academic Term" value={formData.academicTerm} 
       onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-      <CustomSelect id="owner" label="Select owner" items={providers.providers.map(p => {return {_id: p._id, title: p.name}})} getItems={getProviders} itemsStatus={providers.status}
+      <CustomSelect id="owner" label="Select owner" items={providers.providers.map(p => {return {_id: p._id, title: p.name}})} itemsStatus={providers.status}
       formData={formData} setFormData={setFormData} multiple={false} selectedItems={formData.owner} />
       <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Submit</Button>
     </form>

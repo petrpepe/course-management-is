@@ -7,7 +7,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { Status } from '../../features/Status';
-import { useDispatch } from 'react-redux'
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -31,19 +30,8 @@ const MenuProps = {
     },
 };
 
-function CustomSelect({ id, label, items, selectedItems = [], getItems, itemsStatus, formData, setFormData, multiple}) {
-    const [selected, setSelected] = React.useState(multiple ? [] : "")
-    const dispatch = useDispatch()
-    const itemsStatusRef = React.useRef(itemsStatus)
-    const selectedItemsRef = React.useRef(selectedItems)
-
-    React.useEffect(() => {
-        if(itemsStatusRef.current === Status.Idle) dispatch(getItems())
-        setSelected(selectedItemsRef.current)
-    }, [getItems, dispatch])
-
-    itemsStatusRef.current = itemsStatus
-    selectedItemsRef.current = selectedItems
+function CustomSelect({ id, label, items, selectedItems = [], itemsStatus, formData, setFormData, multiple}) {
+    const [selected, setSelected] = React.useState(selectedItems)
 
     const onSelectChange = (e) => {
         const value = e.target.value
@@ -65,8 +53,7 @@ function CustomSelect({ id, label, items, selectedItems = [], getItems, itemsSta
         })
     }
 
-    //if (itemsStatusRef.current !== Status.Success) 
-    //return <LoadingOrError status={itemsStatusRef} />
+    if (itemsStatus !== Status.Success) return <LoadingOrError status={itemsStatus} />
 
     return (
     <div>

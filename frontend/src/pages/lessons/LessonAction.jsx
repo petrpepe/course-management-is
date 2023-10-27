@@ -82,7 +82,7 @@ function LessonAction() {
       placeholder="Enter materials" onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
       <TextField id="duration" name="duration" label="Duration:" value={formData.duration} type="number"
       InputProps={{ inputProps: { min: 1 } }}onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-      <CustomSelect id="course" label="Select course" items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} getItems={getCourses} itemsStatus={courses.status}
+      <CustomSelect id="course" label="Select course" items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} itemsStatus={courses.status}
       formData={formData} setFormData={setFormData} multiple={false} selectedItems={formData.course} />
       <TextField id="content" name="content" label="Content:" value={formData.content.replace(/\\n/g, "\n")} multiline minRows={10} maxRows={30}
       onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />

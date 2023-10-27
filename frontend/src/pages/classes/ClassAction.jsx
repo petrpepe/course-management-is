@@ -38,16 +38,12 @@ function ClassAction() {
   const dispatch = useDispatch()
 
   const { id } = useParams()
-  const users = useGetData("users", getUsers, resetUsers)
-  const courses = useGetData("courses", getCourses, resetCourses)
-  const classes = useGetData("classes", getClasses, resetClasses)
-  const roles = useGetData("roles", getRoles, resetRoles)
+  const {users, status: userStatus} = useGetData("users", getUsers, resetUsers)
+  const {courses, status: courseStatus} = useGetData("courses", getCourses, resetCourses)
+  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses)
+  const {roles, status: roleStatus} = useGetData("roles", getRoles, resetRoles)
 
   let currentClassId = null
-
-  useEffect(() => {
-    if(id && classes.status === Status.Success) setFormData(classes.classes.filter(l => l._id === id)[0])
-  }, [id, classes.status, classes.classes])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -71,39 +67,41 @@ function ClassAction() {
     setOpenModal(true);
   }
 
-  if (isCreated && classes.status === Status.Success) {
+  if (isCreated && classStatus === Status.Success) {
     currentClassId = classes.classes[classes.classes.length-1]._id;
-    console.log(currentClassId);
   }
 
-  if((id && classes.status === Status.Loading) || roles.status === Status.Loading || roles.status === Status.Idle) {
+  if((id && classStatus === Status.Loading) || roleStatus === Status.Loading || courseStatus === Status.Loading || userStatus === Status.Loading) {
     return <CircularProgress />
   }
-  const lectorsOptions = users.users.filter(u => u.roles.includes(roles.roles.filter(r => r.name === "lector")[0]._id))
-  return (
-  <Paper elevation={0} sx={{my: 5, mx: "auto", maxWidth: "1000px"}}>
-    <Typography variant="h2">
-        <CoPresentIcon fontSize="large" /> {id ? "Editing class: " + formData.title : "Create class"}
-    </Typography>
-    <form onSubmit={onSubmit}>
-      <TextField id="title" name="title" label="Title:" value={formData.title} 
-      onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
-      <TextField id="description" name="description" label="Description" value={formData.description} 
-      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-      <TextField id="startDateTime" name="startDateTime" label="First lesson:" value={formData.startDateTime} 
-      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} type="datetime-local" InputLabelProps={{shrink: true,}} />
-      <TextField id="place" name="place" label="Place (address or online url)" value={formData.place}
-      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-      <CustomSelect id="course" label="Select course" selectedItems={formData.course} items={courses.courses.map(c => {return {_id: c._id, title: c.title}})} 
-      getItems={getCourses} itemsStatus={courses.status} formData={formData} setFormData={setFormData} multiple={false} />
-      <CustomSelect id="lectors" label="Select lectors" selectedItems={formData.lectors}
-      items={lectorsOptions.map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
-      getItems={getUsers} itemsStatus={users.status} formData={formData} setFormData={setFormData} multiple={true} />
-      <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Submit</Button>
-    </form>
-    <StudentModal users={users} defaultOpened={openModal} setOpenModal={setOpenModal} classId={currentClassId} />
-  </Paper>
-  )
+
+  if (classStatus === Status.Success && roleStatus === Status.Success && courseStatus === Status.Success && userStatus === Status.Success) {
+    if(id) setFormData(classes.filter(l => l._id === id)[0])
+    const lectorsOptions = users.filter(u => u.roles.includes(roles.filter(r => r.name === "lector")[0]._id))
+    return (
+    <Paper elevation={0} sx={{my: 5, mx: "auto", maxWidth: "1000px"}}>
+      <Typography variant="h2">
+          <CoPresentIcon fontSize="large" /> {id ? "Editing class: " + formData.title : "Create class"}
+      </Typography>
+      <form onSubmit={onSubmit}>
+        <TextField id="title" name="title" label="Title:" value={formData.title} 
+        onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
+        <TextField id="description" name="description" label="Description" value={formData.description} 
+        onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+        <TextField id="startDateTime" name="startDateTime" label="First lesson:" value={formData.startDateTime} 
+        onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} type="datetime-local" InputLabelProps={{shrink: true,}} />
+        <TextField id="place" name="place" label="Place (address or online url)" value={formData.place}
+        onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
+        <CustomSelect id="course" label="Select course" selectedItems={formData.course} items={courses.map(c => {return {_id: c._id, title: c.title}})} 
+        itemsStatus={courses.status} formData={formData} setFormData={setFormData} multiple={false} />
+        <CustomSelect id="lectors" label="Select lectors" selectedItems={formData.lectors}
+        items={lectorsOptions.map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
+        itemsStatus={users.status} formData={formData} setFormData={setFormData} multiple={true} />
+        <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}}>Submit</Button>
+      </form>
+      <StudentModal users={{users: users, status: userStatus}} defaultOpened={openModal} setOpenModal={setOpenModal} classId={currentClassId} />
+    </Paper>
+  )}
 }
 
 export default ClassAction

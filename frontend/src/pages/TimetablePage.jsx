@@ -11,13 +11,14 @@ import LoadingOrError from "../components/LoadingOrError"
 function TimetablePage() {
   const {id} = useParams()
   const user = useSelector(state => state.auth.user)
-  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: id})
-  const {enrollments, status: enrollmentStatus} = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id || user._id})
+  const {enrollments, status: enrollmentStatus} = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id || "652c0f8220f12ad7738b5ad5"})
+  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: id || enrollments.map(e=>e.classId)})
+  const userIds = new Set([...classes.map(c=>c.lectors), ...enrollments.map(e=>e.student)])
 
   if (classStatus === Status.Success) {
     return (<>
       <Typography variant="h2">Rozvrh</Typography>
-      <Timetable classIds={classes.map(c => c._id)} classes={classes} />
+      <Timetable classes={classes} />
     </>)
   } else return <>
     <LoadingOrError status={classStatus} />

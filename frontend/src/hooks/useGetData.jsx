@@ -8,9 +8,9 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
   const getTries = useRef(0)
   const getParamRef = useRef(getParam)
   const dataStatus = useRef(data.status)
-  
+
   useEffect(() => {
-    dispatch(getData(getParamRef))
+    dispatch(getData(getParamRef.current))
 
     if (dataStatus === Status.Error && getTries.current < 3) {
       setTimeout(() => {

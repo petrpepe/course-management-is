@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
-import { createRole, deleteRole, updateRole} from "../../features/roles/roleSlice"
+import { createRole, deleteRole} from "../../features/roles/roleSlice"
 import { getPermissions, reset as resetPermissions } from "../../features/permissions/permissionSlice"
 import ReadOnlyRow from "./ReadOnlyRow"
 import EditableRow from "./EditableRow"
@@ -131,8 +131,8 @@ function RoleTable({roles, rolesStatus}) {
         required={true} size="medium" fullWidth sx={{my: 1}} />
         <TextField  id="description" name="description" label="Description:" placeholder="Enter description" onChange={(e) => onChange(e)} 
         size="medium" fullWidth sx={{my: 1}} />
-        <CustomSelect id="permissions" label="Select permissions" items={permissions.map(p => {return {_id: p._id, title: p.name}})} getItems={getPermissions} itemsStatus={status}
-          formData={role} setFormData={setState} multiple={true} />
+        <CustomSelect id="permissions" label="Select permissions" items={permissions.map(p => {return {_id: p._id, title: p.name}})} 
+          itemsStatus={status} formData={role} setFormData={setState} multiple={true} />
         <Button type="submit" size="large" variant="outlined" fullWidth sx={{my: 1}} >Add</Button>
       </form>
     </Paper>

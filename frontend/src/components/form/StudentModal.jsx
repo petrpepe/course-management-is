@@ -5,7 +5,6 @@ import DialogContent from "@mui/material/DialogContent"
 import DialogContentText from "@mui/material/DialogContentText"
 import DialogTitle from "@mui/material/DialogTitle"
 import CustomSelect from "./CustomSelect"
-import getUsers from "../../features/users/userSlice"
 import Button from "@mui/material/Button"
 import { createEnrollment } from '../../features/enrollments/enrollmentSlice'
 import { useDispatch } from 'react-redux'
@@ -48,7 +47,7 @@ const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
                 will send updates occasionally.
             </DialogContentText>
             <CustomSelect id="students" label="Select students" items={studentsOptions.map(u => {return {_id: u._id, title: u.lastName + " " + u.firstName}})} 
-            getItems={getUsers} itemsStatus={users.status} formData={formData.students} setFormData={setFormData} multiple={true} selectedItems={formData.students} />
+            itemsStatus={users.status} formData={formData.students} setFormData={setFormData} multiple={true} selectedItems={formData.students} />
         </DialogContent>
         <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>

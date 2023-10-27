@@ -42,7 +42,7 @@ function EditableRow({ role, permissions, status, getPermissions, handleCancelCl
         <TableCell>
           <CustomSelect
             id="permissions" label="Select permissions" items={permissions.map(p => {return {_id: p._id, title: p.name}})}
-            getItems={getPermissions} selectedItems={rowState.permissions} itemsStatus={status} formData={rowState} setFormData={setRow} multiple={true}
+            selectedItems={rowState.permissions} itemsStatus={status} formData={rowState} setFormData={setRow} multiple={true}
           />
         </TableCell>
       <TableCell>
