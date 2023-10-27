@@ -8,6 +8,9 @@ function Dashboard() {
   const { user } = useSelector((state) => state.auth)
   const { classes, status } = useGetData("classes", getClasses, resetClasses)
 
+  if (!user) {
+    return console.log("Přihlaš se");
+  }
   return (
     <>
       <section className="heading">
