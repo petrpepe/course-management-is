@@ -6,23 +6,27 @@ import TextField from "@mui/material/TextField";
 import SaveIcon from '@mui/icons-material/Save';
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
+import { updateRole } from "../../features/roles/roleSlice";
+import { useDispatch } from "react-redux";
 
-function EditableRow({ role, permissions, status, getPermissions, setEdit, handleCancelClick }) {
+function EditableRow({ role, permissions, status, getPermissions, handleCancelClick }) {
+  const dispatch = useDispatch()
   const [rowState, setRow] = useState({...role})
 
   const onChange = e => {
     const inputName = e.target.name
 
     setRow({
-      ...rowState,
+      ...role,
       [inputName]: e.target.value
     })
+  }
 
-    setEdit({
-      ...rowState,
-      [inputName]: e.target.value,
-      isEdited: true,
-    })
+  const handleSaveClick = e => {
+    e.preventDefault()
+    rowState.permissions = rowState.permissions || []
+    dispatch(updateRole(rowState))
+    handleCancelClick()
   }
 
   return (
@@ -37,13 +41,13 @@ function EditableRow({ role, permissions, status, getPermissions, setEdit, handl
       </TableCell>
         <TableCell>
           <CustomSelect
-            id="permissions" label="Select permissions" items={permissions.map(p => {return {_id: p._id, title: p.name}})} 
-            getItems={getPermissions} itemsStatus={status} formData={role} setFormData={setRow} multiple={true}
+            id="permissions" label="Select permissions" items={permissions.map(p => {return {_id: p._id, title: p.name}})}
+            getItems={getPermissions} selectedItems={rowState.permissions} itemsStatus={status} formData={rowState} setFormData={setRow} multiple={true}
           />
         </TableCell>
       <TableCell>
         <Box sx={{display: "inline-flex"}}>
-          <IconButton type="submit"><SaveIcon/></IconButton>
+          <IconButton onClick={handleSaveClick}><SaveIcon/></IconButton>
           <IconButton onClick={() => handleCancelClick()}><ClearIcon/></IconButton>
         </Box>
       </TableCell>

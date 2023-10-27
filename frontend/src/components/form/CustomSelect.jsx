@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux'
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import ClearIcon from '@mui/icons-material/Clear';
-import { CircularProgress } from '@mui/material';
+import LoadingOrError from '../LoadingOrError';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -31,14 +31,19 @@ const MenuProps = {
     },
 };
 
-const CustomSelect = ({ id, label, items, selectedItems = [], getItems, itemsStatus, formData, setFormData, multiple}) => {
+function CustomSelect({ id, label, items, selectedItems = [], getItems, itemsStatus, formData, setFormData, multiple}) {
     const [selected, setSelected] = React.useState(multiple ? [] : "")
     const dispatch = useDispatch()
+    const itemsStatusRef = React.useRef(itemsStatus)
+    const selectedItemsRef = React.useRef(selectedItems)
 
     React.useEffect(() => {
-        if(itemsStatus === Status.Idle) dispatch(getItems())
-        if(itemsStatus === Status.Success) setSelected(selectedItems)
-    }, [itemsStatus, getItems, selectedItems, dispatch])
+        if(itemsStatusRef.current === Status.Idle) dispatch(getItems())
+        setSelected(selectedItemsRef.current)
+    }, [getItems, dispatch])
+
+    itemsStatusRef.current = itemsStatus
+    selectedItemsRef.current = selectedItems
 
     const onSelectChange = (e) => {
         const value = e.target.value
@@ -60,9 +65,8 @@ const CustomSelect = ({ id, label, items, selectedItems = [], getItems, itemsSta
         })
     }
 
-    if(itemsStatus === Status.Loading || itemsStatus === Status.Idle) {
-        return <CircularProgress /> 
-    }
+    //if (itemsStatusRef.current !== Status.Success) 
+    //return <LoadingOrError status={itemsStatusRef} />
 
     return (
     <div>
@@ -93,8 +97,7 @@ const CustomSelect = ({ id, label, items, selectedItems = [], getItems, itemsSta
                     ))}
             </Select>
         </FormControl>
-    </div>
-    )
+    </div>)
 }
 
 export default CustomSelect

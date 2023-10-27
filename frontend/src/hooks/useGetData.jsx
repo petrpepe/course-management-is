@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Status } from "../features/Status";
 
@@ -8,10 +8,9 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
   const getTries = useRef(0)
   const getParamRef = useRef(getParam)
   const dataStatus = useRef(data.status)
-  const getDataC = useCallback(() => getData(getParamRef), [getData])
   
   useEffect(() => {
-    dispatch(getDataC(getParamRef))
+    dispatch(getData(getParamRef))
 
     if (dataStatus === Status.Error && getTries.current < 3) {
       setTimeout(() => {
@@ -23,7 +22,7 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
     return () => {
       dispatch(resetData())
     }
-  }, [dataStatus, resetData, getDataC, dispatch]);
+  }, [dataStatus, getParamRef, resetData, getData, dispatch]);
 
   return data
 }

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { updateAttendance } from "../../features/attendances/attendanceSlice"
 import { useDispatch } from "react-redux"
+import { TextField } from "@mui/material"
 
 const CheckBox = ({ id, defaultValue, attId, userId }) => {
     const dispatch = useDispatch()
@@ -13,7 +14,7 @@ const CheckBox = ({ id, defaultValue, attId, userId }) => {
     }
 
     return (
-        <input type="checkbox" id={id} name={id} checked={checked}
+        <TextField type="checkbox" id={id} name={id} checked={checked}
         onChange={(e) => onChange(attId, userId, e)} />
     )
   }

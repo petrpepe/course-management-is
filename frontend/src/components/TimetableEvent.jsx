@@ -10,7 +10,6 @@ import ListItemText from "@mui/material/ListItemText"
 import { Status } from "../features/Status"
 import * as loc from "date-fns/locale"
 import {format, parseISO} from "date-fns/esm"
-import { useSelector } from "react-redux"
 import LoadingOrError from "./LoadingOrError"
 
 const getLocale = () => {
