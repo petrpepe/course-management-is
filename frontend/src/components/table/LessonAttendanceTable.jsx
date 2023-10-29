@@ -1,4 +1,3 @@
-import CheckBox from "../form/CheckBox"
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -10,9 +9,11 @@ import { Status } from "../../features/Status"
 import {getUsers, reset as resetUsers} from "../../features/users/userSlice"
 import useGetData from "../../hooks/useGetData"
 import CircularProgress from "@mui/material/CircularProgress"
+import { getAttendances, reset as resetAttendances } from "../../features/attendances/attendanceSlice"
 
 function LessonAttendanceTable({userIds}) {
   const { users, status: userStatus } = useGetData("users", getUsers, resetUsers, {ids: userIds})
+  const { attendances, status: attendanceStatus } = useGetData("attendances", getAttendances, resetAttendances, {ids: userIds})
 
   if (userStatus === Status.Loading) {
     return <CircularProgress />
@@ -20,7 +21,7 @@ function LessonAttendanceTable({userIds}) {
 
   return (
   <TableContainer component={Paper} sx={{mx: 3, width: "auto"}} >
-    <Table sx={{ overflowX: "auto" }} size="small" aria-label="permissions table">
+    <Table sx={{ overflowX: "auto" }} size="small" aria-label="attendances table">
       <TableHead>
         <TableRow>
           <TableCell>Attendee</TableCell>
