@@ -9,16 +9,11 @@ import Button from "@mui/material/Button"
 import { createEnrollment } from '../../features/enrollments/enrollmentSlice'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import useGetData from '../../hooks/useGetData'
-import { getRoles, reset as resetRoles } from "../../features/roles/roleSlice"
-import { Status } from '../../features/Status'
-import { CircularProgress } from '@mui/material'
 
-const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
+const StudentModal = ({users, roles, defaultOpened, setOpenModal, classId}) => {
     const [formData, setFormData] = React.useState({classId: "", students: []});
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const roles = useGetData("roles", getRoles, resetRoles)
 
     const handleClose = (e, reason) => {
         if (reason !== 'backdropClick') {
@@ -33,10 +28,7 @@ const StudentModal = ({users, defaultOpened, setOpenModal, classId}) => {
         navigate("/classes/" + classId)
     }
 
-    const studentsOptions = users.users.filter(u => u.roles.includes(roles.roles.filter(r => r.name === "student")[0]._id))
-    if (roles.status === Status.Loading || roles.status === Status.Idle) {
-        return <CircularProgress />
-    }
+    const studentsOptions = users.users.filter(u => u.roles.includes(roles.filter(r => r.name === "student")[0]._id))
 
     return (
     <Dialog open={defaultOpened} onClose={handleClose}>

@@ -12,7 +12,7 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
   useEffect(() => {
     dispatch(getData(getParamRef.current))
 
-    if (dataStatus === Status.Error && getTries.current < 3) {
+    if (dataStatus.current === Status.Error && getTries.current < 3) {
       setTimeout(() => {
         getTries.current = getTries.current + 1;
         dispatch(resetData())
@@ -22,7 +22,7 @@ const useGetData = (dataKey, getData, resetData, getParam) => {
     return () => {
       dispatch(resetData())
     }
-  }, [dataStatus, getParamRef, resetData, getData, dispatch]);
+  }, [resetData, getData, dispatch]);
 
   return data
 }
