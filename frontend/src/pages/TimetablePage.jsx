@@ -11,7 +11,7 @@ import LoadingOrError from "../components/LoadingOrError"
 function TimetablePage() {
   const {id} = useParams()
   const user = useSelector(state => state.auth.user)
-  const {enrollments, status: enrollmentStatus} = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id || "652c0f8220f12ad7738b5ad5"})
+  const {enrollments, status: enrollmentStatus} = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id || user._id})
   const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: id || enrollments.map(e=>e.classId)})
   const userIds = new Set([...classes.map(c=>c.lectors), ...enrollments.map(e=>e.student)])
 
