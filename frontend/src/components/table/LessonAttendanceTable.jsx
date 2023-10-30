@@ -17,7 +17,7 @@ function LessonAttendanceTable({timetable, enrolledUsers}) {
   const { users, status: userStatus } = useGetData("users", getUsers, resetUsers, {ids: enrolledUsers})
   const { attendances, status: attendanceStatus } = useGetData("attendances", getAttendances, resetAttendances, {ids: enrolledUsers})
 
-  if (userStatus === Status.Loading) {
+  if (userStatus === Status.Loading || attendanceStatus === Status.Loading) {
     return <CircularProgress />
   }
 
@@ -29,15 +29,16 @@ function LessonAttendanceTable({timetable, enrolledUsers}) {
     <Table sx={{ overflowX: "auto" }} size="small" aria-label="attendances table">
       <TableHead>
         <TableRow>
-          <TableCell sx={{width: "300px"}}>Attendee</TableCell>
-          <TableCell>Note</TableCell>
-          <TableCell align="center" sx={{width: "40px"}}>#</TableCell>
-          <TableCell align="center" sx={{width: "120px"}}><EditIcon/></TableCell>
+          <TableCell sx={{width: "15%"}}>Attendee</TableCell>
+          <TableCell sx={{width: "25%"}}>Datetime</TableCell>
+          <TableCell sx={{width: "45%"}}>Note</TableCell>
+          <TableCell align="center" sx={{width: "1%"}}>#</TableCell>
+          <TableCell align="center" sx={{width: "14%"}}><EditIcon/></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {users.map((u) => (
-          <LessonAttendanceRow att={attendances.filter(att => att.userId === u._id) || newAtt} user={u} />
+          <LessonAttendanceRow key={u._id} att={attendances.filter(att => att.userId === u._id).length > 0 ? attendances.filter(att => att.userId === u._id)[0] : newAtt} user={u} />
         ))}
       </TableBody>
     </Table>

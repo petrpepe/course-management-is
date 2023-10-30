@@ -66,9 +66,9 @@ const setClass = asyncHandler(async (req, res) => {
 
     let timetables = []
     for (let i = 0; i < lessons.length; i++) {
-        const timetable = {dateTime: classVar.startDateTime, classId: classVar._id, lesson: lessons[i]._id, lector: classVar.lectors}
-        const dateTime = new Date(classVar.startDateTime)
-        timetable.dateTime = dateTime.setDate(dateTime.getDate() + 7 * i)
+        const timetable = {datetime: classVar.startDateTime, classId: classVar._id, lesson: lessons[i]._id, lector: classVar.lectors}
+        const datetime = new Date(classVar.startDateTime)
+        timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i)
         timetables.push(timetable)
     }
 
@@ -117,9 +117,9 @@ const updateClass = asyncHandler(async (req, res) => {
 
     let timetables = []
     for (let i = 0; i < lessons.length; i++) {
-        const timetable = {dateTime: updatedClass.startDateTime, classId: updatedClass._id, lesson: lessons[i]._id, lector: updatedClass.lectors}
-        const dateTime = new Date(updatedClass.startDateTime)
-        timetable.dateTime = dateTime.setDate(dateTime.getDate() + 7 * i)
+        const timetable = {datetime: updatedClass.startDateTime, classId: updatedClass._id, lesson: lessons[i]._id, lector: updatedClass.lectors}
+        const datetime = new Date(updatedClass.startDateTime)
+        timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i)
         timetables.push(timetable)
     }
 

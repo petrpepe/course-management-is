@@ -23,36 +23,7 @@ const getAttendances = asyncHandler(async (req, res) => {
 
     const attendances = await Attendance.find(arg)
 
-    let editableAttendances = JSON.parse(JSON.stringify(attendances))
-    if (req.query.names) {
-        let classIds = []
-        let lessonIds = []
-        let userIds = []
-        attendances.map(att => {
-            classIds.push(att.classId)
-            lessonIds.push(att.lessonId)
-            att.attendees.map(userId => userIds.push(userId.user))
-        })
-
-        const classNames = await Class.find({_id: {$in: classIds}}).select("_id title")
-        const lessonNames = await Lesson.find({_id: {$in: lessonIds}}).select("_id title duration")
-        const userNames = await User.find({_id: {$in: userIds}}).select("_id lastName firstName")
-
-        editableAttendances.map(att => {
-            if(classNames.length > 0)att.classId = classNames.filter(className => className._id == att.classId)[0].title
-            const lesson = lessonNames.filter(lessonName => lessonName._id == att.lessonId)[0]
-            if(lessonNames.length > 0 && lesson) att.lessonId = {id: lesson._id, title: lesson.title, duration: lesson.duration}
-            att.attendees = att.attendees.map(attendee => {
-                let filtUserName = userNames.filter(userName => userName._id == attendee.user)[0]
-                if (filtUserName) {
-                    attendee.name = filtUserName.lastName + " " + filtUserName.firstName
-                    return attendee
-                } else return null
-            }).filter(att => att != null)
-        })
-    }
-
-    res.status(200).json(editableAttendances)
+    res.status(200).json(attendances)
 })
 
 /**

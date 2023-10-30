@@ -77,13 +77,7 @@ export const attendanceSlice = createSlice({
         .addCase(updateAttendance.fulfilled, (state, action) => {
             state.status = Status.Success
             let index = state.attendances.findIndex((obj => obj._id === action.payload._id))
-            let attendees = state.attendances[index].attendees.map(att => {
-                let actionAtt = action.payload.attendees.filter(attendee => attendee._id === att._id)[0]
-                if(att.attType !== actionAtt.attType) att.attType = actionAtt.attType
-                return att
-            })
-            console.log(action.payload);
-            state.attendances[index].attendees = attendees
+            state.attendances[index] = action.payload
         })
         .addCase(updateAttendance.rejected, (state, action) => {
             state.status = Status.Error

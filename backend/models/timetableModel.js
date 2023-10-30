@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const timetableSchema = mongoose.Schema(
     {
-        dateTime: {
+        datetime: {
             type: Date,
         },
         classId: {

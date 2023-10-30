@@ -18,7 +18,7 @@ function Timetable({classes, userIds, byUser}) {
     let sortedTimetables = []
     for (const cid of classes.map(c => c._id)) {
       sortedTimetables.push({classId: cid, timetables: timetables.filter(t => t.classId === cid)})
-      sortedTimetables.find(a => a.classId === cid).timetables.sort((a,b) => compareAsc(parseISO(a.dateTime), parseISO(b.dateTime)))
+      sortedTimetables.find(a => a.classId === cid).timetables.sort((a,b) => compareAsc(parseISO(a.datetime), parseISO(b.datetime)))
     }
     const timetableIds = timetables.map(t => t._id)
     const lessonIds = timetables.map(t => t.lesson)

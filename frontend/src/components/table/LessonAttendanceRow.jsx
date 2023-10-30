@@ -1,4 +1,3 @@
-import CheckBox from "../form/CheckBox"
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import { useState } from "react"
@@ -9,16 +8,24 @@ import ClearIcon from '@mui/icons-material/Clear';
 import TextField from "@mui/material/TextField";
 import SaveIcon from '@mui/icons-material/Save';
 import { useDispatch } from "react-redux"
+import Checkbox from "@mui/material/Checkbox"
 
 function LessonAttendanceRow({user, att}) {
   const dispatch = useDispatch()
-  const [formData, setFormData] = useState({...att, userId: att.userId || user._id, note: att.note || "", attended: att.attended || false})
+  const [formData, setFormData] = useState({...att, userId: att.userId || user._id})
   const [isEdited, setIsEdited] = useState(false)
 
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
+    }))
+  }
+
+  const onCheckboxChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.checked,
     }))
   }
 
@@ -32,12 +39,15 @@ function LessonAttendanceRow({user, att}) {
     <TableRow key={formData._id || formData.userId}>
       <TableCell scope="row">{user.firstName + " " + user.lastName}</TableCell>
       <TableCell>
-        <TextField id="note" name="note" label="Note" value={formData.note} onChange={(e) => onChange(e)}/>
+        <TextField id="datetime" name="datetime" label="Datetime" value={formData.datetime} onChange={(e) => onChange(e)} fullWidth/>
       </TableCell>
       <TableCell>
-        <CheckBox id="attended" defaultChecked={formData.attended} onChange={(e) => onChange(e)}/>
+        <TextField id="note" name="note" label="Note" value={formData.note} onChange={(e) => onChange(e)} fullWidth/>
       </TableCell>
-      <TableCell align="center">
+      <TableCell>
+        <Checkbox id="attended" checked={formData.attended} onChange={(e) => onCheckboxChange(e)}/>
+      </TableCell>
+      <TableCell align="center" sx={{p: 0}}>
           <IconButton aria-label="save" onClick={() => saveAttendance(formData._id)}>
             <SaveIcon />
           </IconButton>
@@ -50,11 +60,12 @@ function LessonAttendanceRow({user, att}) {
   else {return (
     <TableRow key={formData.userId}>
         <TableCell scope="row">{user.firstName + " " + user.lastName}</TableCell>
+        <TableCell>{formData.datetime}</TableCell>
         <TableCell>{formData.note}</TableCell>
         <TableCell align="center">
-          <CheckBox id="attended" disabled={true} defaultChecked={formData.attended}/>
+          <Checkbox id="attendedDisabled" checked={formData.attended} disabled />
         </TableCell>
-        <TableCell align="center">
+        <TableCell align="center" sx={{p: 0}}>
           <IconButton aria-label="edit" onClick={() => setIsEdited(true)}>
             <EditIcon />
           </IconButton>

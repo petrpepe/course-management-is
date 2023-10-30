@@ -28,7 +28,7 @@ function TimetableEvent({timetables, timetableIds, lessonIds, lectorIds, classTi
     if (lessonStatus === Status.Success && userStatus === Status.Success && attendanceStatus === Status.Success) {
         return timetables.map(t => {
             let userAttendance = {}
-            const event = {lessonTitle: "", classTitle: classTitle, dateTime: t.dateTime, lectors: [], background: "normal"}
+            const event = {lessonTitle: "", classTitle: classTitle, datetime: t.datetime, lectors: [], background: "normal"}
             const lesson = lessons.filter(l => l._id === t.lesson)[0]
             event.lessonTitle = lesson && lesson.title
             event.lectors = users.filter(u => t.lector.includes(u._id)).map(u => u.email).join(", ")
@@ -39,7 +39,7 @@ function TimetableEvent({timetables, timetableIds, lessonIds, lectorIds, classTi
             <ListItem key={t._id} sx={{width: "100%", display: "block"}}>
                 <ListItemButton component={ReactLink} to={"/classes/call/" + t._id} sx={{ color: '#fff' }}>
                     <ListItemText primary={classTitle + ": " + event.lessonTitle} secondary={event.lectors} />
-                    <ListItemText sx={{flex: "none"}} secondary={format(parseISO(event.dateTime),"P", {locale: locale})} />
+                    <ListItemText sx={{flex: "none"}} secondary={format(parseISO(event.datetime),"P", {locale: locale})} />
                 </ListItemButton>
             </ListItem>)
         })
