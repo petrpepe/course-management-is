@@ -25,7 +25,7 @@ function ClassCall() {
     return <Paper elevation={0} sx={{height: "100%"}}>
       <ClassLessonTitle classId={timetable.classId} lessonId={timetable.lesson} />
       {(user.roles.includes("lector") || user.roles.includes("admin")) &&
-        <ClassCallDetails classId={timetable.classId} lessonId={timetable.lesson} />
+        <ClassCallDetails timetable={timetable}/>
       }
       <Box sx={{my: 2, width: "100%", display: "inline-block", height: "500px"}}>
         <JaaSMeeting

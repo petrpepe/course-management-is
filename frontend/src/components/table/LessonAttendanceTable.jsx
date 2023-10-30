@@ -9,52 +9,40 @@ import { Status } from "../../features/Status"
 import {getUsers, reset as resetUsers} from "../../features/users/userSlice"
 import useGetData from "../../hooks/useGetData"
 import CircularProgress from "@mui/material/CircularProgress"
+import EditIcon from '@mui/icons-material/Edit';
 import { getAttendances, reset as resetAttendances } from "../../features/attendances/attendanceSlice"
+import LessonAttendanceRow from './LessonAttendanceRow'
 
-function LessonAttendanceTable({userIds}) {
-  const { users, status: userStatus } = useGetData("users", getUsers, resetUsers, {ids: userIds})
-  const { attendances, status: attendanceStatus } = useGetData("attendances", getAttendances, resetAttendances, {ids: userIds})
+function LessonAttendanceTable({timetable, enrolledUsers}) {
+  const { users, status: userStatus } = useGetData("users", getUsers, resetUsers, {ids: enrolledUsers})
+  const { attendances, status: attendanceStatus } = useGetData("attendances", getAttendances, resetAttendances, {ids: enrolledUsers})
 
   if (userStatus === Status.Loading) {
     return <CircularProgress />
   }
+
+  if (userStatus === Status.Success && attendanceStatus === Status.Success) {
+  const newAtt = {datetime: timetable.datetime, timetableId: timetable._id, userId: "", attended: false, note: "" }
 
   return (
   <TableContainer component={Paper} sx={{mx: 3, width: "auto"}} >
     <Table sx={{ overflowX: "auto" }} size="small" aria-label="attendances table">
       <TableHead>
         <TableRow>
-          <TableCell>Attendee</TableCell>
+          <TableCell sx={{width: "300px"}}>Attendee</TableCell>
           <TableCell>Note</TableCell>
-          <TableCell align="center" >#</TableCell>
+          <TableCell align="center" sx={{width: "40px"}}>#</TableCell>
+          <TableCell align="center" sx={{width: "120px"}}><EditIcon/></TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {users.map((u) => (
-          <TableRow key={u._id}>
-            <TableCell scope="row">{u.firstName + " " + u.lastName}</TableCell>
-            <TableCell>{u.note}</TableCell>
-            <TableCell>{u.attended}</TableCell>
-          </TableRow>
+          <LessonAttendanceRow att={attendances.filter(att => att.userId === u._id) || newAtt} user={u} />
         ))}
       </TableBody>
     </Table>
   </TableContainer>
-  )
-/*
-<tbody>
-        {atts.map(attendance => {
-          return (
-            <tr key={attendance.user}>
-              <td>{attendance.name}</td>
-              <td><CheckBox id="attType" defaultValue={attendance.attType === "true" ? true : false} 
-              attId={attendance._id} userId={attendance.user} /></td>
-            </tr>
-          )
-          })}
-      </tbody>
-      </table>
-*/
+  )}
 }
 
 export default LessonAttendanceTable
