@@ -9,11 +9,21 @@ import TextField from "@mui/material/TextField";
 import SaveIcon from '@mui/icons-material/Save';
 import { useDispatch } from "react-redux"
 import Checkbox from "@mui/material/Checkbox"
+import * as loc from "date-fns/locale"
+import {format, parseISO} from "date-fns/esm"
+
+const getLocale = () => {
+  const locale = navigator.language.replace("-", "");
+  const rootLocale = locale.substring(0, 2);
+
+  return loc[locale] || loc[rootLocale] || loc.enUS;
+};
 
 function LessonAttendanceRow({user, att}) {
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({...att, userId: att.userId || user._id})
   const [isEdited, setIsEdited] = useState(false)
+  const locale = getLocale()
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -60,7 +70,7 @@ function LessonAttendanceRow({user, att}) {
   else {return (
     <TableRow key={formData.userId}>
         <TableCell scope="row">{user.firstName + " " + user.lastName}</TableCell>
-        <TableCell>{formData.datetime}</TableCell>
+        <TableCell>{format(parseISO(formData.datetime),"Pp", {locale: locale})}</TableCell>
         <TableCell>{formData.note}</TableCell>
         <TableCell align="center">
           <Checkbox id="attendedDisabled" checked={formData.attended} disabled />

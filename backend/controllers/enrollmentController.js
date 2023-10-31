@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Enrollment = require('../models/enrollmentModel')
 const User = require('../models/userModel')
+const mongoose = require("mongoose")
 
 /**
  * @desc Get Enrollments
@@ -8,7 +9,15 @@ const User = require('../models/userModel')
  * @access Private
  */
 const getEnrollments = asyncHandler(async (req, res) => {
-    const Enrollments = await Enrollment.find()
+    let arg = {}
+
+    if(req.query.id) {
+        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+        arg = {$or: [{classId: {$in: ids}}, {student: {$in: ids}}, {_id: {$in: ids}}]}
+    }
+
+    const Enrollments = await Enrollment.find(arg)
 
     res.status(200).json(Enrollments)
 })

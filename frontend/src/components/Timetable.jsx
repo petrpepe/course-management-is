@@ -12,7 +12,9 @@ import LoadingOrError from "../components/LoadingOrError"
 import Button from '@mui/material/Button';
 
 function Timetable({classes, userIds, byUser}) {
-  const {timetables, status: timetableStatus} = useGetData("timetables", getTimetables, resetTimetables, {ids: classes.map(c=>c._id), userIds: userIds})
+  const ids = classes.map(c=>c._id)
+  if (userIds) ids.push(userIds)
+  const {timetables, status: timetableStatus} = useGetData("timetables", getTimetables, resetTimetables, {ids: ids})
 
   if (timetableStatus === Status.Success) {
     let sortedTimetables = []

@@ -54,7 +54,7 @@ const getClasses = asyncHandler(async (req, res) => {
  * }
  */
 const setClass = asyncHandler(async (req, res) => {
-    const {title, lectors} = req.body
+    const {title} = req.body
     if(!title){
         res.status(400)
         throw new Error("Please add title")
@@ -65,32 +65,14 @@ const setClass = asyncHandler(async (req, res) => {
     const classVar = await Class.create(req.body)
 
     let timetables = []
-    for (let i = 0; i < lessons.length; i++) {
-        const timetable = {datetime: classVar.startDateTime, classId: classVar._id, lesson: lessons[i]._id, lector: classVar.lectors}
+    for (let i = 1; i <= lessons.length; i++) {
+        const timetable = {datetime: classVar.startDateTime, classId: classVar._id, lesson: lessons.filter(l => l.lessonNum === i)._id, lector: classVar.lectors}
         const datetime = new Date(classVar.startDateTime)
         timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i)
         timetables.push(timetable)
     }
 
     await Timetable.create(timetables)
-
-    const users = await User.find({_id: {$in: lectors}})
-    
-    for (const user of users) {
-        try {
-            await sendEmail("no-reply@noreplycris.com", user.email, "", "New account",
-            "<div>" +
-            "<p>Dear " + user.firstName + " " + user.lastName + ",</p>" +
-            "<p>you have been assigned to class " + classVar.title + "</p>" +
-            "</ br>" +
-            "<p>You can <a href='" + process.env.FRONTEND_URL + "/login'>login</a> and see it in the list.</p>" +
-            "<p>crsis</p>", res, false
-            )
-        } catch(error) {
-            res.status(500);
-            throw new Error(error)
-        }
-    }
 
     res.status(200).json(classVar)
 })
@@ -112,18 +94,19 @@ const updateClass = asyncHandler(async (req, res) => {
         new: true,
     })
 
-    req.body.course = mongoose.Types.ObjectId(req.body.course)
-    const lessons = await Lesson.find({course: req.body.course})
+    if (!classVar.course.equals(updatedClass.course)) {
+        req.body.course = mongoose.Types.ObjectId(req.body.course)
+        const lessons = (await Lesson.find({course: req.body.course})).sort()
 
-    let timetables = []
-    for (let i = 0; i < lessons.length; i++) {
-        const timetable = {datetime: updatedClass.startDateTime, classId: updatedClass._id, lesson: lessons[i]._id, lector: updatedClass.lectors}
-        const datetime = new Date(updatedClass.startDateTime)
-        timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i)
-        timetables.push(timetable)
+        for (let i = 1; i <= lessons.length; i++) {
+            const timetable = {datetime: updatedClass.startDateTime, classId: updatedClass._id, 
+                lesson: lessons.filter(l => l.lessonNum === i)._id, lector: updatedClass.lectors}
+            const datetime = new Date(updatedClass.startDateTime)
+            timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i)
+
+            await Timetable.update({$and: [{classId: timetable.classId}, {lesson: timetable.lesson}]}, timetable)
+        }
     }
-
-    await Timetable.create(timetables)
 
     res.status(200).json(updatedClass)
 })

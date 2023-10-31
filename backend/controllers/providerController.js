@@ -8,7 +8,15 @@ const User = require('../models/userModel')
  * @access Private
  */
 const getProviders = asyncHandler(async (req, res) => {
-    const Providers = await Provider.find()
+    let arg = {}
+
+    if(req.query.id) {
+        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
+        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+        arg = {_id: {$in: ids}}
+    }
+
+    const Providers = await Provider.find(arg)
 
     res.status(200).json(Providers)
 })

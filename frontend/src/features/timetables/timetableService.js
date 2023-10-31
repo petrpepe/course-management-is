@@ -26,9 +26,13 @@ const updateTimetable = async (timetableId, timetableData, token) => {
     return response.data
 }
 
-const getTimetables = async (ids, token) => {
+const getTimetables = async (ids, datetime, token) => {
     let params = new URLSearchParams()
     if(ids) typeof ids === "string" ? params.append("id", ids) : ids.map((id) => params.append("id", id))
+    if(datetime) {
+        params.append("startDatetime", datetime.startDatetime)
+        params.append("endDatetime", datetime.endDatetime)
+    }
     const config = {
         headers: {
             Authorization: `Bearer ${token}`

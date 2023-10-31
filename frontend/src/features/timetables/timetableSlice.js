@@ -33,7 +33,7 @@ export const updateTimetable = createAsyncThunk("timetables/update", async (time
 export const getTimetables = createAsyncThunk("timetables/get", async (timetableData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await timetableService.getTimetables(timetableData.ids || [],token)
+        return await timetableService.getTimetables(timetableData.ids || [], timetableData.datetime,token)
     } catch (error) {
         const message = (error.response && error.response.data && 
             error.response.data.message) || error.message || error.toString()

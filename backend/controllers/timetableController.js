@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Timetable = require('../models/timetableModel')
 const User = require('../models/userModel')
+const mongoose = require("mongoose");
 
 /**
  * @desc Get Timetables
@@ -8,7 +9,22 @@ const User = require('../models/userModel')
  * @access Private
  */
 const getTimetables = asyncHandler(async (req, res) => {
-    const Timetables = await Timetable.find()
+    const {id, datetime} = req.query;
+    let arg = {}
+
+    if(id) {
+        const ids = typeof id == "string" ? new mongoose.Types.ObjectId(id) 
+        : id.map((id) => new mongoose.Types.ObjectId(id))
+        arg = {$or: [{classId: {$in: ids}}, {lector: {$in: ids}}, {lesson: {$in: ids}}, {_id: {$in: ids}}]}
+    }
+
+    if (datetime) {
+        const start = new Date(datetime.startDatetime)
+        const end = new Date(datetime.endDatetime)
+        arg = {...arg, datetime: {$gte: start.toISOString(), $lte: end.toISOString()}}
+    }
+
+    const Timetables = await Timetable.find(arg)
 
     res.status(200).json(Timetables)
 })

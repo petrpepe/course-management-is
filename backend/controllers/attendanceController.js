@@ -12,14 +12,18 @@ const User = require('../models/userModel')
 const getAttendances = asyncHandler(async (req, res) => {
     let arg = {}
 
-    if (req.userRoles.includes("admin")) arg = {}
-    if (req.userRoles.includes("student"))  arg = {attendees: {$elemMatch: {user: req.user._id}}}
-    if (req.userRoles.includes("lector")) {
-        const classes = await Class.find({lectors: req.user._id}).select("_id")
-        arg = {...arg, classId: {$in: classes}}
+    const {id, datetime} = req.query;
+    if(id) {
+        const ids = typeof id == "string" ? new mongoose.Types.ObjectId(id) 
+        : id.map((id) => new mongoose.Types.ObjectId(id))
+        arg = {$or: [{timetableId: {$in: ids}}, {userId: {$in: ids}}, {_id: {$in: ids}}]}
     }
 
-    if(req.query.itemId) arg = {...arg, $or: [{classId: req.query.itemId},{attendees: {$elemMatch: {user: req.query.itemId}}}]}
+    if (datetime) {
+        const start = new Date(datetime.startDatetime)
+        const end = new Date(datetime.endDatetime)
+        arg = {...arg, datetime: {$gte: start.toISOString(), $lte: end.toISOString()}}
+    }
 
     const attendances = await Attendance.find(arg)
 
@@ -57,13 +61,7 @@ const updateAttendance = asyncHandler(async (req, res) => {
         throw new Error("Attendance not find")
     }
 
-    const attendees = attendance.attendees.map(att => {
-        if(att.user.equals(req.body.userId)) att.attType = req.body.attType
-        return att
-    })
-
-    const updatedAttendance = await Attendance.findByIdAndUpdate(req.params.id, 
-        {$set: {attendees: attendees}}, {new: true})
+    const updatedAttendance = await Attendance.findByIdAndUpdate(req.params.id, {new: true})
 
     res.status(200).json(updatedAttendance)
 })
