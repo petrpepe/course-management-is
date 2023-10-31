@@ -92,11 +92,6 @@ function Header() {
                     <ListItemText primary="Timetable" />
                 </ListItemButton>
             </ListItem>
-            <ListItem key="attendances" disablePadding>
-                <ListItemButton component={ReactLink} to="/attendances" sx={{ textAlign: 'center' }}>
-                    <ListItemText primary="Attendances" />
-                </ListItemButton>
-            </ListItem>
             <Divider />
             {managementListItems}
             <Divider />
@@ -140,11 +135,11 @@ function Header() {
                 <Box sx={{ flexGrow: 1, justifyContent: 'flex-start', display: { xs: 'none', sm: 'flex' } }}>
                     <Button component={ReactLink} to="/classes" sx={{ color: '#fff' }}>Classes</Button>
                     <Button component={ReactLink} to="/timetable" sx={{ color: '#fff' }}>Timetable</Button>
-                    <Button component={ReactLink} to="/attendances" sx={{ color: '#fff' }}>Attendances</Button>
                 </Box>
                 <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                     {!user ? <Button component={ReactLink}to="/login" sx={{ color: '#fff' }}>Login</Button> : <>
                     <Button component={ReactLink} to="/me" sx={{ color: '#fff' }}>Profile</Button>
+                    {!user.roles.includes("admin") && <Button component={ReactLink}to="/logout" sx={{ color: '#fff' }}>Logout</Button>}
                     </>}
                 </Box>
                 {user && user.roles.includes("admin") && <>

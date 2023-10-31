@@ -3,14 +3,17 @@ import {deleteClass, getClasses, reset as resetClasses} from "../features/classe
 import CustomCard from "../components/CustomCard"
 import { Status } from "../features/Status"
 import useGetData from "../hooks/useGetData"
+import { useEffect } from "react"
 
 function Dashboard() {
   const { user } = useSelector((state) => state.auth)
   const { classes, status } = useGetData("classes", getClasses, resetClasses)
 
-  if (!user) {
-    return console.log("Přihlaš se");
-  }
+  useEffect(() => {
+    if (!user) {
+      return console.log("Přihlaš se");
+    }
+  },[user])
   return (
     <>
       <section className="heading">

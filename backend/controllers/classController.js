@@ -14,17 +14,9 @@ const {sendEmail} = require("./emailController")
  */
 const getClasses = asyncHandler(async (req, res) => {
     let arg = {}
-    if (req.userRoles.includes("admin")) arg = {}
-    else {
-        if (req.userRoles.includes("lector")) arg = {$or: [{students: req.user._id}, {lectors: req.user._id}]}
-        if (req.userRoles.includes("student") && !req.userRoles.includes("lector")) {
-            arg = {students: req.user._id}
-        }
-    }
 //zápis enrollments
     if(req.query.id && req.query.id != null) {
-        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {...arg, _id: {$in: ids}}
     }
 

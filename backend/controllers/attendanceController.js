@@ -10,18 +10,17 @@ const User = require('../models/userModel')
  * @access Private
  */
 const getAttendances = asyncHandler(async (req, res) => {
+    const {id, startDatetime, endDatetime} = req.query;
     let arg = {}
 
-    const {id, datetime} = req.query;
     if(id) {
-        const ids = typeof id == "string" ? new mongoose.Types.ObjectId(id) 
-        : id.map((id) => new mongoose.Types.ObjectId(id))
+        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {$or: [{timetableId: {$in: ids}}, {userId: {$in: ids}}, {_id: {$in: ids}}]}
     }
 
     if (datetime) {
-        const start = new Date(datetime.startDatetime)
-        const end = new Date(datetime.endDatetime)
+        const start = new Date(startDatetime)
+        const end = new Date(endDatetime)
         arg = {...arg, datetime: {$gte: start.toISOString(), $lte: end.toISOString()}}
     }
 
@@ -61,7 +60,7 @@ const updateAttendance = asyncHandler(async (req, res) => {
         throw new Error("Attendance not find")
     }
 
-    const updatedAttendance = await Attendance.findByIdAndUpdate(req.params.id, {new: true})
+    const updatedAttendance = await Attendance.findByIdAndUpdate(req.params.id, req.body, {new: true})
 
     res.status(200).json(updatedAttendance)
 })

@@ -11,9 +11,8 @@ const getLessons = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(req.query.id) {
-        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
-        arg = {...arg, _id: {$in: ids}}
+        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
+        arg = {...arg, $or: [{course: {$in: ids}}, {_id: {$in: ids}}]}
     }
 
     let select = "-content";

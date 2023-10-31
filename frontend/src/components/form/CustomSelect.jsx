@@ -53,7 +53,7 @@ function CustomSelect({ id, label, items, selectedItems = [], itemsStatus, formD
         })
     }
 
-    if (itemsStatus !== Status.Success) return <LoadingOrError status={itemsStatus} />
+    //if (itemsStatus !== Status.Success) return <LoadingOrError status={itemsStatus} />
 
     return (
     <div>

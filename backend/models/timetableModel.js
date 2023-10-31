@@ -20,4 +20,4 @@ const timetableSchema = mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model("Timetable", timetableSchema)  
+module.exports = mongoose.model("Timetable", timetableSchema)

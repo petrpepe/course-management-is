@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Provider = require('../models/providerModel')
 const User = require('../models/userModel')
+const mongoose = require("mongoose")
 
 /**
  * @desc Get Providers
@@ -11,8 +12,7 @@ const getProviders = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(req.query.id) {
-        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {_id: {$in: ids}}
     }
 

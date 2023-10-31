@@ -17,9 +17,9 @@ const {sendEmail} = require("./emailController")
  */
 const getUsers = asyncHandler(async (req, res) => {
     let arg = {}
+
     if(req.query.id) {
-        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {_id: {$in: ids}}
     }
 
@@ -259,15 +259,6 @@ const setNewPassword = asyncHandler(async (req, res) => {
 })
 
 /**
- * @desc Get user data
- * @route GET /api/users/me
- * @access Private
- */
-const getMe = asyncHandler(async (req, res) => {
-    res.status(200).json(req.user)
-})
-
-/**
  * Generate JWT with userId
  * 
  * @param {string} id 
@@ -414,7 +405,6 @@ module.exports = {
     loginUser,
     forgotPassword,
     setNewPassword,
-    getMe,
     updateUser,
     createUser,
     deleteUser,

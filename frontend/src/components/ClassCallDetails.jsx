@@ -16,7 +16,7 @@ function ClassCallDetails({timetable}) {
     }
 
     const lesson = lessons.filter(l => l._id === timetable.lesson)[0]
-console.log(enrollments);
+
     return (
     <Box sx={{width: "100%", display: "block"}}>
         {(lessonStatus === Status.Success && lesson.content) && lesson.content.split("\\n").map((c, i) =>

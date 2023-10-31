@@ -11,13 +11,12 @@ const mongoose = require("mongoose")
 const getCourses = asyncHandler(async (req, res) => {
     let arg = {}
 
-    if(req.query.id && req.query.id != null) {
-        const ids = typeof req.query.id == "string" ? new mongoose.Types.ObjectId(req.query.id) 
-        : req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+    if(req.query.id) {
+        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {...arg, _id: {$in: ids}}
     }
 
-    if(req.query.keyword && req.query.keyword != null) {
+    if(req.query.keyword) {
         const keyword = new RegExp(".*" + req.query.keyword + ".*", "i")
         arg = {...arg, title: {$regex: keyword}}
     }
