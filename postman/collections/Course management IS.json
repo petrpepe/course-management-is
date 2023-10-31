@@ -296,7 +296,7 @@
 							"urlencoded": [
 								{
 									"key": "name",
-									"value": "lessonGet",
+									"value": "providersManagement",
 									"type": "text"
 								}
 							]
@@ -598,6 +598,11 @@
 								{
 									"key": "id",
 									"value": "{{userId}}"
+								},
+								{
+									"key": "detail",
+									"value": "true",
+									"disabled": true
 								}
 							]
 						}
@@ -717,6 +722,118 @@
 				}
 			],
 			"id": "4164e6b3-5365-4086-8507-87e8e7bf20ea"
+		},
+		{
+			"name": "Enrollments",
+			"item": [
+				{
+					"name": "Get Enrollments",
+					"id": "5162f314-1228-4946-a029-ce662c22073c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "datetime",
+									"value": "{startDatetime: 2023-10-16T10:00:00.000Z, endDatetime: 2023-10-16T10:00:00.000Z)",
+									"type": "text"
+								},
+								{
+									"key": "id",
+									"value": "652d5e15a356752f679735df",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/enrollments?id=652d5ebc6ad006e86e1cf01a",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"enrollments"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "652d5ebc6ad006e86e1cf01a"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "1bdfa3d3-fbd2-4152-9716-eac2019f9dbe"
+		},
+		{
+			"name": "Timetables",
+			"item": [
+				{
+					"name": "Get Timetables",
+					"id": "939387fe-d28d-4cf5-84ad-e45c2f10069e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "datetime",
+									"value": "{startDatetime: 2023-10-16T10:00:00.000Z, endDatetime: 2023-10-16T10:00:00.000Z)",
+									"type": "text"
+								},
+								{
+									"key": "id",
+									"value": "652d5e15a356752f679735df",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{site}}/api/timetables?startDatetime=2023-10-16T10:00:00.000Z&endDatetime=2023-10-27T10:00:00.000Z&id=652d5e15a356752f679735df",
+							"host": [
+								"{{site}}"
+							],
+							"path": [
+								"api",
+								"timetables"
+							],
+							"query": [
+								{
+									"key": "startDatetime",
+									"value": "2023-10-16T10:00:00.000Z"
+								},
+								{
+									"key": "endDatetime",
+									"value": "2023-10-27T10:00:00.000Z"
+								},
+								{
+									"key": "id",
+									"value": "652d5e15a356752f679735df",
+									"type": "text"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "2d38df4d-1b9c-42f7-b9a1-55e275269169"
+		},
+		{
+			"name": "Providers",
+			"item": [],
+			"id": "208e8d3d-ce93-4a07-948d-100ce64c206c"
 		}
 	],
 	"auth": {
