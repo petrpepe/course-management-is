@@ -2,16 +2,25 @@ const path = require("path")
 const express = require("express")
 const colors = require("colors")
 const dotenv = require("dotenv").config()
+const cors = require("cors")
 const {errorHandler} = require("./middleware/errorMiddleware")
 const connectDB = require("./config/db");
 const port = process.env.PORT || 5000
 
 connectDB()
 
+var corsOptions = {
+    origin: ['http://localhost:3000', 'https://sis-cr-fe.onrender.com'],
+    methods: "GET,POST,PUT,DELETE",
+    optionsSuccessStatus: 200
+}
+
 const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
+
+app.use(cors(corsOptions));
 
 app.use("/api/providers", require("./routes/providerRoutes"))
 app.use("/api/courses", require("./routes/courseRoutes"))

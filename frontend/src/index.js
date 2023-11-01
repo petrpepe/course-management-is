@@ -8,9 +8,14 @@ import './index.css';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { getLocale } from "./utils"
+import axios from 'axios';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
+const token = localStorage.getItem("user").token
+
+axios.defaults.baseURL = 'http://localhost:5000';
+if(token) axios.defaults.headers.common['Authorization'] = token;
 
 root.render(
     <React.StrictMode>
