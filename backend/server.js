@@ -9,11 +9,13 @@ const port = process.env.PORT || 5000
 
 connectDB()
 
-var corsOptions = {
-    origin: ['http://localhost:3000', 'https://sis-cr-fe.onrender.com'],
+const corsOptions = {
+    origin: 'http://localhost:3000',
     methods: "GET,POST,PUT,DELETE",
     optionsSuccessStatus: 200
 }
+
+const feOrigin = "https://sis-cr-fe.onrender.com/";
 
 const app = express()
 
@@ -21,6 +23,12 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
 app.use(cors(corsOptions));
+
+app.all('*', function(req, res, next) {
+    const origin = feOrigin === req.header('origin').toLowerCase() ? feOrigin : corsOptions.origin;
+    app.use(cors(corsOptions))
+    next();
+});
 
 app.use("/api/providers", require("./routes/providerRoutes"))
 app.use("/api/courses", require("./routes/courseRoutes"))
