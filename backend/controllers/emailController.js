@@ -1,8 +1,16 @@
-const nodemailer = require("nodemailer")
-const Transport = require("../emailConfig/transport")
+const nodemailer = require("nodemailer");
+const Transport = require("../emailConfig/transport");
 
-const sendEmail = async (sent_from, send_to, reply_to = "", subject, content) => {
-  const transporter = nodemailer.createTransport(new Transport({apiKey: process.env.EMAIL_API_KEY}));
+const sendEmail = async (
+  sent_from,
+  send_to,
+  reply_to = "",
+  subject,
+  content,
+) => {
+  const transporter = nodemailer.createTransport(
+    new Transport({ apiKey: process.env.EMAIL_API_KEY }),
+  );
 
   const options = {
     from: sent_from,
@@ -10,9 +18,9 @@ const sendEmail = async (sent_from, send_to, reply_to = "", subject, content) =>
     replyTo: reply_to,
     subject: subject,
     html: content,
-  }
+  };
 
-  transporter.sendMail(options)
-}
+  transporter.sendMail(options);
+};
 
-module.exports = {sendEmail};
+module.exports = { sendEmail };

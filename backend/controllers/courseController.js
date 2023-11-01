@@ -1,8 +1,8 @@
-const asyncHandler = require('express-async-handler')
-const Course = require('../models/courseModel')
-const Class = require('../models/classModel')
-const Lesson = require('../models/lessonModel')
-const mongoose = require("mongoose")
+const asyncHandler = require("express-async-handler");
+const Course = require("../models/courseModel");
+const Class = require("../models/classModel");
+const Lesson = require("../models/lessonModel");
+const mongoose = require("mongoose");
 
 /**
  * @desc Get courses
@@ -10,22 +10,24 @@ const mongoose = require("mongoose")
  * @access Private
  */
 const getCourses = asyncHandler(async (req, res) => {
-    let arg = {}
+  let arg = {};
 
-    if(req.query.id) {
-        const ids = Array.isArray(req.query.id) ? req.query.id.map((id) => new mongoose.Types.ObjectId(id)) : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
-        arg = {...arg, _id: {$in: ids}}
-    }
+  if (req.query.id) {
+    const ids = Array.isArray(req.query.id)
+      ? req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+      : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id));
+    arg = { ...arg, _id: { $in: ids } };
+  }
 
-    if(req.query.keyword) {
-        const keyword = new RegExp(".*" + req.query.keyword + ".*", "i")
-        arg = {...arg, title: {$regex: keyword}}
-    }
+  if (req.query.keyword) {
+    const keyword = new RegExp(".*" + req.query.keyword + ".*", "i");
+    arg = { ...arg, title: { $regex: keyword } };
+  }
 
-    const courses = await Course.find(arg)
+  const courses = await Course.find(arg);
 
-    res.status(200).json(courses)
-})
+  res.status(200).json(courses);
+});
 
 /**
  * @desc Create courses
@@ -33,15 +35,15 @@ const getCourses = asyncHandler(async (req, res) => {
  * @access Private
  */
 const setCourse = asyncHandler(async (req, res) => {
-    if(!req.body.title){
-        res.status(400)
-        throw new Error("Please add course title ", req.body)
-    }
+  if (!req.body.title) {
+    res.status(400);
+    throw new Error("Please add course title ", req.body);
+  }
 
-    const course = await Course.create(req.body)
+  const course = await Course.create(req.body);
 
-    res.status(200).json(course)
-})
+  res.status(200).json(course);
+});
 
 /**
  * @desc Update courses
@@ -49,19 +51,23 @@ const setCourse = asyncHandler(async (req, res) => {
  * @access Private
  */
 const updateCourse = asyncHandler(async (req, res) => {
-    const course = await Course.findById(req.params.id)
+  const course = await Course.findById(req.params.id);
 
-    if(!course) {
-        res.status(400)
-        throw new Error("Course not find")
-    }
+  if (!course) {
+    res.status(400);
+    throw new Error("Course not find");
+  }
 
-    const updatedCourse = await Course.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-    })
+  const updatedCourse = await Course.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+    },
+  );
 
-    res.status(200).json(updatedCourse)
-})
+  res.status(200).json(updatedCourse);
+});
 
 /**
  * @desc Delete courses
@@ -69,24 +75,28 @@ const updateCourse = asyncHandler(async (req, res) => {
  * @access Private
  */
 const deleteCourse = asyncHandler(async (req, res) => {
-    const course = await Course.findById(req.params.id)
+  const course = await Course.findById(req.params.id);
 
-    if(!course) {
-        res.status(400)
-        throw new Error("Course not find")
-    }
+  if (!course) {
+    res.status(400);
+    throw new Error("Course not find");
+  }
 
-    await Class.updateMany({course: course._id}, {$pull: {course: course._id}}, {multi: true})
-    await Lesson.daleteMany({course: course._id})
+  await Class.updateMany(
+    { course: course._id },
+    { $pull: { course: course._id } },
+    { multi: true },
+  );
+  await Lesson.daleteMany({ course: course._id });
 
-    await course.deleteOne()
+  await course.deleteOne();
 
-    res.status(200).json({id: req.params.id})
-})
+  res.status(200).json({ id: req.params.id });
+});
 
 module.exports = {
-    getCourses,
-    setCourse,
-    updateCourse,
-    deleteCourse
-}
+  getCourses,
+  setCourse,
+  updateCourse,
+  deleteCourse,
+};

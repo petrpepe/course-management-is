@@ -1,6 +1,6 @@
-const asyncHandler = require('express-async-handler')
-const Lesson = require('../models/lessonModel');
-const Timetable = require('../models/timetableModel');
+const asyncHandler = require("express-async-handler");
+const Lesson = require("../models/lessonModel");
+const Timetable = require("../models/timetableModel");
 const mongoose = require("mongoose");
 
 /**
@@ -9,27 +9,29 @@ const mongoose = require("mongoose");
  * @access Private
  */
 const getLessons = asyncHandler(async (req, res) => {
-    let arg = {}
+  let arg = {};
 
-    if(req.query.id) {
-        const ids = Array.isArray(req.query.id) ? req.query.id.map((id) => new mongoose.Types.ObjectId(id)) : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
-        arg = {...arg, $or: [{course: {$in: ids}}, {_id: {$in: ids}}]}
-    }
+  if (req.query.id) {
+    const ids = Array.isArray(req.query.id)
+      ? req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+      : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id));
+    arg = { ...arg, $or: [{ course: { $in: ids } }, { _id: { $in: ids } }] };
+  }
 
-    let select = "-content";
-    if(req.query.detail === "true") {
-        select = ""
-    }
+  let select = "-content";
+  if (req.query.detail === "true") {
+    select = "";
+  }
 
-    if(req.query.keyword) {
-        const keyword = new RegExp(".*" + req.query.keyword + ".*", "i")
-        arg = {...arg, title: {$regex: keyword}}
-    }
+  if (req.query.keyword) {
+    const keyword = new RegExp(".*" + req.query.keyword + ".*", "i");
+    arg = { ...arg, title: { $regex: keyword } };
+  }
 
-    const lessons = await Lesson.find(arg).select(select)
+  const lessons = await Lesson.find(arg).select(select);
 
-    res.status(200).json(lessons)
-})
+  res.status(200).json(lessons);
+});
 
 /**
  * @desc Create Lesson
@@ -37,15 +39,15 @@ const getLessons = asyncHandler(async (req, res) => {
  * @access Private
  */
 const setLesson = asyncHandler(async (req, res) => {
-    if(!req.body.title){
-        res.status(400)
-        throw new Error("Please add lesson title")
-    }
+  if (!req.body.title) {
+    res.status(400);
+    throw new Error("Please add lesson title");
+  }
 
-    const lesson = await Lesson.create(req.body)
+  const lesson = await Lesson.create(req.body);
 
-    res.status(200).json(lesson)
-})
+  res.status(200).json(lesson);
+});
 
 /**
  * @desc Update Lessons
@@ -53,19 +55,23 @@ const setLesson = asyncHandler(async (req, res) => {
  * @access Private
  */
 const updateLesson = asyncHandler(async (req, res) => {
-    const lesson = await Lesson.findById(req.params.id)
+  const lesson = await Lesson.findById(req.params.id);
 
-    if(!lesson) {
-        res.status(400)
-        throw new Error("Lesson not find")
-    }
+  if (!lesson) {
+    res.status(400);
+    throw new Error("Lesson not find");
+  }
 
-    const updatedLesson = await Lesson.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-    })
+  const updatedLesson = await Lesson.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+    },
+  );
 
-    res.status(200).json(updatedLesson)
-})
+  res.status(200).json(updatedLesson);
+});
 
 /**
  * @desc Delete Lessons
@@ -73,23 +79,27 @@ const updateLesson = asyncHandler(async (req, res) => {
  * @access Private
  */
 const deleteLesson = asyncHandler(async (req, res) => {
-    const lesson = await Lesson.findById(req.params.id)
+  const lesson = await Lesson.findById(req.params.id);
 
-    if(!lesson) {
-        res.status(400)
-        throw new Error("Lesson not find")
-    }
+  if (!lesson) {
+    res.status(400);
+    throw new Error("Lesson not find");
+  }
 
-    await Timetable.updateMany({lesson: lesson._id}, {$pull: {lesson: lesson._id}}, {multi: true})
+  await Timetable.updateMany(
+    { lesson: lesson._id },
+    { $pull: { lesson: lesson._id } },
+    { multi: true },
+  );
 
-    await lesson.deleteOne()
+  await lesson.deleteOne();
 
-    res.status(200).json({id: req.params.id})
-})
+  res.status(200).json({ id: req.params.id });
+});
 
 module.exports = {
-    getLessons,
-    setLesson,
-    updateLesson,
-    deleteLesson
-}
+  getLessons,
+  setLesson,
+  updateLesson,
+  deleteLesson,
+};

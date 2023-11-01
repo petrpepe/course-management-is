@@ -1,16 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const enrollmentSchema = mongoose.Schema(
+const enrollmentSchema = mongoose.Schema({
+  classId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Class",
+  },
+  student: [
     {
-        classId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Class",
-        },
-        student: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        }]
-    }
-)
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+});
 
-module.exports = mongoose.model("Enrollment", enrollmentSchema)
+module.exports = mongoose.model("Enrollment", enrollmentSchema);

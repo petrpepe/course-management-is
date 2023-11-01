@@ -1,6 +1,6 @@
-const asyncHandler = require('express-async-handler')
-const Role = require('../models/roleModel')
-const User = require('../models/userModel')
+const asyncHandler = require("express-async-handler");
+const Role = require("../models/roleModel");
+const User = require("../models/userModel");
 
 /**
  * @desc Get Roles
@@ -8,10 +8,10 @@ const User = require('../models/userModel')
  * @access Private
  */
 const getRoles = asyncHandler(async (req, res) => {
-    const Roles = await Role.find()
+  const Roles = await Role.find();
 
-    res.status(200).json(Roles)
-})
+  res.status(200).json(Roles);
+});
 
 /**
  * @desc Create role
@@ -19,15 +19,15 @@ const getRoles = asyncHandler(async (req, res) => {
  * @access Private
  */
 const setRole = asyncHandler(async (req, res) => {
-    if(!req.body.name){
-        res.status(400)
-        throw new Error("Please add name")
-    }
+  if (!req.body.name) {
+    res.status(400);
+    throw new Error("Please add name");
+  }
 
-    const role = await Role.create(req.body)
+  const role = await Role.create(req.body);
 
-    res.status(200).json(role)
-})
+  res.status(200).json(role);
+});
 
 /**
  * @desc Update role by id
@@ -35,19 +35,19 @@ const setRole = asyncHandler(async (req, res) => {
  * @access Private
  */
 const updateRole = asyncHandler(async (req, res) => {
-    const role = await Role.findById(req.params.id)
+  const role = await Role.findById(req.params.id);
 
-    if(!role) {
-        res.status(400)
-        throw new Error("Role not find")
-    }
+  if (!role) {
+    res.status(400);
+    throw new Error("Role not find");
+  }
 
-    const updatedRole = await Role.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-    })
+  const updatedRole = await Role.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
 
-    res.status(200).json(updatedRole)
-})
+  res.status(200).json(updatedRole);
+});
 
 /**
  * @desc Delete role by id
@@ -55,23 +55,27 @@ const updateRole = asyncHandler(async (req, res) => {
  * @access Private
  */
 const deleteRole = asyncHandler(async (req, res) => {
-    const role = await Role.findById(req.params.id)
+  const role = await Role.findById(req.params.id);
 
-    if(!role) {
-        res.status(400)
-        throw new Error("Role not find")
-    }
+  if (!role) {
+    res.status(400);
+    throw new Error("Role not find");
+  }
 
-    await User.updateMany({roles: role._id}, {$pull: {roles: role._id}}, {multi: true})
+  await User.updateMany(
+    { roles: role._id },
+    { $pull: { roles: role._id } },
+    { multi: true },
+  );
 
-    await role.deleteOne()
+  await role.deleteOne();
 
-    res.status(200).json({id: req.params.id})
-})
+  res.status(200).json({ id: req.params.id });
+});
 
 module.exports = {
-    getRoles,
-    setRole,
-    updateRole,
-    deleteRole
-}
+  getRoles,
+  setRole,
+  updateRole,
+  deleteRole,
+};
