@@ -5,6 +5,9 @@ import { store } from './app/store';
 import App from './App';
 //import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { getLocale } from "./utils"
 
 const container = document.getElementById('root');
 const root = createRoot(container);
@@ -12,7 +15,9 @@ const root = createRoot(container);
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <App />
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={getLocale()}>
+                <App />
+            </LocalizationProvider>
         </Provider>
     </React.StrictMode>
 );

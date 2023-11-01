@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Timetable = require('../models/timetableModel')
 const mongoose = require("mongoose");
+const Attendance = require("../models/attendanceModel")
 
 /**
  * @desc Get Timetables
@@ -12,7 +13,7 @@ const getTimetables = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(id) {
-        const ids = id.split(",").map((id) => new mongoose.Types.ObjectId(id))
+        const ids = Array.isArray(id) ? id.map((id) => new mongoose.Types.ObjectId(id)) : id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {$or: [{classId: {$in: ids}}, {lector: {$in: ids}}, {lesson: {$in: ids}}, {_id: {$in: ids}}]}
     }
 
@@ -76,7 +77,9 @@ const deleteTimetable = asyncHandler(async (req, res) => {
         throw new Error("Timetable not find")
     }
 
-    await timetable.remove()
+    await Attendance.updateMany({timetableId: timetable._id}, {$pull: {timetableId: timetable._id}}, {multi: true})
+
+    await timetable.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })

@@ -1,11 +1,9 @@
 const asyncHandler = require('express-async-handler')
 const Class = require('../models/classModel');
-const Attendance = require('../models/attendanceModel');
-const User = require('../models/userModel');
 const Lesson = require('../models/lessonModel');
 const Timetable = require('../models/timetableModel');
+const Enrollment = require('../models/enrollmentModel');
 const mongoose = require("mongoose")
-const {sendEmail} = require("./emailController")
 
 /**
  * @desc Get Classes
@@ -16,7 +14,7 @@ const getClasses = asyncHandler(async (req, res) => {
     let arg = {}
 //zápis enrollments
     if(req.query.id && req.query.id != null) {
-        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
+        const ids = Array.isArray(req.query.id) ? req.query.id.map((id) => new mongoose.Types.ObjectId(id)) : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {...arg, _id: {$in: ids}}
     }
 
@@ -53,12 +51,13 @@ const setClass = asyncHandler(async (req, res) => {
     }
 
     req.body.course = new mongoose.Types.ObjectId(req.body.course)
-    const lessons = await Lesson.find({course: req.body.course})
+
+    const lessons = await Lesson.find({course: req.body.course}).select("-content")
     const classVar = await Class.create(req.body)
 
     let timetables = []
     for (let i = 1; i <= lessons.length; i++) {
-        const timetable = {datetime: classVar.startDateTime, classId: classVar._id, lesson: lessons.filter(l => l.lessonNum === i)._id, lector: classVar.lectors}
+        const timetable = {datetime: classVar.startDateTime, classId: classVar._id, lesson: lessons.filter(l => l.lessonNum === i)[0]._id, lector: classVar.lectors}
         const datetime = new Date(classVar.startDateTime)
         timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i)
         timetables.push(timetable)
@@ -116,7 +115,9 @@ const deleteClass = asyncHandler(async (req, res) => {
         throw new Error("Class not find")
     }
 
-    await Timetable.deleteMany({classId: classVar._id.toString()})
+    await Enrollment.deleteMany({classId: classVar._id.toString()})
+    const timetables = await Timetable.deleteMany({classId: classVar._id.toString()})
+    await Attendance.deleteMany({timetableId: {$in: timetables.map(t => t._id.toString())}})
 
     await classVar.deleteOne()
 

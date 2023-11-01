@@ -12,10 +12,10 @@ import Timetable from "../../components/Timetable"
 
 function ClassDetail() {
   const {id} = useParams()
-  const {classes, status} = useGetData("classes", getClasses, resetClasses, {ids: id})
-  const enrollments = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id})
+  const {classes, status: classStatus} = useGetData("classes", getClasses, resetClasses, {ids: id})
+  const {enrollments, status: enrollmentStatus } = useGetData("enrollments", getEnrollments, resetEnrollments, {ids: id})
 
-  if (status === Status.Loading || status === Status.Idle || enrollments.status === Status.Loading || enrollments.status === Status.Idle) {
+  if (classStatus === Status.Loading || enrollmentStatus === Status.Loading || classStatus === Status.Idle) {
     return <CircularProgress sx={{position: "absolute", top: "50%"}} />
   }
 
@@ -24,7 +24,7 @@ function ClassDetail() {
     <Typography variant="h3">{classes[0].description}</Typography>
     <CourseTitleLink courseId={classes[0].course}/>
     <Timetable classIds={id} classes={classes} />
-    <UsersList usersIds={enrollments.enrollments.flatMap(e => e.student)} heading="students" />
+    <UsersList usersIds={enrollments.flatMap(e => e.student)} heading="students" />
     <UsersList usersIds={classes[0].lectors} heading="lectors" />
     <Button component={ReactLink} to={"/classes/" + classes[0]._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
   </>)

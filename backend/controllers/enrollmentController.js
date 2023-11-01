@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler')
 const Enrollment = require('../models/enrollmentModel')
 const User = require('../models/userModel')
 const mongoose = require("mongoose")
+const {sendEmail} = require("./emailController")
 
 /**
  * @desc Get Enrollments
@@ -12,7 +13,7 @@ const getEnrollments = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(req.query.id) {
-        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
+        const ids = Array.isArray(req.query.id) ? req.query.id.map((id) => new mongoose.Types.ObjectId(id)) : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {$or: [{classId: {$in: ids}}, {student: {$in: ids}}, {_id: {$in: ids}}]}
     }
 
@@ -93,7 +94,7 @@ const deleteEnrollment = asyncHandler(async (req, res) => {
         throw new Error("Enrollment not find")
     }
 
-    await enrollment.remove()
+    await enrollment.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })

@@ -14,9 +14,8 @@ function Profile() {
     <Typography variant="h2">Your profile</Typography>
     <Typography variant="h3">Whole name: {user.firstName + (user.otherNames ? " " + user.otherNames.join(" ") + " " : " ") + user.lastName}</Typography>
     <Typography variant="h4">Email: {user.email}</Typography>
-    <Typography variant="body1">{user.phone.length > 0 && <>Phone:
-      {user.phone.map(phone => <span key={phone._id}>{" " + phone.type + ": " + phone.number}</span>)}
-    </>}</Typography>
+    <Typography variant="body1">Phones</Typography>
+    {user.phone.map(phone => <Typography variant="body1" key={phone.type}>{" " + phone.type + ": " + phone.number}</Typography>)}
     <Button component={ReactLink} to={"/users/" + user._id + "/edit"} sx={{ my: 1 }}>Edit</Button>
   </>)
 }

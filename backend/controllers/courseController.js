@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const Course = require('../models/courseModel')
 const Class = require('../models/classModel')
+const Lesson = require('../models/lessonModel')
 const mongoose = require("mongoose")
 
 /**
@@ -12,7 +13,7 @@ const getCourses = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(req.query.id) {
-        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
+        const ids = Array.isArray(req.query.id) ? req.query.id.map((id) => new mongoose.Types.ObjectId(id)) : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {...arg, _id: {$in: ids}}
     }
 
@@ -76,8 +77,9 @@ const deleteCourse = asyncHandler(async (req, res) => {
     }
 
     await Class.updateMany({course: course._id}, {$pull: {course: course._id}}, {multi: true})
+    await Lesson.daleteMany({course: course._id})
 
-    await course.remove()
+    await course.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })

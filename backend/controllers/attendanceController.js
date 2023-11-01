@@ -14,11 +14,11 @@ const getAttendances = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(id) {
-        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
+        const ids = Array.isArray(id) ? id.map((id) => new mongoose.Types.ObjectId(id)) : id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {$or: [{timetableId: {$in: ids}}, {userId: {$in: ids}}, {_id: {$in: ids}}]}
     }
 
-    if (datetime) {
+    if (startDatetime && endDatetime) {
         const start = new Date(startDatetime)
         const end = new Date(endDatetime)
         arg = {...arg, datetime: {$gte: start.toISOString(), $lte: end.toISOString()}}
@@ -78,7 +78,7 @@ const deleteAttendance = asyncHandler(async (req, res) => {
         throw new Error("Attendance not find")
     }
 
-    await attendance.remove()
+    await attendance.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })

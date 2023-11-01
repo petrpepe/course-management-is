@@ -16,6 +16,10 @@ const timetableSchema = mongoose.Schema(
         lector: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
+        }],
+        extraUser: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
         }]
     }
 )

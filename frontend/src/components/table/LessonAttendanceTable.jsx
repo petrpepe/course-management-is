@@ -23,9 +23,9 @@ function LessonAttendanceTable({timetable, enrolledUsers}) {
 
   if (userStatus === Status.Success && attendanceStatus === Status.Success) {
   const newAtt = {datetime: timetable.datetime, timetableId: timetable._id, userId: "", attended: false, note: "" }
-console.log(attendances.filter(att => att.timetableId === timetable._id));
+
   return (
-  <TableContainer component={Paper} sx={{mx: 3, width: "auto"}} >
+  <TableContainer component={Paper} sx={{my: 2, width: "auto"}} >
     <Table sx={{ overflowX: "auto" }} size="small" aria-label="attendances table">
       <TableHead>
         <TableRow>

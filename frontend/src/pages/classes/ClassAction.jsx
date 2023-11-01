@@ -15,6 +15,8 @@ import useGetData from "../../hooks/useGetData"
 import { getRoles, reset as resetRoles } from "../../features/roles/roleSlice"
 import Paper from "@mui/material/Paper"
 import LoadingOrError from "../../components/LoadingOrError"
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import {parseISO} from "date-fns/esm"
 
 function ClassAction() {
   const [isCreated, setIsCreated] = useState(false)
@@ -52,6 +54,13 @@ function ClassAction() {
     }))
   }
 
+  const onPickerChange = (e, name) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: e,
+    }))
+  }
+
   const onSubmit = (e) => {
     e.preventDefault()
     formData.startDateTime = formData.startDateTime.toLocaleString()
@@ -68,7 +77,7 @@ function ClassAction() {
   }
 
   if (isCreated && classStatus === Status.Success) {
-    currentClassId = classes.classes[classes.classes.length-1]._id;
+    currentClassId = classes[classes.length-1]._id;
   }
 
   if((id && classStatus === Status.Loading) || roleStatus === Status.Loading || courseStatus === Status.Loading || userStatus === Status.Loading) {
@@ -88,8 +97,8 @@ function ClassAction() {
       onChange={(e) => onChange(e)} required={true} size="medium" fullWidth sx={{my: 1}} />
       <TextField id="description" name="description" label="Description" value={formData.description} 
       onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
-      <TextField id="startDateTime" name="startDateTime" label="First lesson:" value={formData.startDateTime} 
-      onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} type="datetime-local" InputLabelProps={{shrink: true,}} />
+      <DateTimePicker id="startDateTime" name="startDateTime" label="First lesson:" value={parseISO(formData.startDateTime)} 
+      onChange={(e) => onPickerChange(e, "startDateTime")} size="medium" sx={{my: 1, width: "100%"}}/>
       <TextField id="place" name="place" label="Place (address or online url)" value={formData.place}
       onChange={(e) => onChange(e)} size="medium" fullWidth sx={{my: 1}} />
       <CustomSelect id="course" label="Select course" selectedItems={formData.course} items={courses.map(c => {return {_id: c._id, title: c.title}})} 

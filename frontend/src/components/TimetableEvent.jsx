@@ -8,16 +8,9 @@ import ListItem from "@mui/material/ListItem"
 import ListItemButton from "@mui/material/ListItemButton"
 import ListItemText from "@mui/material/ListItemText"
 import { Status } from "../features/Status"
-import * as loc from "date-fns/locale"
 import {format, parseISO} from "date-fns/esm"
 import LoadingOrError from "./LoadingOrError"
-
-const getLocale = () => {
-    const locale = navigator.language.replace("-", "");
-    const rootLocale = locale.substring(0, 2);
-  
-    return loc[locale] || loc[rootLocale] || loc.enUS;
-};
+import { getLocale } from "../utils"
 
 function TimetableEvent({timetables, timetableIds, lessonIds, lectorIds, classTitle, isUser}) {
     const {lessons, status: lessonStatus} = useGetData("lessons", getLessons, resetLessons, {ids: lessonIds})

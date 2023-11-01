@@ -61,7 +61,7 @@ const deletePermission = asyncHandler(async (req, res) => {
         throw new Error("Permission not find")
     }
 
-    await permission.remove()
+    //await permission.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })

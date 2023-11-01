@@ -12,7 +12,7 @@ const getProviders = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(req.query.id) {
-        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
+        const ids = Array.isArray(id) ? req.query.id.map((id) => new mongoose.Types.ObjectId(id)) : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {_id: {$in: ids}}
     }
 
@@ -70,7 +70,7 @@ const deleteProvider = asyncHandler(async (req, res) => {
         throw new Error("Provider not find")
     }
 
-    await provider.remove()
+    await provider.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })

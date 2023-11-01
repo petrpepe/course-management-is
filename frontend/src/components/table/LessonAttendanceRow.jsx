@@ -9,15 +9,10 @@ import TextField from "@mui/material/TextField";
 import SaveIcon from '@mui/icons-material/Save';
 import { useDispatch } from "react-redux"
 import Checkbox from "@mui/material/Checkbox"
-import * as loc from "date-fns/locale"
 import {format, parseISO} from "date-fns/esm"
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { getLocale } from "../../utils"
 
-const getLocale = () => {
-  const locale = navigator.language.replace("-", "");
-  const rootLocale = locale.substring(0, 2);
-
-  return loc[locale] || loc[rootLocale] || loc.enUS;
-};
 
 function LessonAttendanceRow({user, att}) {
   const dispatch = useDispatch()
@@ -49,7 +44,8 @@ function LessonAttendanceRow({user, att}) {
     <TableRow key={formData._id || formData.userId}>
       <TableCell scope="row">{user.firstName + " " + user.lastName}</TableCell>
       <TableCell>
-        <TextField id="datetime" name="datetime" label="Datetime" value={formData.datetime} onChange={(e) => onChange(e)} fullWidth/>
+        <DateTimePicker id="datetime" name="datetime" label="Datetime" value={parseISO(formData.datetime)} 
+        onChange={(e) => onChange(e)} sx={{width: "100%"}}/>
       </TableCell>
       <TableCell>
         <TextField id="note" name="note" label="Note" value={formData.note} onChange={(e) => onChange(e)} fullWidth/>

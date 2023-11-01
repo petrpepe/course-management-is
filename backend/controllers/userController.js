@@ -9,6 +9,8 @@ const Enrollment = require('../models/enrollmentModel')
 const e = require("express")
 const mongoose = require("mongoose")
 const {sendEmail} = require("./emailController")
+const Timetable = require("../models/timetableModel")
+const Attendance = require("../models/attendanceModel")
 
 /**
  * @desc Get users
@@ -19,7 +21,7 @@ const getUsers = asyncHandler(async (req, res) => {
     let arg = {}
 
     if(req.query.id) {
-        const ids = req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
+        const ids = Array.isArray(req.query.id) ? req.query.id.map((id) => new mongoose.Types.ObjectId(id)) : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id))
         arg = {_id: {$in: ids}}
     }
 
@@ -74,7 +76,7 @@ const createUser = asyncHandler(async (req, res) => {
             await sendEmail("crsis@noreplycris.com", user.email, "", "New account",
             "<div>" +
             "<p>Dear " + user.firstName + " " + user.lastName + ",</p>" +
-            "<p>sending you a link for resetting your password.</p>" +
+            "<p>sending you a link for setting your password to access your CR education system.</p>" +
             "<p><a href=" + url + " >Click here to set new password and sign in!</a></p>" +
             "</ br>" +
             "<p>You have a week to set it.</p>" +
@@ -95,60 +97,6 @@ const createUser = asyncHandler(async (req, res) => {
             phone: user.phone,
             roles: user.roles,
             estraPerms: user.extraPerms,
-        })
-    } else {
-        res.status(400)
-        throw new Error("Invalid user data")
-    }
-})
-
-/**
- * @desc Register new user
- * @route POST /api/users
- * @access Private?
- */
-const registerUser = asyncHandler(async (req, res) => {
-    const { firstName, lastName, email, password, password1, roles } = req.body
-
-    if(!firstName || !lastName || !email || !password || !roles.length) {
-        res.status(400)
-        throw new Error("Please fill all required fields")
-    }
-
-    const userExists = await User.findOne({email})
-
-    if (userExists) {
-        res.status(400)
-        throw new Error("User already exists")
-    }
-
-    // Hash pwd
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
-
-    // Create user
-    const user = await User.create({
-        firstName,
-        otherNames: user.otherNames,
-        lastName,
-        email,
-        phone: user.phone,
-        roles: user.roles,
-        estraPerms: user.extraPerms,
-        password: hashedPassword,
-    })
-
-    if (user && password == password1) {
-        res.status(201).json({
-            _id: user.id,
-            firstName: user.firstName,
-            otherNames: user.otherNames,
-            lastName: user.lastName,
-            email: user.email,
-            phone: user.phone,
-            roles: user.roles,
-            estraPerms: user.extraPerms,
-            token: generateToken(user._id),
         })
     } else {
         res.status(400)
@@ -325,8 +273,10 @@ const deleteUser = asyncHandler(async (req, res) => {
 
     await Enrollment.updateMany({student: user._id}, {$pull: {student: user._id}}, {multi: true})
     await Class.updateMany({lectors: user._id}, {$pull: {lectors: user._id}}, {multi: true})
+    await Timetable.updateMany({extraUser: user._id}, {$pull: {extraUser: user._id}}, {multi: true})
+    await Attendance.deleteMany({userId: user._id})
 
-    await user.remove()
+    await user.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })
@@ -400,12 +350,65 @@ function getValue(object, id) {
 }
 
 module.exports = {
+    createUser,
     getUsers,
-    registerUser,
+    updateUser,
+    deleteUser,
     loginUser,
     forgotPassword,
     setNewPassword,
-    updateUser,
-    createUser,
-    deleteUser,
 }
+
+/**
+ * @desc Register new user
+ * @route POST /api/users
+ * @access Private?
+ */
+const registerUser = asyncHandler(async (req, res) => {
+    const { firstName, lastName, email, password, password1, roles } = req.body
+
+    if(!firstName || !lastName || !email || !password || !roles.length) {
+        res.status(400)
+        throw new Error("Please fill all required fields")
+    }
+
+    const userExists = await User.findOne({email})
+
+    if (userExists) {
+        res.status(400)
+        throw new Error("User already exists")
+    }
+
+    // Hash pwd
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+
+    // Create user
+    const user = await User.create({
+        firstName,
+        otherNames: user.otherNames,
+        lastName,
+        email,
+        phone: user.phone,
+        roles: user.roles,
+        estraPerms: user.extraPerms,
+        password: hashedPassword,
+    })
+
+    if (user && password == password1) {
+        res.status(201).json({
+            _id: user.id,
+            firstName: user.firstName,
+            otherNames: user.otherNames,
+            lastName: user.lastName,
+            email: user.email,
+            phone: user.phone,
+            roles: user.roles,
+            estraPerms: user.extraPerms,
+            token: generateToken(user._id),
+        })
+    } else {
+        res.status(400)
+        throw new Error("Invalid user data")
+    }
+})

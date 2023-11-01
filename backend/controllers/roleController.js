@@ -64,7 +64,7 @@ const deleteRole = asyncHandler(async (req, res) => {
 
     await User.updateMany({roles: role._id}, {$pull: {roles: role._id}}, {multi: true})
 
-    await role.remove()
+    await role.deleteOne()
 
     res.status(200).json({id: req.params.id})
 })

@@ -23,7 +23,7 @@ function ClassCallDetails({timetable}) {
             <Typography key={i} variant="body1" fontSize="large" textAlign="left" sx={{ m: 1.5 }}>{c}</Typography>
         )}
         {
-            enrollmentStatus === Status.Success && <LessonAttendanceTable timetable={timetable} enrolledUsers={enrollments.map(e => e.student)} />
+            enrollmentStatus === Status.Success && <LessonAttendanceTable timetable={timetable} enrolledUsers={enrollments.flatMap(e => e.student)} />
         }
     </Box>)
 }
