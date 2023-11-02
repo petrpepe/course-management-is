@@ -138,7 +138,7 @@ function Header({ darkTheme, setDarkTheme }) {
             <ListItemText primary="Profile" />
           </ListItemButton>
         </ListItem>
-        <ListItem key="darkThemeSwitcher">
+        <ListItem key="darkThemeSwitcher" disablePadding>
           <FormControlLabel
             control={
               <Switch
@@ -219,6 +219,7 @@ function Header({ darkTheme, setDarkTheme }) {
                   }
                   label="Dark theme"
                   labelPlacement="start"
+                  sx={{ mr: 2 }}
                 />
                 <Button component={ReactLink} to="/me" sx={{ color: "#fff" }}>
                   Profile

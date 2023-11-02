@@ -43,8 +43,7 @@ function LessonsList({ courseId }) {
               }}>
               <ListItemButton
                 component={ReactLink}
-                to={"/lessons/" + lesson._id}
-                sx={{ color: "#fff" }}>
+                to={"/lessons/" + lesson._id}>
                 <ListItemText
                   primary={lesson.lessonNum + ". " + lesson.title}
                   secondary={lesson.description}

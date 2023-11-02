@@ -39,10 +39,7 @@ function UsersList({ usersIds, heading }) {
               width: { xs: "100%", md: "50%", lg: "33%" },
               display: "inline-block",
             }}>
-            <ListItemButton
-              component={ReactLink}
-              to={"/users/" + user._id}
-              sx={{ color: "#fff" }}>
+            <ListItemButton component={ReactLink} to={"/users/" + user._id}>
               <ListItemText
                 primary={user.firstName + ". " + user.lastName}
                 secondary={user.email}

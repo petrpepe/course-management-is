@@ -30,7 +30,7 @@ function TimetableEvent({
     "lessons",
     getLessons,
     resetLessons,
-    { ids: lessonIds },
+    { ids: lessonIds }
   );
   const { attendances, status: attendanceStatus } = useGetData(
     "attendances",
@@ -38,13 +38,13 @@ function TimetableEvent({
     resetAttendances,
     {
       ids: timetableIds,
-    },
+    }
   );
   const { users, status: userStatus } = useGetData(
     "users",
     getUsers,
     resetUsers,
-    { ids: lectorIds },
+    { ids: lectorIds }
   );
   const locale = getLocale();
 
@@ -79,10 +79,7 @@ function TimetableEvent({
 
       return (
         <ListItem key={t._id} sx={{ width: "100%", display: "block" }}>
-          <ListItemButton
-            component={ReactLink}
-            to={"/classes/call/" + t._id}
-            sx={{ color: "#fff" }}>
+          <ListItemButton component={ReactLink} to={"/classes/call/" + t._id}>
             <ListItemText
               primary={classTitle + ": " + event.lessonTitle}
               secondary={event.lectors}
