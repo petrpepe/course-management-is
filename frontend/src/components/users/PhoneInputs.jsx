@@ -66,8 +66,7 @@ const PhoneInputs = ({ name, listName, formData, phones, setFormData }) => {
             onClick={() => changeFields(index)}
             size="large"
             variant="outlined"
-            sx={{ my: 1 }}
-          >
+            sx={{ my: 1 }}>
             {index === 0 ? <AddBoxIcon /> : <IndeterminateCheckBoxIcon />}
           </Button>
         </div>

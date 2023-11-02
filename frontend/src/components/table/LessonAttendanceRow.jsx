@@ -80,8 +80,7 @@ function LessonAttendanceRow({ user, att }) {
         <TableCell align="center" sx={{ p: 0 }}>
           <IconButton
             aria-label="save"
-            onClick={() => saveAttendance(formData._id)}
-          >
+            onClick={() => saveAttendance(formData._id)}>
             <SaveIcon />
           </IconButton>
           <IconButton aria-label="cancel" onClick={() => setIsEdited(false)}>

@@ -106,20 +106,17 @@ function RoleTable({ roles, rolesStatus }) {
         <TableContainer component={Paper} sx={{ my: 3, width: "auto" }}>
           <Table
             sx={{ overflowX: "auto", minWidth: "800px" }}
-            aria-label="permissions table"
-          >
+            aria-label="permissions table">
             <TableHead>
               <TableRow key="head">
                 {headers.map((headCell) => (
                   <TableCell
                     key={headCell.id}
-                    sortDirection={orderBy === headCell.id ? order : false}
-                  >
+                    sortDirection={orderBy === headCell.id ? order : false}>
                     <TableSortLabel
                       active={orderBy === headCell.id}
                       direction={orderBy === headCell.id ? order : "asc"}
-                      onClick={setSortOrderBy(headCell.id)}
-                    >
+                      onClick={setSortOrderBy(headCell.id)}>
                       {headCell.label}
                       {orderBy === headCell.id && (
                         <Box component="span" sx={visuallyHidden}>
@@ -203,8 +200,7 @@ function RoleTable({ roles, rolesStatus }) {
             size="large"
             variant="outlined"
             fullWidth
-            sx={{ my: 1 }}
-          >
+            sx={{ my: 1 }}>
             Add
           </Button>
         </form>

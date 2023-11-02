@@ -6,8 +6,7 @@ function Footer() {
   return (
     <Button
       onClick={() => navigate(-1)}
-      sx={{ position: "fixed", bottom: "10px", right: "10px" }}
-    >
+      sx={{ position: "fixed", bottom: "10px", right: "10px" }}>
       Go back
     </Button>
   );

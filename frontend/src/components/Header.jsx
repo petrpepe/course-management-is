@@ -43,8 +43,7 @@ function Header() {
         <ListItemButton
           component={ReactLink}
           to="/courses"
-          sx={{ textAlign: "center" }}
-        >
+          sx={{ textAlign: "center" }}>
           <ListItemText primary="Courses" />
         </ListItemButton>
       </ListItem>
@@ -52,8 +51,7 @@ function Header() {
         <ListItemButton
           component={ReactLink}
           to="/lessons"
-          sx={{ textAlign: "center" }}
-        >
+          sx={{ textAlign: "center" }}>
           <ListItemText primary="Lessons" />
         </ListItemButton>
       </ListItem>
@@ -61,8 +59,7 @@ function Header() {
         <ListItemButton
           component={ReactLink}
           to="/users"
-          sx={{ textAlign: "center" }}
-        >
+          sx={{ textAlign: "center" }}>
           <ListItemText primary="Users" />
         </ListItemButton>
       </ListItem>
@@ -70,8 +67,7 @@ function Header() {
         <ListItemButton
           component={ReactLink}
           to="/roles"
-          sx={{ textAlign: "center" }}
-        >
+          sx={{ textAlign: "center" }}>
           <ListItemText primary="Roles" />
         </ListItemButton>
       </ListItem>
@@ -79,8 +75,7 @@ function Header() {
         <ListItemButton
           component={ReactLink}
           to="/permissions"
-          sx={{ textAlign: "center" }}
-        >
+          sx={{ textAlign: "center" }}>
           <ListItemText primary="Permissions" />
         </ListItemButton>
       </ListItem>
@@ -88,8 +83,7 @@ function Header() {
         <ListItemButton
           component={ReactLink}
           to="/email"
-          sx={{ textAlign: "center" }}
-        >
+          sx={{ textAlign: "center" }}>
           <ListItemText primary="Email" />
         </ListItemButton>
       </ListItem>
@@ -100,8 +94,7 @@ function Header() {
             <ListItemButton
               component={ReactLink}
               to="/logout"
-              sx={{ textAlign: "center" }}
-            >
+              sx={{ textAlign: "center" }}>
               <ListItemText primary="Logout" />
             </ListItemButton>
           </ListItem>
@@ -114,15 +107,13 @@ function Header() {
     <Box
       onClick={toggleDrawer("main", false)}
       onKeyDown={toggleDrawer("main", false)}
-      sx={{ textAlign: "center", minWidth: "200px" }}
-    >
+      sx={{ textAlign: "center", minWidth: "200px" }}>
       <List>
         <ListItem key="classes" disablePadding>
           <ListItemButton
             component={ReactLink}
             to="/classes"
-            sx={{ textAlign: "center" }}
-          >
+            sx={{ textAlign: "center" }}>
             <ListItemText primary="Classes" />
           </ListItemButton>
         </ListItem>
@@ -130,8 +121,7 @@ function Header() {
           <ListItemButton
             component={ReactLink}
             to="/timetable"
-            sx={{ textAlign: "center" }}
-          >
+            sx={{ textAlign: "center" }}>
             <ListItemText primary="Timetable" />
           </ListItemButton>
         </ListItem>
@@ -142,8 +132,7 @@ function Header() {
           <ListItemButton
             component={ReactLink}
             to="/me"
-            sx={{ textAlign: "center" }}
-          >
+            sx={{ textAlign: "center" }}>
             <ListItemText primary="Profile" />
           </ListItemButton>
         </ListItem>
@@ -151,8 +140,7 @@ function Header() {
           <ListItemButton
             component={ReactLink}
             to="/logout"
-            sx={{ textAlign: "center" }}
-          >
+            sx={{ textAlign: "center" }}>
             <ListItemText primary="Logout" />
           </ListItemButton>
         </ListItem>
@@ -164,8 +152,7 @@ function Header() {
     <Box
       onClick={toggleDrawer("management", false)}
       onKeyDown={toggleDrawer("management", false)}
-      sx={{ textAlign: "center", minWidth: "200px" }}
-    >
+      sx={{ textAlign: "center", minWidth: "200px" }}>
       <List>{managementListItems}</List>
     </Box>
   );
@@ -179,8 +166,7 @@ function Header() {
             variant="h5"
             noWrap
             component="div"
-            sx={{ flexGrow: { xs: 1, sm: "unset" }, textAlign: "left", mr: 2 }}
-          >
+            sx={{ flexGrow: { xs: 1, sm: "unset" }, textAlign: "left", mr: 2 }}>
             <Link component={ReactLink} to="/" sx={{ color: "#fff" }}>
               System
             </Link>
@@ -190,16 +176,14 @@ function Header() {
               flexGrow: 1,
               justifyContent: "flex-start",
               display: { xs: "none", sm: "flex" },
-            }}
-          >
+            }}>
             <Button component={ReactLink} to="/classes" sx={{ color: "#fff" }}>
               Classes
             </Button>
             <Button
               component={ReactLink}
               to="/timetable"
-              sx={{ color: "#fff" }}
-            >
+              sx={{ color: "#fff" }}>
               Timetable
             </Button>
           </Box>
@@ -217,8 +201,7 @@ function Header() {
                   <Button
                     component={ReactLink}
                     to="/logout"
-                    sx={{ color: "#fff" }}
-                  >
+                    sx={{ color: "#fff" }}>
                     Logout
                   </Button>
                 )}
@@ -233,16 +216,17 @@ function Header() {
                 color="inherit"
                 aria-label="open drawer"
                 sx={{ display: { xs: "none", sm: "block" }, ml: 2 }}
-                onClick={toggleDrawer("management", !drawerState["management"])}
-              >
+                onClick={toggleDrawer(
+                  "management",
+                  !drawerState["management"],
+                )}>
                 <MenuIcon />
               </IconButton>
               <SwipeableDrawer
                 anchor={"right"}
                 open={drawerState["management"]}
                 onClose={toggleDrawer("management", false)}
-                onOpen={toggleDrawer("management", true)}
-              >
+                onOpen={toggleDrawer("management", true)}>
                 {managementDrawer}
               </SwipeableDrawer>
             </>
@@ -255,16 +239,14 @@ function Header() {
                 color="inherit"
                 aria-label="open drawer"
                 sx={{ display: { xs: "block", sm: "none" }, ml: 2 }}
-                onClick={toggleDrawer("main", !drawerState["main"])}
-              >
+                onClick={toggleDrawer("main", !drawerState["main"])}>
                 <MenuIcon />
               </IconButton>
               <SwipeableDrawer
                 anchor={"right"}
                 open={drawerState["main"]}
                 onClose={toggleDrawer("main", false)}
-                onOpen={toggleDrawer("main", true)}
-              >
+                onOpen={toggleDrawer("main", true)}>
                 {mainDrawer}
               </SwipeableDrawer>
             </>

@@ -25,8 +25,7 @@ function Classes() {
         <Button
           component={ReactLink}
           to="/classes/create"
-          sx={{ color: "#fff" }}
-        >
+          sx={{ color: "#fff" }}>
           Create new Class
         </Button>
       )}

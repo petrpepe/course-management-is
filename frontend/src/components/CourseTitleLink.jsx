@@ -21,8 +21,7 @@ function CourseTitleLink({ courseId }) {
     <Button
       component={ReactLink}
       to={"/courses/" + courseId}
-      sx={{ color: "#fff" }}
-    >
+      sx={{ color: "#fff" }}>
       {courses[0].title}
     </Button>
   );

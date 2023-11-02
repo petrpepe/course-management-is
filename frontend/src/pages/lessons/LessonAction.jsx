@@ -174,8 +174,7 @@ function LessonAction() {
           size="large"
           variant="outlined"
           fullWidth
-          sx={{ my: 1 }}
-        >
+          sx={{ my: 1 }}>
           Submit
         </Button>
       </form>

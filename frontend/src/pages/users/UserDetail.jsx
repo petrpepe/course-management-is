@@ -47,8 +47,7 @@ function UserDetail() {
       <Button
         component={ReactLink}
         to={"/users/" + currentUser._id + "/edit"}
-        sx={{ my: 1 }}
-      >
+        sx={{ my: 1 }}>
         Edit
       </Button>
     </>

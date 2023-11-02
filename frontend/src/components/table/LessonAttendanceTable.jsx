@@ -27,7 +27,9 @@ function LessonAttendanceTable({ timetable, enrolledUsers }) {
     "attendances",
     getAttendances,
     resetAttendances,
-    { ids: enrolledUsers },
+    {
+      ids: enrolledUsers,
+    },
   );
 
   if (userStatus === Status.Loading || attendanceStatus === Status.Loading) {
@@ -48,8 +50,7 @@ function LessonAttendanceTable({ timetable, enrolledUsers }) {
         <Table
           sx={{ overflowX: "auto" }}
           size="small"
-          aria-label="attendances table"
-        >
+          aria-label="attendances table">
           <TableHead>
             <TableRow>
               <TableCell sx={{ width: "15%" }}>Attendee</TableCell>

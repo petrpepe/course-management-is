@@ -21,7 +21,9 @@ function Timetable({ classes, userIds, byUser }) {
     "timetables",
     getTimetables,
     resetTimetables,
-    { ids: ids },
+    {
+      ids: ids,
+    },
   );
 
   if (timetableStatus === Status.Success) {
@@ -50,8 +52,7 @@ function Timetable({ classes, userIds, byUser }) {
               m: 1,
               width: { xs: "100%", md: "50%", lg: "40%" },
               display: "inline-block",
-            }}
-          >
+            }}>
             {sortedTimetables.length > 1 && (
               <Button component={ReactLink} to={"../classes/" + ts.classId}>
                 {classes.filter((c) => c._id === ts.classId)[0].title}

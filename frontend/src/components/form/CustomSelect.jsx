@@ -94,8 +94,7 @@ function CustomSelect({
               items.find((i) => i._id === s).title
             )
           }
-          MenuProps={MenuProps}
-        >
+          MenuProps={MenuProps}>
           {items.map((item) => (
             <MenuItem key={item._id} value={item._id}>
               {multiple && (

@@ -43,16 +43,14 @@ function LessonDetail() {
           variant="body1"
           fontSize="large"
           textAlign="left"
-          sx={{ m: 1.5 }}
-        >
+          sx={{ m: 1.5 }}>
           {c}
         </Typography>
       ))}
       <Button
         component={ReactLink}
         to={"/lessons/" + lesson._id + "/edit"}
-        sx={{ my: 1 }}
-      >
+        sx={{ my: 1 }}>
         Edit
       </Button>
     </>

@@ -31,21 +31,18 @@ function UsersList({ usersIds, heading }) {
           width: "100%",
           bgcolor: "background.paper",
           border: "1px solid",
-        }}
-      >
+        }}>
         {filtered.map((user, i) => (
           <ListItem
             key={user._id + i}
             sx={{
               width: { xs: "100%", md: "50%", lg: "33%" },
               display: "inline-block",
-            }}
-          >
+            }}>
             <ListItemButton
               component={ReactLink}
               to={"/users/" + user._id}
-              sx={{ color: "#fff" }}
-            >
+              sx={{ color: "#fff" }}>
               <ListItemText
                 primary={user.firstName + ". " + user.lastName}
                 secondary={user.email}

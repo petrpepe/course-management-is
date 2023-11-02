@@ -52,20 +52,17 @@ function AttendanceTable({ atts = [], isAdmin = [], status }) {
         <Table
           sx={{ overflowX: "auto" }}
           size="small"
-          aria-label="permissions table"
-        >
+          aria-label="permissions table">
           <TableHead>
             <TableRow>
               {headers.map((headCell) => (
                 <TableCell
                   key={headCell.id}
-                  sortDirection={orderBy === headCell.id ? order : false}
-                >
+                  sortDirection={orderBy === headCell.id ? order : false}>
                   <TableSortLabel
                     active={orderBy === headCell.id}
                     direction={orderBy === headCell.id ? order : "asc"}
-                    onClick={setSortOrderBy(headCell.id)}
-                  >
+                    onClick={setSortOrderBy(headCell.id)}>
                     {headCell.label}
                     {orderBy === headCell.id && (
                       <Box component="span" sx={visuallyHidden}>
@@ -85,8 +82,7 @@ function AttendanceTable({ atts = [], isAdmin = [], status }) {
             {sortedAtts.map((perm) => (
               <TableRow
                 key={perm.name}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <TableCell scope="row">{perm.name}</TableCell>
                 <TableCell>{perm.description}</TableCell>
               </TableRow>

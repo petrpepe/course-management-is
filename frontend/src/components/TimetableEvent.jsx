@@ -36,7 +36,9 @@ function TimetableEvent({
     "attendances",
     getAttendances,
     resetAttendances,
-    { ids: timetableIds },
+    {
+      ids: timetableIds,
+    },
   );
   const { users, status: userStatus } = useGetData(
     "users",
@@ -80,8 +82,7 @@ function TimetableEvent({
           <ListItemButton
             component={ReactLink}
             to={"/classes/call/" + t._id}
-            sx={{ color: "#fff" }}
-          >
+            sx={{ color: "#fff" }}>
             <ListItemText
               primary={classTitle + ": " + event.lessonTitle}
               secondary={event.lectors}

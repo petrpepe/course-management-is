@@ -20,7 +20,9 @@ function ClassCall() {
     "timetables",
     getTimetables,
     resetTimetables,
-    { ids: timetableId },
+    {
+      ids: timetableId,
+    },
   );
   const user = useSelector((state) => state.auth.user);
 
@@ -45,8 +47,7 @@ function ClassCall() {
             width: "100%",
             display: "inline-block",
             height: "500px",
-          }}
-        >
+          }}>
           <JaaSMeeting
             appId="criscoderebels"
             roomName={timetableId}

@@ -20,8 +20,7 @@ root.render(
     <Provider store={store}>
       <LocalizationProvider
         dateAdapter={AdapterDateFns}
-        adapterLocale={getLocale()}
-      >
+        adapterLocale={getLocale()}>
         <App />
       </LocalizationProvider>
     </Provider>

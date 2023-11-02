@@ -21,7 +21,10 @@ function ClassLessonTitle({ classId, lessonId }) {
     "lessons",
     getLessons,
     resetLessons,
-    { ids: lessonId, detail: true },
+    {
+      ids: lessonId,
+      detail: true,
+    },
   );
 
   if (classStatus === Status.Success && lessonStatus === Status.Success) {

@@ -25,8 +25,7 @@ function Courses() {
         <Button
           component={ReactLink}
           to="/courses/create"
-          sx={{ color: "#fff" }}
-        >
+          sx={{ color: "#fff" }}>
           Create new Course
         </Button>
       )}

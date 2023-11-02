@@ -38,8 +38,7 @@ function CustomCard({
         <Typography
           variant="body2"
           color="text.secondary"
-          sx={{ minHeight: "0.875rem" }}
-        >
+          sx={{ minHeight: "0.875rem" }}>
           {desc ? desc : data.description}
         </Typography>
       </CardContent>
@@ -54,8 +53,7 @@ function CustomCard({
             component={ReactLink}
             size="small"
             to={link + data._id + "/edit"}
-            state={{ data }}
-          >
+            state={{ data }}>
             Edit
           </Button>
         )}
@@ -63,8 +61,7 @@ function CustomCard({
           <Button
             variant="outlined"
             startIcon={<DeleteIcon />}
-            onClick={() => dispatch(deleteAction(data._id))}
-          >
+            onClick={() => dispatch(deleteAction(data._id))}>
             Delete
           </Button>
         )}

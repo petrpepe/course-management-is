@@ -42,8 +42,7 @@ function CourseDetail() {
         <Button
           component={ReactLink}
           to={"/courses/" + course._id + "/edit"}
-          sx={{ my: 1 }}
-        >
+          sx={{ my: 1 }}>
           Edit
         </Button>
       </>

@@ -16,7 +16,9 @@
   width: 300px;
   height: auto;
   transition: all 450ms ease-out 0s;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -2px rgba(0, 0, 0, 0.2);
 }
 
 .card:hover {
@@ -95,7 +97,9 @@
   user-select: none;
   border: none;
   outline: none;
-  box-shadow: 0 4px 6px -1px rgba(33, 150, 243, 0.4), 0 2px 4px -2px rgba(33, 150, 243, 0.4);
+  box-shadow:
+    0 4px 6px -1px rgba(33, 150, 243, 0.4),
+    0 2px 4px -2px rgba(33, 150, 243, 0.4);
   color: rgb(255, 255, 255);
   text-transform: uppercase;
   font-weight: 700;

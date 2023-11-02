@@ -33,21 +33,18 @@ function LessonsList({ courseId }) {
             width: "100%",
             bgcolor: "background.paper",
             border: "1px solid",
-          }}
-        >
+          }}>
           {lessons.map((lesson) => (
             <ListItem
               key={lesson._id}
               sx={{
                 width: { xs: "100%", md: "50%", lg: "33%" },
                 display: "inline-block",
-              }}
-            >
+              }}>
               <ListItemButton
                 component={ReactLink}
                 to={"/lessons/" + lesson._id}
-                sx={{ color: "#fff" }}
-              >
+                sx={{ color: "#fff" }}>
                 <ListItemText
                   primary={lesson.lessonNum + ". " + lesson.title}
                   secondary={lesson.description}

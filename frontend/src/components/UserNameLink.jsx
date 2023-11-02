@@ -19,8 +19,7 @@ function UserNameLink({ userId }) {
       <Button
         component={ReactLink}
         to={"/users/" + userId}
-        sx={{ color: "#fff" }}
-      >
+        sx={{ color: "#fff" }}>
         {users[0].firstName + " " + users[0].lastName}
       </Button>
     );

@@ -21,13 +21,17 @@ function TimetablePage() {
     "enrollments",
     getEnrollments,
     resetEnrollments,
-    { ids: id || user._id },
+    {
+      ids: id || user._id,
+    },
   );
   const { classes, status: classStatus } = useGetData(
     "classes",
     getClasses,
     resetClasses,
-    { ids: id || enrollments.map((e) => e.classId) },
+    {
+      ids: id || enrollments.map((e) => e.classId),
+    },
   );
   const userIds = new Set([
     ...classes.map((c) => c.lectors),

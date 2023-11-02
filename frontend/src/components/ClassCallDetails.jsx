@@ -18,13 +18,18 @@ function ClassCallDetails({ timetable }) {
     "lessons",
     getLessons,
     resetLessons,
-    { ids: timetable.lesson, detail: true },
+    {
+      ids: timetable.lesson,
+      detail: true,
+    },
   );
   const { enrollments, status: enrollmentStatus } = useGetData(
     "enrollments",
     getEnrollments,
     resetEnrollments,
-    { ids: timetable.classId },
+    {
+      ids: timetable.classId,
+    },
   );
 
   if (lessonStatus === Status.Loading || enrollmentStatus === Status.Loading) {
@@ -43,8 +48,7 @@ function ClassCallDetails({ timetable }) {
             variant="body1"
             fontSize="large"
             textAlign="left"
-            sx={{ m: 1.5 }}
-          >
+            sx={{ m: 1.5 }}>
             {c}
           </Typography>
         ))}

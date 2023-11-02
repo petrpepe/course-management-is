@@ -12,8 +12,7 @@ function Page404() {
         size="large"
         variant="outlined"
         fullWidth
-        sx={{ my: 1 }}
-      >
+        sx={{ my: 1 }}>
         Go Back
       </Button>
     </>

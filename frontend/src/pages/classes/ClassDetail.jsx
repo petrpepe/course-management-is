@@ -28,7 +28,9 @@ function ClassDetail() {
     "enrollments",
     getEnrollments,
     resetEnrollments,
-    { ids: id },
+    {
+      ids: id,
+    },
   );
 
   if (
@@ -53,8 +55,7 @@ function ClassDetail() {
       <Button
         component={ReactLink}
         to={"/classes/" + classes[0]._id + "/edit"}
-        sx={{ my: 1 }}
-      >
+        sx={{ my: 1 }}>
         Edit
       </Button>
     </>
