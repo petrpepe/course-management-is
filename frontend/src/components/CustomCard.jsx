@@ -1,4 +1,4 @@
-import { Link as ReactLink, useLocation } from "react-router-dom";
+import { Link as ReactLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import * as React from "react";
 import Card from "@mui/material/Card";
@@ -16,10 +16,11 @@ function CustomCard({
   link = "",
   imgSrc = "",
   deleteAction,
+  deletePerm,
+  editPerm,
 }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const location = useLocation();
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -46,18 +47,15 @@ function CustomCard({
         <Button component={ReactLink} size="small" to={link + data._id}>
           View detail
         </Button>
-        {(user.roles.includes("admin") ||
-          (user.roles.includes("lector") &&
-            location.pathname.includes("lessons"))) && (
+        {user.rolePermissions.includes(editPerm) && (
           <Button
             component={ReactLink}
             size="small"
-            to={link + data._id + "/edit"}
-            state={{ data }}>
+            to={link + data._id + "/edit"}>
             Edit
           </Button>
         )}
-        {user.roles.includes("admin") && (
+        {user.rolePermissions.includes(deletePerm) && (
           <Button
             variant="outlined"
             startIcon={<DeleteIcon />}

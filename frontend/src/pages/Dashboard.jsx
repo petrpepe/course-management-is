@@ -7,6 +7,8 @@ import {
 import CustomCard from "../components/CustomCard";
 import { Status } from "../features/Status";
 import useGetData from "../hooks/useGetData";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
 function Dashboard() {
   const { user } = useSelector((state) => state.auth);
@@ -14,27 +16,28 @@ function Dashboard() {
 
   return (
     <>
-      <section className="heading">
-        <h1>Welcome {user && user.firstName + " " + user.lastName}</h1>
-        <p>Main Dashboard</p>
-      </section>
+      <Typography variant="h2">
+        Welcome {user && user.firstName + " " + user.lastName}
+      </Typography>
+      <Typography variant="h3">Main Dashboard</Typography>
 
-      <section className="content">
-        {classes.length > 0 && status === Status.Success ? (
-          <div className="cards">
-            {classes.map((classVar) => (
+      {classes.length > 0 && status === Status.Success ? (
+        <Grid container spacing={3} justifyContent="space-evenly">
+          {classes.map((classVar) => (
+            <Grid key={classVar._id}>
               <CustomCard
-                key={classVar._id}
                 data={classVar}
                 link="/classes/"
                 deleteAction={deleteClass}
+                deletePerm="classDelete"
+                editPerm="classUpdate"
               />
-            ))}
-          </div>
-        ) : (
-          <h3>You don't have any class today</h3>
-        )}
-      </section>
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Typography variant="h4">You don't have any class today</Typography>
+      )}
     </>
   );
 }

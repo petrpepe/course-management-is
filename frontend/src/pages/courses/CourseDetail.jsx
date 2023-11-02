@@ -7,7 +7,7 @@ import useGetData from "../../hooks/useGetData";
 import { Status } from "../../features/Status";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import UserNameLink from "../../components/UserNameLink";
+import UserNameLink from "../../components/users/UserNameLink";
 import LessonsList from "../../components/LessonsList";
 import { Button } from "@mui/material";
 
@@ -17,7 +17,7 @@ function CourseDetail() {
     "courses",
     getCourses,
     resetCourses,
-    { ids: id },
+    { ids: id }
   );
 
   if (status === Status.Loading) {

@@ -10,7 +10,7 @@ import {
 } from "../features/classes/classSlice";
 import useGetData from "../hooks/useGetData";
 import Typography from "@mui/material/Typography";
-import Timetable from "../components/Timetable";
+import Timetable from "../components/table/Timetable";
 import { Status } from "../features/Status";
 import LoadingOrError from "../components/LoadingOrError";
 
@@ -23,7 +23,7 @@ function TimetablePage() {
     resetEnrollments,
     {
       ids: id || user._id,
-    },
+    }
   );
   const { classes, status: classStatus } = useGetData(
     "classes",
@@ -31,7 +31,7 @@ function TimetablePage() {
     resetClasses,
     {
       ids: id || enrollments.map((e) => e.classId),
-    },
+    }
   );
   const userIds = new Set([
     ...classes.map((c) => c.lectors),

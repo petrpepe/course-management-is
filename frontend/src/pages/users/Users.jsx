@@ -1,5 +1,3 @@
-import { Link as ReactLink } from "react-router-dom";
-import { useSelector } from "react-redux";
 import {
   deleteUser,
   getUsers,
@@ -10,38 +8,41 @@ import Typography from "@mui/material/Typography";
 import useGetData from "../../hooks/useGetData";
 import { Status } from "../../features/Status";
 import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
 import Search from "../../components/Search";
+import CreateNewEntryLink from "../../components/form/CreateNewEntryLink";
+import Grid from "@mui/material/Unstable_Grid2";
 
 function Users() {
-  const { user } = useSelector((state) => state.auth);
   const { users, status } = useGetData("users", getUsers, resetUsers);
 
   return (
     <>
       <Typography variant="h2">Users Dashboard</Typography>
       <Search getData={getUsers} resetData={resetUsers} />
-      {user.roles.includes("admin") && (
-        <Button component={ReactLink} to="/users/create" sx={{ color: "#fff" }}>
-          Register new User
-        </Button>
-      )}
+      <CreateNewEntryLink
+        linkText="Register new User"
+        linkTo="/users/create"
+        perm="userCreate"
+      />
 
       {status === Status.Loading ? (
         <CircularProgress />
       ) : users.length > 0 ? (
-        <div className="cards">
+        <Grid container spacing={3} justifyContent="space-evenly">
           {users.map((u) => (
-            <CustomCard
-              key={u._id}
-              title={u.firstName + " " + u.lastName}
-              desc={u.email}
-              data={u}
-              link="/users/"
-              deleteAction={deleteUser}
-            />
+            <Grid key={u._id}>
+              <CustomCard
+                data={u}
+                title={u.firstName + " " + u.lastName}
+                desc={u.email}
+                link="/users/"
+                deleteAction={deleteUser}
+                deletePerm="userDelete"
+                editPerm="userUpdate"
+              />
+            </Grid>
           ))}
-        </div>
+        </Grid>
       ) : (
         <Typography variant="h3">There are no users</Typography>
       )}

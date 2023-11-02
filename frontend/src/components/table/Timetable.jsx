@@ -3,15 +3,15 @@ import { Link as ReactLink } from "react-router-dom";
 import {
   getTimetables,
   reset as resetTimetables,
-} from "../features/timetables/timetableSlice";
-import useGetData from "../hooks/useGetData";
+} from "../../features/timetables/timetableSlice";
+import useGetData from "../../hooks/useGetData";
 import Paper from "@mui/material/Paper";
 import TimetableEvent from "./TimetableEvent";
 import List from "@mui/material/List";
-import { Status } from "../features/Status";
+import { Status } from "../../features/Status";
 import { compareAsc, parseISO } from "date-fns";
 import Box from "@mui/material/Box";
-import LoadingOrError from "../components/LoadingOrError";
+import LoadingOrError from "../LoadingOrError";
 import Button from "@mui/material/Button";
 
 function Timetable({ classes, userIds, byUser }) {
@@ -23,7 +23,7 @@ function Timetable({ classes, userIds, byUser }) {
     resetTimetables,
     {
       ids: ids,
-    },
+    }
   );
 
   if (timetableStatus === Status.Success) {
@@ -36,7 +36,7 @@ function Timetable({ classes, userIds, byUser }) {
       sortedTimetables
         .find((a) => a.classId === cid)
         .timetables.sort((a, b) =>
-          compareAsc(parseISO(a.datetime), parseISO(b.datetime)),
+          compareAsc(parseISO(a.datetime), parseISO(b.datetime))
         );
     }
     const timetableIds = timetables.map((t) => t._id);

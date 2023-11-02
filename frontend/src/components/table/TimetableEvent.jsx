@@ -3,20 +3,20 @@ import { Link as ReactLink } from "react-router-dom";
 import {
   getLessons,
   reset as resetLessons,
-} from "../features/lessons/lessonSlice";
+} from "../../features/lessons/lessonSlice";
 import {
   getAttendances,
   reset as resetAttendances,
-} from "../features/attendances/attendanceSlice";
-import { getUsers, reset as resetUsers } from "../features/users/userSlice";
-import useGetData from "../hooks/useGetData";
+} from "../../features/attendances/attendanceSlice";
+import { getUsers, reset as resetUsers } from "../../features/users/userSlice";
+import useGetData from "../../hooks/useGetData";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import { Status } from "../features/Status";
+import { Status } from "../../features/Status";
 import { format, parseISO } from "date-fns/esm";
-import LoadingOrError from "./LoadingOrError";
-import { getLocale } from "../utils";
+import LoadingOrError from "../LoadingOrError";
+import { getLocale } from "../../utils";
 
 function TimetableEvent({
   timetables,

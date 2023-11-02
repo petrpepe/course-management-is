@@ -57,22 +57,22 @@ function ClassAction() {
   const { users, status: userStatus } = useGetData(
     "users",
     getUsers,
-    resetUsers,
+    resetUsers
   );
   const { courses, status: courseStatus } = useGetData(
     "courses",
     getCourses,
-    resetCourses,
+    resetCourses
   );
   const { classes, status: classStatus } = useGetData(
     "classes",
     getClasses,
-    resetClasses,
+    resetClasses
   );
   const { roles, status: roleStatus } = useGetData(
     "roles",
     getRoles,
-    resetRoles,
+    resetRoles
   );
 
   let currentClassId = null;
@@ -124,7 +124,7 @@ function ClassAction() {
   let lectorsOptions = [];
   if (userStatus === Status.Success && roleStatus === Status.Success)
     lectorsOptions = users.filter((u) =>
-      u.roles.includes(roles.filter((r) => r.name === "lector")[0]._id),
+      u.roles.includes(roles.filter((r) => r.name === "lector")[0]._id)
     );
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>

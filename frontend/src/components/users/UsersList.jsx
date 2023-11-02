@@ -1,8 +1,8 @@
 import CircularProgress from "@mui/material/CircularProgress";
-import useGetData from "../hooks/useGetData";
-import { Status } from "../features/Status";
+import useGetData from "../../hooks/useGetData";
+import { Status } from "../../features/Status";
 import { Link as ReactLink } from "react-router-dom";
-import { getUsers, reset as resetUsers } from "../features/users/userSlice";
+import { getUsers, reset as resetUsers } from "../../features/users/userSlice";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";

@@ -35,7 +35,7 @@ const StudentModal = ({
   };
 
   const studentsOptions = users.users.filter((u) =>
-    u.roles.includes(roles.filter((r) => r.name === "student")[0]._id),
+    u.roles.includes(roles.filter((r) => r.name === "student")[0]._id)
   );
 
   return (

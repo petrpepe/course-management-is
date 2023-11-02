@@ -13,8 +13,8 @@ import {
   getEnrollments,
   reset as resetEnrollments,
 } from "../../features/enrollments/enrollmentSlice";
-import UsersList from "../../components/UsersList";
-import Timetable from "../../components/Timetable";
+import UsersList from "../../components/users/UsersList";
+import Timetable from "../../components/table/Timetable";
 
 function ClassDetail() {
   const { id } = useParams();
@@ -22,7 +22,7 @@ function ClassDetail() {
     "classes",
     getClasses,
     resetClasses,
-    { ids: id },
+    { ids: id }
   );
   const { enrollments, status: enrollmentStatus } = useGetData(
     "enrollments",
@@ -30,7 +30,7 @@ function ClassDetail() {
     resetEnrollments,
     {
       ids: id,
-    },
+    }
   );
 
   if (

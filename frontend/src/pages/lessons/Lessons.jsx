@@ -1,5 +1,3 @@
-import { Link as ReactLink } from "react-router-dom";
-import { useSelector } from "react-redux";
 import {
   deleteLesson,
   getLessons,
@@ -10,39 +8,39 @@ import { Status } from "../../features/Status";
 import useGetData from "../../hooks/useGetData";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
 import Search from "../../components/Search";
+import CreateNewEntryLink from "../../components/form/CreateNewEntryLink";
+import Grid from "@mui/material/Unstable_Grid2";
 
 function Lessons() {
-  const { user } = useSelector((state) => state.auth);
   const { lessons, status } = useGetData("lessons", getLessons, resetLessons);
 
   return (
     <>
       <Typography variant="h2">Lessons Dashboard</Typography>
       <Search getData={getLessons} resetData={resetLessons} />
-      {(user.roles.includes("admin") || user.roles.includes("lector")) && (
-        <Button
-          component={ReactLink}
-          to="/lessons/create"
-          sx={{ color: "#fff" }}>
-          Create new Lesson
-        </Button>
-      )}
+      <CreateNewEntryLink
+        linkText="Create new Lesson"
+        linkTo="/lessons/create"
+        perm="lessonCreate"
+      />
 
       {status === Status.Loading ? (
         <CircularProgress />
       ) : lessons.length > 0 ? (
-        <div className="cards">
+        <Grid container spacing={3} justifyContent="space-evenly">
           {lessons.map((lesson) => (
-            <CustomCard
-              key={lesson._id}
-              data={lesson}
-              link="/lessons/"
-              deleteAction={deleteLesson}
-            />
+            <Grid key={lesson._id}>
+              <CustomCard
+                data={lesson}
+                link="/lessons/"
+                deleteAction={deleteLesson}
+                deletePerm="lessonDelete"
+                editPerm="lessonUpdate"
+              />
+            </Grid>
           ))}
-        </div>
+        </Grid>
       ) : (
         <Typography variant="h3">You haven't set any lesson</Typography>
       )}

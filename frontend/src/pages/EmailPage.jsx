@@ -7,6 +7,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
+import { Paper } from "@mui/material";
 
 function EmailPage() {
   const [formData, setFormData] = useState({
@@ -38,13 +39,11 @@ function EmailPage() {
 
   return (
     <>
-      <section className="heading">
-        <Typography variant="h2">
-          <EmailIcon fontSize="large" /> Send Emails to people
-        </Typography>
-        <Typography variant="body1">It can be send to whoever</Typography>
-      </section>
-      <section className="form">
+      <Typography variant="h2">
+        <EmailIcon fontSize="large" /> Send Emails to people
+      </Typography>
+      <Typography variant="body1">It can be send to whoever</Typography>
+      <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>
         <form onSubmit={onSubmit}>
           <TextField
             id="from"
@@ -118,7 +117,7 @@ function EmailPage() {
             Submit
           </Button>
         </form>
-      </section>
+      </Paper>
     </>
   );
 }

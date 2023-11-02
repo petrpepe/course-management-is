@@ -225,10 +225,7 @@ function Header({ darkTheme, setDarkTheme }) {
                   Profile
                 </Button>
                 {!user.roles.includes("admin") && (
-                  <Button
-                    component={ReactLink}
-                    to="/logout"
-                    sx={{ color: "#fff" }}>
+                  <Button component={ReactLink} to="/logout">
                     Logout
                   </Button>
                 )}

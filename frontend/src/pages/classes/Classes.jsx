@@ -1,5 +1,3 @@
-import { Link as ReactLink } from "react-router-dom";
-import { useSelector } from "react-redux";
 import {
   deleteClass,
   getClasses,
@@ -10,39 +8,39 @@ import Search from "../../components/Search";
 import { Status } from "../../features/Status";
 import useGetData from "../../hooks/useGetData";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import CreateNewEntryLink from "../../components/form/CreateNewEntryLink";
+import Grid from "@mui/material/Unstable_Grid2";
 
 function Classes() {
-  const { user } = useSelector((state) => state.auth);
   const { classes, status } = useGetData("classes", getClasses, resetClasses);
 
   return (
     <>
       <Typography variant="h2">Classes Dashboard</Typography>
       <Search getData={getClasses} resetData={resetClasses} />
-      {user.roles.includes("admin") && (
-        <Button
-          component={ReactLink}
-          to="/classes/create"
-          sx={{ color: "#fff" }}>
-          Create new Class
-        </Button>
-      )}
+      <CreateNewEntryLink
+        linkText="Create new Class"
+        linkTo="/classes/create"
+        perm="classCreate"
+      />
 
       {status === Status.Loading ? (
         <CircularProgress />
       ) : classes.length > 0 ? (
-        <div className="cards">
+        <Grid container spacing={3} justifyContent="space-evenly">
           {classes.map((classVar) => (
-            <CustomCard
-              key={classVar._id}
-              data={classVar}
-              link="/classes/"
-              deleteAction={deleteClass}
-            />
+            <Grid key={classVar._id}>
+              <CustomCard
+                data={classVar}
+                link="/classes/"
+                deleteAction={deleteClass}
+                deletePerm="classDelete"
+                editPerm="classUpdate"
+              />
+            </Grid>
           ))}
-        </div>
+        </Grid>
       ) : (
         <Typography variant="h3">
           You are not enrolled in any classes
