@@ -7,17 +7,11 @@ import {
 import CustomCard from "../components/CustomCard";
 import { Status } from "../features/Status";
 import useGetData from "../hooks/useGetData";
-import { useEffect } from "react";
 
 function Dashboard() {
   const { user } = useSelector((state) => state.auth);
   const { classes, status } = useGetData("classes", getClasses, resetClasses);
 
-  useEffect(() => {
-    if (!user) {
-      return console.log("Přihlaš se");
-    }
-  }, [user]);
   return (
     <>
       <section className="heading">

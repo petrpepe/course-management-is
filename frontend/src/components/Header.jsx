@@ -17,8 +17,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 
-function Header() {
+function Header({ darkTheme, setDarkTheme }) {
   const { user } = useSelector((state) => state.auth);
   const [drawerState, setDrawerState] = useState({
     management: false,
@@ -136,6 +138,19 @@ function Header() {
             <ListItemText primary="Profile" />
           </ListItemButton>
         </ListItem>
+        <ListItem key="darkThemeSwitcher">
+          <FormControlLabel
+            control={
+              <Switch
+                color="primary"
+                onChange={() => setDarkTheme(!darkTheme)}
+                checked={darkTheme}
+              />
+            }
+            label="Dark theme"
+            labelPlacement="start"
+          />
+        </ListItem>
         <ListItem key="logout" disablePadding>
           <ListItemButton
             component={ReactLink}
@@ -194,6 +209,17 @@ function Header() {
               </Button>
             ) : (
               <>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      color="primary"
+                      onChange={() => setDarkTheme(!darkTheme)}
+                      checked={darkTheme}
+                    />
+                  }
+                  label="Dark theme"
+                  labelPlacement="start"
+                />
                 <Button component={ReactLink} to="/me" sx={{ color: "#fff" }}>
                   Profile
                 </Button>
@@ -218,7 +244,7 @@ function Header() {
                 sx={{ display: { xs: "none", sm: "block" }, ml: 2 }}
                 onClick={toggleDrawer(
                   "management",
-                  !drawerState["management"],
+                  !drawerState["management"]
                 )}>
                 <MenuIcon />
               </IconButton>

@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 const corsOptions = {
-  origin: ["http://localhost:3000|https://sis-cr-fe.onrender.com/"],
+  origin: ["http://localhost:3000", "https://sis-cr-fe.onrender.com"],
   methods: "GET,POST,PUT,DELETE",
   optionsSuccessStatus: 200,
 };
@@ -39,8 +39,8 @@ if (process.env.NODE_ENV == "production") {
 
   app.get("*", (req, res) =>
     res.sendFile(
-      path.resolve(__dirname, "..", "frontend", "build", "index.html"),
-    ),
+      path.resolve(__dirname, "..", "frontend", "build", "index.html")
+    )
   );
 } else {
   app.get("/", (req, res) => res.send("Please set to production"));

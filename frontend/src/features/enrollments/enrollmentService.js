@@ -20,11 +20,11 @@ const updateEnrollment = async (enrollmentId, enrollmentData, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  delete enrollmentData._id;
+
   const response = await axios.put(
     API_URL + enrollmentId,
     enrollmentData,
-    config,
+    config
   );
 
   return response.data;

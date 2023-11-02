@@ -20,7 +20,7 @@ const updateRole = async (roleId, roleData, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  delete roleData._id;
+
   const response = await axios.put(API_URL + roleId, roleData, config);
 
   return response.data;

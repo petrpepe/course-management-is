@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   Outlet,
+  Navigate,
 } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -26,7 +27,7 @@ import ClassCall from "./pages/classes/ClassCall";
 import Classes from "./pages/classes/Classes";
 import ClassDetail from "./pages/classes/ClassDetail";
 import ClassAction from "./pages/classes/ClassAction";
-import Attendances from "./pages/Attendances";
+//import Attendances from "./pages/Attendances";
 import Roles from "./pages/Roles";
 import Permissions from "./pages/Permissions";
 import EmailPage from "./pages/EmailPage";
@@ -35,25 +36,36 @@ import { useSelector } from "react-redux";
 import TimetablePage from "./pages/TimetablePage";
 import { useMediaQuery } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Profile from "./pages/users/Profile";
 
-export const ProtectedRoute = ({ isAllowed }) => {
+export const OldProtectedRoute = ({ isAllowed }) => {
   return isAllowed ? <Outlet /> : <Page404 />;
+};
+
+export const ProtectedRoute = ({ perm, children }) => {
+  const { user } = useSelector((state) => state.auth);
+
+  return user && user.rolePermissions && user.rolePermissions.includes(perm) ? (
+    children
+  ) : (
+    <Navigate to={user ? "/" : "/login"} replace />
+  );
 };
 
 function App() {
   const { user } = useSelector((state) => state.auth);
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [darkTheme, setDarkTheme] = useState(prefersDarkMode);
 
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          mode: prefersDarkMode ? "dark" : "light",
+          mode: darkTheme ? "dark" : "light",
         },
       }),
-    [prefersDarkMode],
+    [darkTheme]
   );
 
   return (
@@ -61,7 +73,7 @@ function App() {
       <CssBaseline />
       <Router>
         <Paper elevation={0} sx={{ m: 5, textAlign: "center" }}>
-          <Header />
+          <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
@@ -71,91 +83,189 @@ function App() {
             {user && (
               <>
                 <Route
-                  path="users"
-                  element={<ProtectedRoute isAllowed={user.roles} />}>
-                  <Route index element={<Users />} />
-                  <Route path=":id" element={<UserDetail />} />
-                  <Route path=":id/edit" element={<UserAction />} />
-                </Route>
-                <Route
-                  path="users"
+                  path="/users/create"
                   element={
-                    <ProtectedRoute
-                      isAllowed={user.roles && user.roles.includes("admin")}
-                    />
-                  }>
-                  <Route path="create" element={<UserAction />} />
-                </Route>
+                    <ProtectedRoute perm="userCreate">
+                      <UserAction />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
-                  path="courses"
-                  element={<ProtectedRoute isAllowed={user.roles} />}>
-                  <Route index element={<Courses />} />
-                  <Route path=":id" element={<CourseDetail />} />
-                </Route>
-                <Route
-                  path="courses"
+                  path="/users"
                   element={
-                    <ProtectedRoute
-                      isAllowed={user.roles && user.roles.includes("admin")}
-                    />
-                  }>
-                  <Route path="create" element={<CourseAction />} />
-                  <Route path=":id/edit" element={<CourseAction />} />
-                </Route>
+                    <ProtectedRoute perm="userGet">
+                      <Users />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
-                  path="lessons"
-                  element={<ProtectedRoute isAllowed={user.roles} />}>
-                  <Route index element={<Lessons />} />
-                  <Route path=":id" element={<LessonDetail />} />
-                </Route>
-                <Route
-                  path="lessons"
+                  path="/me"
                   element={
-                    <ProtectedRoute
-                      isAllowed={
-                        user &&
-                        user.roles &&
-                        (user.roles.includes("admin") ||
-                          user.roles.includes("lector"))
-                      }
-                    />
-                  }>
-                  <Route path="create" element={<LessonAction />} />
-                  <Route path=":id/edit" element={<LessonAction />} />
-                </Route>
+                    <ProtectedRoute perm="userGet">
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
-                  path="classes"
-                  element={<ProtectedRoute isAllowed={user.roles} />}>
-                  <Route index element={<Classes />} />
-                  <Route path=":id" element={<ClassDetail />} />
-                  <Route path="call/:id" element={<ClassCall />} />
-                </Route>
-                <Route
-                  path="classes"
+                  path="/users/:id"
                   element={
-                    <ProtectedRoute
-                      isAllowed={user.roles && user.roles.includes("admin")}
-                    />
-                  }>
-                  <Route path="create" element={<ClassAction />} />
-                  <Route path=":id/edit" element={<ClassAction />} />
-                </Route>
-                <Route element={<ProtectedRoute isAllowed={user.roles} />}>
-                  <Route path="/me" element={<Profile />} />
-                  <Route path="/attendances" element={<Attendances />} />
-                  <Route path="/timetable" element={<TimetablePage />} />
-                </Route>
+                    <ProtectedRoute perm="userGet">
+                      <UserDetail />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
+                  path="/users/:id/edit"
                   element={
-                    <ProtectedRoute
-                      isAllowed={user.roles && user.roles.includes("admin")}
-                    />
-                  }>
-                  <Route path="/timetable/:id" element={<TimetablePage />} />
-                  <Route path="/roles" element={<Roles />} />
-                  <Route path="/permissions" element={<Permissions />} />
-                  <Route path="/email" element={<EmailPage />} />
-                </Route>
+                    <ProtectedRoute perm="userUpdate">
+                      <UserAction />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/courses/create"
+                  element={
+                    <ProtectedRoute perm="courseCreate">
+                      <CourseAction />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/courses"
+                  element={
+                    <ProtectedRoute perm="courseGet">
+                      <Courses />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/courses/:id"
+                  element={
+                    <ProtectedRoute perm="courseGet">
+                      <CourseDetail />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/courses/:id/edit"
+                  element={
+                    <ProtectedRoute perm="courseUpdate">
+                      <CourseAction />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/lessons/create"
+                  element={
+                    <ProtectedRoute perm="lessonCreate">
+                      <LessonAction />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/lessons"
+                  element={
+                    <ProtectedRoute perm="lessonGet">
+                      <Lessons />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/lessons/:id"
+                  element={
+                    <ProtectedRoute perm="lessonGet">
+                      <LessonDetail />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/lessons/:id/edit"
+                  element={
+                    <ProtectedRoute perm="lessonUpdate">
+                      <LessonAction />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/classes/create"
+                  element={
+                    <ProtectedRoute perm="classCreate">
+                      <ClassAction />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/classes"
+                  element={
+                    <ProtectedRoute perm="classGet">
+                      <Classes />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/classes/:id"
+                  element={
+                    <ProtectedRoute perm="classGet">
+                      <ClassDetail />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/classes/call/:id"
+                  element={
+                    <ProtectedRoute perm="classGet">
+                      <ClassCall />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/classes/:id/edit"
+                  element={
+                    <ProtectedRoute perm="classUpdate">
+                      <ClassAction />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/timetable"
+                  element={
+                    <ProtectedRoute perm="timetablesGet">
+                      <TimetablePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/timetable/:id"
+                  element={
+                    <ProtectedRoute perm="timetablesGet">
+                      <TimetablePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/roles"
+                  element={
+                    <ProtectedRoute perm="rolesManagement">
+                      <Roles />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/permissions"
+                  element={
+                    <ProtectedRoute perm="permissionsManagement">
+                      <Permissions />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/email"
+                  element={
+                    <ProtectedRoute perm="sendEmails">
+                      <EmailPage />
+                    </ProtectedRoute>
+                  }
+                />
               </>
             )}
             <Route path="*" element={<Page404 />} />

@@ -20,11 +20,11 @@ const updateTimetable = async (timetableId, timetableData, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  delete timetableData._id;
+
   const response = await axios.put(
     API_URL + timetableId,
     timetableData,
-    config,
+    config
   );
 
   return response.data;

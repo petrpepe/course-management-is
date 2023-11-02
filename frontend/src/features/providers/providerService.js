@@ -20,7 +20,7 @@ const updateProvider = async (providerId, providerData, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-  delete providerData._id;
+
   const response = await axios.put(API_URL + providerId, providerData, config);
 
   return response.data;
