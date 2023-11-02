@@ -14,7 +14,7 @@ function UserNameLink({ userId }) {
     return <CircularProgress />;
   }
 
-  if (status === Status.Success) {
+  if (status === Status.Success && userId) {
     return (
       <Button component={ReactLink} to={"/users/" + userId}>
         {users[0].firstName + " " + users[0].lastName}

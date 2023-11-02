@@ -19,7 +19,7 @@ function CustomSelect({
     setSelected(value);
     setFormData({
       ...formData,
-      [e.target.id]: value ? value._id : "",
+      [id]: value._id ? value._id : value.map((v) => v._id),
     });
   };
 

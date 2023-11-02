@@ -25,7 +25,7 @@ function Login() {
   const { user, status, message } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (status === Status.Success || user) {
+    if (user && user.email) {
       navigate("/");
     }
 
@@ -40,7 +40,7 @@ function Login() {
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      [e.target.id]: e.target.value,
     }));
   };
   const onSubmitLogin = (e) => {

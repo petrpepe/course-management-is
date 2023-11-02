@@ -9,7 +9,7 @@ import useGetData from "../../hooks/useGetData";
 import { Status } from "../../features/Status";
 import CircularProgress from "@mui/material/CircularProgress";
 import Search from "../../components/Search";
-import CreateNewEntryLink from "../../components/form/CreateNewEntryLink";
+import ActionPermLink from "../../components/form/ActionPermLink";
 import Grid from "@mui/material/Unstable_Grid2";
 
 function Users() {
@@ -19,7 +19,7 @@ function Users() {
     <>
       <Typography variant="h2">Users Dashboard</Typography>
       <Search getData={getUsers} resetData={resetUsers} />
-      <CreateNewEntryLink
+      <ActionPermLink
         linkText="Register new User"
         linkTo="/users/create"
         perm="userCreate"

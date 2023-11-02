@@ -52,11 +52,22 @@ const StudentModal = ({
           items={studentsOptions.map((u) => {
             return { _id: u._id, title: u.lastName + " " + u.firstName };
           })}
-          itemsStatus={users.status}
           formData={formData.students}
           setFormData={setFormData}
           multiple={true}
-          selectedItems={formData.students}
+          selectedItems={
+            studentsOptions.filter((u) => formData.students.includes(u._id))
+              .length > 0
+              ? studentsOptions
+                  .filter((u) => formData.students.includes(u._id))
+                  .map((u) => {
+                    return {
+                      _id: u._id,
+                      title: u.lastName + " " + u.firstName,
+                    };
+                  })
+              : null
+          }
         />
       </DialogContent>
       <DialogActions>

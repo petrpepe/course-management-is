@@ -37,7 +37,7 @@ function RoleTable({ roles, rolesStatus }) {
   const { permissions, status } = useGetData(
     "permissions",
     getPermissions,
-    resetPermissions,
+    resetPermissions
   );
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
@@ -63,11 +63,9 @@ function RoleTable({ roles, rolesStatus }) {
   };
 
   const onChange = (e) => {
-    const inputName = e.target.name;
-
     setState({
       ...role,
-      [inputName]: e.target.value,
+      [e.target.id]: e.target.value,
     });
   };
 
@@ -90,7 +88,7 @@ function RoleTable({ roles, rolesStatus }) {
           return order === "asc" ? 1 : -1;
         }
         return 0;
-      }),
+      })
     );
   };
 
@@ -190,7 +188,6 @@ function RoleTable({ roles, rolesStatus }) {
             items={permissions.map((p) => {
               return { _id: p._id, title: p.name };
             })}
-            itemsStatus={status}
             formData={role}
             setFormData={setState}
             multiple={true}

@@ -43,32 +43,49 @@ function UserAction() {
 
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth);
-  const users = useGetData("users", getUsers, resetUsers, { ids: id });
-  const roles = useGetData("roles", getRoles, resetRoles);
-  const permissions = useGetData(
+  const { users, status: userStatus } = useGetData(
+    "users",
+    getUsers,
+    resetUsers,
+    { ids: id }
+  );
+  const { roles, status: roleStatus } = useGetData(
+    "roles",
+    getRoles,
+    resetRoles
+  );
+  const { permissions, status: permissionStatus } = useGetData(
     "permissions",
     getPermissions,
-    resetPermissions,
+    resetPermissions
   );
 
   useEffect(() => {
-    if (id && users.status === Status.Success)
-      setFormData(users.users.filter((u) => u._id === id)[0]);
-  }, [id, users.status, users.users]);
+    if (id !== user._id && !user.roles.includes("admin")) navigate(-1);
+    if (id && userStatus === Status.Success)
+      setFormData(users.filter((u) => u._id === id)[0]);
+  }, [id, user, userStatus, users, navigate]);
 
-  if (isCreated && users.status === Status.Success) {
-    navigate("/users/" + users.users[users.users.length - 1]._id);
+  if (isCreated && userStatus === Status.Success) {
+    navigate("/users/" + users[users.length - 1]._id);
   }
 
-  if (users.status === Status.Loading || users.status === Status.Idle) {
+  if (
+    userStatus === Status.Loading ||
+    userStatus === Status.Idle ||
+    roleStatus === Status.Loading ||
+    roleStatus === Status.Idle ||
+    permissionStatus === Status.Loading ||
+    permissionStatus === Status.Idle
+  ) {
     return <CircularProgress />;
   }
 
-  const selectedRolesPermissons = roles.roles
+  const selectedRolesPermissons = roles
     .filter((r) => formData.roles.includes(r._id))
     .flatMap((r) => r.permissions);
-  const avaiblePermissions = permissions.permissions.filter(
-    (p) => !selectedRolesPermissons.includes(p._id),
+  const avaiblePermissions = permissions.filter(
+    (p) => !selectedRolesPermissons.includes(p._id)
   );
 
   const onSubmit = (e) => {
@@ -85,8 +102,11 @@ function UserAction() {
         phone: formData.phone,
       };
 
-      if (user._id !== id || user.roles.includes("admin")) {
+      if (user.rolePermissions.includes("rolesManagement")) {
         userData.roles = formData.roles;
+      }
+
+      if (user.rolePermissions.includes("permissionsManagement")) {
         userData.extraPerms = formData.extraPerms;
       }
 
@@ -112,7 +132,7 @@ function UserAction() {
   const onChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.id]: e.target.value,
     });
   };
 
@@ -211,33 +231,45 @@ function UserAction() {
           fullWidth
           sx={{ my: 1 }}
         />
-        {user.roles.includes("admin") && (
-          <>
-            <CustomSelect
-              id="roles"
-              label="Select roles"
-              items={roles.roles.map((r) => {
-                return { _id: r._id, title: r.name };
+        {user.rolePermissions.includes("rolesManagement") && (
+          <CustomSelect
+            id="roles"
+            label="Select roles"
+            items={roles.map((r) => {
+              return { _id: r._id, title: r.name };
+            })}
+            formData={formData}
+            selectedItems={roles
+              .filter((r) => formData.roles.includes(r._id))
+              .map((r) => {
+                return {
+                  _id: r._id,
+                  title: r.name,
+                };
               })}
-              itemsStatus={roles.status}
-              formData={formData}
-              selectedItems={formData.roles}
-              setFormData={setFormData}
-              multiple={true}
-            />
-            <CustomSelect
-              id="extraPerms"
-              label="Select extra permissions"
-              items={avaiblePermissions.map((p) => {
-                return { _id: p._id, title: p.name };
+            setFormData={setFormData}
+            multiple={true}
+          />
+        )}
+        {user.rolePermissions.includes("permissionsManagement") && (
+          <CustomSelect
+            id="extraPerms"
+            label="Select extra permissions"
+            items={avaiblePermissions.map((p) => {
+              return { _id: p._id, title: p.name };
+            })}
+            formData={formData}
+            selectedItems={avaiblePermissions
+              .filter((p) => formData.extraPerms.includes(p._id))
+              .map((p) => {
+                return {
+                  _id: p._id,
+                  title: p.name,
+                };
               })}
-              itemsStatus={permissions.status}
-              formData={formData}
-              selectedItems={formData.extraPerms}
-              setFormData={setFormData}
-              multiple={true}
-            />
-          </>
+            setFormData={setFormData}
+            multiple={true}
+          />
         )}
         <Button
           type="submit"

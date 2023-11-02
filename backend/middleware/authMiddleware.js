@@ -25,7 +25,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
       req.userRoles = req.user.roles.map(
         (userRole) =>
           cache.roles.filter((cacheRole) => cacheRole._id.equals(userRole))[0]
-            .name,
+            .name
       );
 
       next();
@@ -55,12 +55,14 @@ const authorize = (permissions) => {
 
       req.user = await User.findById(decoded.id).select("-password");
 
-      if (
-        !token ||
-        (!req.user.roles && req.user._id.toString() !== req.query.id)
-      ) {
+      if (!token) {
         res.status(403);
         throw new Error("Forbidden");
+      }
+
+      if (!req.user) {
+        res.status(401);
+        throw new Error("User not found");
       }
 
       if (!permissions) {
@@ -77,28 +79,25 @@ const authorize = (permissions) => {
       }
 
       const user = req.user;
-      let contains = new Map();
-
-      if (typeof permissions === "string") contains.set(permissions, false);
-      else {
-        for (const perm of permissions) {
-          contains.set(perm, false);
-        }
-      }
+      let userPermissions = new Set();
 
       for (const roleId of user.roles) {
         for (const permId of getValue(cache.roles, roleId).permissions) {
           const permName = getValue(cache.permissions, permId).name;
-          if (contains.has(permName)) contains.set(permName, true);
+          if (!userPermissions.has(permName)) userPermissions.add(permName);
         }
       }
 
       for (const extraPermId of user.extraPerms) {
         const permName = getValue(cache.permissions, extraPermId).name;
-        if (contains.has(permName)) contains.set(permName, true);
+        if (!userPermissions.has(permName)) userPermissions.add(permName);
       }
 
-      if (user && Array.from(contains.values()).every((e) => e === true)) {
+      if (
+        userPermissions.has(permissions) ||
+        (Array.isArray(permissions) &&
+          permissions.every((p) => userPermissions.has(p)))
+      ) {
         next();
       } else {
         res.status(403);

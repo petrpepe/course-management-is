@@ -9,22 +9,14 @@ import Box from "@mui/material/Box";
 import { updateRole } from "../../features/roles/roleSlice";
 import { useDispatch } from "react-redux";
 
-function EditableRow({
-  role,
-  permissions,
-  status,
-  getPermissions,
-  handleCancelClick,
-}) {
+function EditableRow({ role, permissions, handleCancelClick }) {
   const dispatch = useDispatch();
   const [rowState, setRow] = useState({ ...role });
 
   const onChange = (e) => {
-    const inputName = e.target.name;
-
     setRow({
       ...role,
-      [inputName]: e.target.value,
+      [e.target.id]: e.target.value,
     });
   };
 
@@ -72,8 +64,14 @@ function EditableRow({
           items={permissions.map((p) => {
             return { _id: p._id, title: p.name };
           })}
-          selectedItems={rowState.permissions}
-          itemsStatus={status}
+          selectedItems={permissions
+            .filter((p) => rowState.permissions.includes(p._id))
+            .map((p) => {
+              return {
+                _id: p._id,
+                title: p.name,
+              };
+            })}
           formData={rowState}
           setFormData={setRow}
           multiple={true}

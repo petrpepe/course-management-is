@@ -12,7 +12,7 @@ const PhoneInputs = ({ name, listName, formData, phones, setFormData }) => {
 
   const onPhoneChange = (e, i) => {
     let changedPhoneList = phoneList;
-    changedPhoneList[i][e.target.name] = e.target.value;
+    changedPhoneList[i][e.target.id] = e.target.value;
     setPhoneList(changedPhoneList);
 
     setFormData({

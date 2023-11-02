@@ -1,4 +1,4 @@
-import { Link as ReactLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   getLessons,
   reset as resetLessons,
@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import useGetData from "../../hooks/useGetData";
 import CourseTitleLink from "../../components/CourseTitleLink";
 import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
+import ActionPermLink from "../../components/form/ActionPermLink";
 
 function LessonDetail() {
   const { id } = useParams();
@@ -47,12 +47,11 @@ function LessonDetail() {
           {c}
         </Typography>
       ))}
-      <Button
-        component={ReactLink}
-        to={"/lessons/" + lesson._id + "/edit"}
-        sx={{ my: 1 }}>
-        Edit
-      </Button>
+      <ActionPermLink
+        linkText="Edit"
+        linkTo={"/lessons/" + lesson._id + "/edit"}
+        perm="lessonUpdate"
+      />
     </>
   );
 }

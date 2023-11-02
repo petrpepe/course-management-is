@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
@@ -77,17 +77,23 @@ function ClassAction() {
 
   let currentClassId = null;
 
+  useEffect(() => {
+    if (id && classStatus === Status.Success) {
+      setFormData(classes.filter((c) => c._id === id)[0]);
+    }
+  }, [id, classStatus, classes]);
+
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      [e.target.id]: e.target.value,
     }));
   };
 
-  const onPickerChange = (e, name) => {
+  const onPickerChange = (e, id) => {
     setFormData((prevState) => ({
       ...prevState,
-      [name]: e,
+      [id]: e,
     }));
   };
 
@@ -114,18 +120,19 @@ function ClassAction() {
     (id && classStatus === Status.Loading) ||
     roleStatus === Status.Loading ||
     courseStatus === Status.Loading ||
-    userStatus === Status.Loading
+    userStatus === Status.Loading ||
+    userStatus === Status.Idle
   ) {
     return <LoadingOrError status={Status.Loading} />;
   }
 
-  if (id && classStatus === Status.Success)
-    setFormData(classes.filter((c) => c._id === id)[0]);
   let lectorsOptions = [];
-  if (userStatus === Status.Success && roleStatus === Status.Success)
+  if (userStatus === Status.Success && roleStatus === Status.Success) {
     lectorsOptions = users.filter((u) =>
       u.roles.includes(roles.filter((r) => r.name === "lector")[0]._id)
     );
+  }
+
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>
       <Typography variant="h2">
@@ -176,11 +183,18 @@ function ClassAction() {
         <CustomSelect
           id="course"
           label="Select course"
-          selectedItems={formData.course}
+          selectedItems={
+            courses.filter((c) => c._id === formData.course).length > 0
+              ? courses
+                  .filter((c) => c._id === formData.course)
+                  .map((c) => {
+                    return { _id: c._id, title: c.title };
+                  })[0]
+              : null
+          }
           items={courses.map((c) => {
             return { _id: c._id, title: c.title };
           })}
-          itemsStatus={courseStatus}
           formData={formData}
           setFormData={setFormData}
           multiple={false}
@@ -188,11 +202,17 @@ function ClassAction() {
         <CustomSelect
           id="lectors"
           label="Select lectors"
-          selectedItems={formData.lectors}
+          selectedItems={lectorsOptions
+            .filter((u) => formData.lectors.includes(u._id))
+            .map((u) => {
+              return {
+                _id: u._id,
+                title: u.lastName + " " + u.firstName,
+              };
+            })}
           items={lectorsOptions.map((u) => {
             return { _id: u._id, title: u.lastName + " " + u.firstName };
           })}
-          itemsStatus={userStatus}
           formData={formData}
           setFormData={setFormData}
           multiple={true}

@@ -1,10 +1,10 @@
-import { useParams, Link as ReactLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getUsers, reset as resetUsers } from "../../features/users/userSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import useGetData from "../../hooks/useGetData";
 import { Status } from "../../features/Status";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import ActionPermLink from "../../components/form/ActionPermLink";
 
 function UserDetail() {
   const { id } = useParams();
@@ -44,12 +44,13 @@ function UserDetail() {
           {" " + phone.type + ": " + phone.number}
         </Typography>
       ))}
-      <Button
-        component={ReactLink}
-        to={"/users/" + currentUser._id + "/edit"}
-        sx={{ my: 1 }}>
-        Edit
-      </Button>
+      {users.roles.includes("admin") && (
+        <ActionPermLink
+          linkText="Edit"
+          linkTo={"/users/" + currentUser._id + "/edit"}
+          perm="userUpdate"
+        />
+      )}
     </>
   );
 }

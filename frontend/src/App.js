@@ -1,10 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Header from "./components/Header";
@@ -39,17 +33,13 @@ import Paper from "@mui/material/Paper";
 import { useMemo, useState } from "react";
 import Profile from "./pages/users/Profile";
 
-export const OldProtectedRoute = ({ isAllowed }) => {
-  return isAllowed ? <Outlet /> : <Page404 />;
-};
-
 export const ProtectedRoute = ({ perm, children }) => {
   const { user } = useSelector((state) => state.auth);
 
   return user && user.rolePermissions && user.rolePermissions.includes(perm) ? (
     children
   ) : (
-    <Navigate to={user ? "/" : "/login"} replace />
+    <Page404 />
   );
 };
 
@@ -72,6 +62,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
+        <AuthVerify />
         <Paper elevation={0} sx={{ m: 5, textAlign: "center" }}>
           <Header darkTheme={darkTheme} setDarkTheme={setDarkTheme} />
           <Routes>
@@ -272,7 +263,6 @@ function App() {
           </Routes>
           <Footer />
         </Paper>
-        <AuthVerify />
       </Router>
     </ThemeProvider>
   );

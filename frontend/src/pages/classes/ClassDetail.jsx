@@ -1,4 +1,4 @@
-import { Link as ReactLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   getClasses,
   reset as resetClasses,
@@ -8,13 +8,13 @@ import Typography from "@mui/material/Typography";
 import useGetData from "../../hooks/useGetData";
 import CourseTitleLink from "../../components/CourseTitleLink";
 import CircularProgress from "@mui/material/CircularProgress";
-import Button from "@mui/material/Button";
 import {
   getEnrollments,
   reset as resetEnrollments,
 } from "../../features/enrollments/enrollmentSlice";
 import UsersList from "../../components/users/UsersList";
 import Timetable from "../../components/table/Timetable";
+import ActionPermLink from "../../components/form/ActionPermLink";
 
 function ClassDetail() {
   const { id } = useParams();
@@ -28,9 +28,7 @@ function ClassDetail() {
     "enrollments",
     getEnrollments,
     resetEnrollments,
-    {
-      ids: id,
-    }
+    { ids: id }
   );
 
   if (
@@ -52,12 +50,11 @@ function ClassDetail() {
         heading="students"
       />
       <UsersList usersIds={classes[0].lectors} heading="lectors" />
-      <Button
-        component={ReactLink}
-        to={"/classes/" + classes[0]._id + "/edit"}
-        sx={{ my: 1 }}>
-        Edit
-      </Button>
+      <ActionPermLink
+        linkText="Edit"
+        linkTo={"/classes/" + classes[0]._id + "/edit"}
+        perm="classUpdate"
+      />
     </>
   );
 }

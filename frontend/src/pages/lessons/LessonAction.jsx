@@ -17,7 +17,7 @@ import {
 } from "../../features/courses/courseSlice";
 import Typography from "@mui/material/Typography";
 import useGetData from "../../hooks/useGetData";
-import CircularProgress from "@mui/material/CircularProgress";
+import LoadingOrError from "../../components/LoadingOrError";
 import { Status } from "../../features/Status";
 import Paper from "@mui/material/Paper";
 
@@ -60,7 +60,7 @@ function LessonAction() {
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      [e.target.id]: e.target.value,
     }));
   };
 
@@ -83,8 +83,13 @@ function LessonAction() {
     navigate("/lessons/" + lessons[lessons.length - 1]._id);
   }
 
-  if (lessonStatus === Status.Loading || courseStatus === Status.Idle) {
-    return <CircularProgress />;
+  if (
+    lessonStatus === Status.Loading ||
+    lessonStatus === Status.Idle ||
+    courseStatus === Status.Loading ||
+    courseStatus === Status.Idle
+  ) {
+    return <LoadingOrError status={Status.Loading} />;
   }
 
   return (
@@ -168,7 +173,7 @@ function LessonAction() {
                   .filter((c) => c._id === formData.course)
                   .map((c) => {
                     return { _id: c._id, title: c.title };
-                  })
+                  })[0]
               : null
           }
         />

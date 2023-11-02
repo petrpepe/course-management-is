@@ -1,11 +1,6 @@
-import { Link as ReactLink } from "react-router-dom";
-//import {getUsers, reset as resetUsers} from "../../features/users/userSlice"
-//import CircularProgress from "@mui/material/CircularProgress"
-//import useGetData from "../../hooks/useGetData"
-//import { Status } from "../../features/Status"
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useSelector } from "react-redux";
+import ActionPermLink from "../../components/form/ActionPermLink";
 
 function Profile() {
   const { user } = useSelector((state) => state.auth);
@@ -26,12 +21,11 @@ function Profile() {
           {" " + phone.type + ": " + phone.number}
         </Typography>
       ))}
-      <Button
-        component={ReactLink}
-        to={"/users/" + user._id + "/edit"}
-        sx={{ my: 1 }}>
-        Edit
-      </Button>
+      <ActionPermLink
+        linkText="Edit"
+        linkTo={"/users/" + user._id + "/edit"}
+        perm="userUpdate"
+      />
     </>
   );
 }

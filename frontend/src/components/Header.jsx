@@ -39,7 +39,7 @@ function Header({ darkTheme, setDarkTheme }) {
     setDrawerState({ ...drawerState, [anchor]: open });
   };
 
-  const managementListItems = (
+  const managementListItems = user && user.rolePermissions && (
     <>
       {user.rolePermissions.includes("courseGet") && (
         <ListItem key="courses" disablePadding>
@@ -123,25 +123,29 @@ function Header({ darkTheme, setDarkTheme }) {
       onKeyDown={toggleDrawer("main", false)}
       sx={{ textAlign: "center", minWidth: "200px" }}>
       <List>
-        {user.rolePermissions.includes("classGet") && (
-          <ListItem key="classes" disablePadding>
-            <ListItemButton
-              component={ReactLink}
-              to="/classes"
-              sx={{ textAlign: "center" }}>
-              <ListItemText primary="Classes" />
-            </ListItemButton>
-          </ListItem>
-        )}
-        {user.rolePermissions.includes("timetablesGet") && (
-          <ListItem key="timetable" disablePadding>
-            <ListItemButton
-              component={ReactLink}
-              to="/timetable"
-              sx={{ textAlign: "center" }}>
-              <ListItemText primary="Timetable" />
-            </ListItemButton>
-          </ListItem>
+        {user && user.rolePermissions && (
+          <>
+            {user.rolePermissions.includes("classGet") && (
+              <ListItem key="classes" disablePadding>
+                <ListItemButton
+                  component={ReactLink}
+                  to="/classes"
+                  sx={{ textAlign: "center" }}>
+                  <ListItemText primary="Classes" />
+                </ListItemButton>
+              </ListItem>
+            )}
+            {user.rolePermissions.includes("timetablesGet") && (
+              <ListItem key="timetable" disablePadding>
+                <ListItemButton
+                  component={ReactLink}
+                  to="/timetable"
+                  sx={{ textAlign: "center" }}>
+                  <ListItemText primary="Timetable" />
+                </ListItemButton>
+              </ListItem>
+            )}
+          </>
         )}
         <Divider />
         {user && user.rolePermissions && managementListItems}
@@ -195,22 +199,26 @@ function Header({ darkTheme, setDarkTheme }) {
               justifyContent: "flex-start",
               display: { xs: "none", sm: "flex" },
             }}>
-            {user.rolePermissions.includes("classGet") && (
-              <Button
-                component={ReactLink}
-                to="/classes"
-                sx={{ color: "#fff" }}>
-                Classes
-              </Button>
-            )}
-            {user.rolePermissions.includes("timetablesGet") && (
-              <Button
-                component={ReactLink}
-                to="/timetable"
-                sx={{ color: "#fff" }}>
-                Timetable
-              </Button>
-            )}
+            {user &&
+              user.rolePermissions &&
+              user.rolePermissions.includes("classGet") && (
+                <Button
+                  component={ReactLink}
+                  to="/classes"
+                  sx={{ color: "#fff" }}>
+                  Classes
+                </Button>
+              )}
+            {user &&
+              user.rolePermissions &&
+              user.rolePermissions.includes("timetablesGet") && (
+                <Button
+                  component={ReactLink}
+                  to="/timetable"
+                  sx={{ color: "#fff" }}>
+                  Timetable
+                </Button>
+              )}
           </Box>
           {darkTheme ? (
             <IconButton onClick={() => setDarkTheme(!darkTheme)}>
@@ -227,16 +235,9 @@ function Header({ darkTheme, setDarkTheme }) {
                 Login
               </Button>
             ) : (
-              <>
-                <Button component={ReactLink} to="/me" sx={{ color: "#fff" }}>
-                  Profile
-                </Button>
-                {!user.roles.includes("admin") && (
-                  <Button component={ReactLink} to="/logout">
-                    Logout
-                  </Button>
-                )}
-              </>
+              <Button component={ReactLink} to="/me" sx={{ color: "#fff" }}>
+                Profile
+              </Button>
             )}
           </Box>
           {user && user.rolePermissions && (

@@ -18,8 +18,8 @@ import CustomSelect from "../../components/form/CustomSelect";
 import useGetData from "../../hooks/useGetData";
 import Typography from "@mui/material/Typography";
 import { Status } from "../../features/Status";
-import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
+import LoadingOrError from "../../components/LoadingOrError";
 
 function CourseAction() {
   const [isCreated, setIsCreated] = useState(false);
@@ -34,18 +34,26 @@ function CourseAction() {
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  const courses = useGetData("courses", getCourses, resetCourses);
-  const providers = useGetData("providers", getProviders, resetProviders);
+  const { courses, status: courseStatus } = useGetData(
+    "courses",
+    getCourses,
+    resetCourses
+  );
+  const { providers, status: providerStatus } = useGetData(
+    "providers",
+    getProviders,
+    resetProviders
+  );
 
   useEffect(() => {
-    if (id && courses.status === Status.Success)
-      setFormData(courses.courses.filter((l) => l._id === id)[0]);
-  }, [id, courses.status, courses.courses]);
+    if (id && courseStatus === Status.Success)
+      setFormData(courses.filter((l) => l._id === id)[0]);
+  }, [id, courseStatus, courses]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      [e.target.id]: e.target.value,
     }));
   };
 
@@ -61,12 +69,12 @@ function CourseAction() {
     }
   };
 
-  if (isCreated && courses.status === Status.Success) {
-    navigate("/courses/" + courses.courses[courses.courses.length - 1]._id);
+  if (isCreated && courseStatus === Status.Success) {
+    navigate("/courses/" + courses[courses.length - 1]._id);
   }
 
-  if (courses.status === Status.Loading) {
-    return <CircularProgress />;
+  if (courseStatus === Status.Loading || providerStatus === Status.Loading) {
+    return <LoadingOrError status={Status.Loading} />;
   }
 
   return (
@@ -110,10 +118,9 @@ function CourseAction() {
         <CustomSelect
           id="owner"
           label="Select owner"
-          items={providers.providers.map((p) => {
+          items={providers.map((p) => {
             return { _id: p._id, title: p.name };
           })}
-          itemsStatus={providers.status}
           formData={formData}
           setFormData={setFormData}
           multiple={false}

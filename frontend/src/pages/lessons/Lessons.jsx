@@ -9,7 +9,7 @@ import useGetData from "../../hooks/useGetData";
 import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import Search from "../../components/Search";
-import CreateNewEntryLink from "../../components/form/CreateNewEntryLink";
+import ActionPermLink from "../../components/form/ActionPermLink";
 import Grid from "@mui/material/Unstable_Grid2";
 
 function Lessons() {
@@ -19,7 +19,7 @@ function Lessons() {
     <>
       <Typography variant="h2">Lessons Dashboard</Typography>
       <Search getData={getLessons} resetData={resetLessons} />
-      <CreateNewEntryLink
+      <ActionPermLink
         linkText="Create new Lesson"
         linkTo="/lessons/create"
         perm="lessonCreate"

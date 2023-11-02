@@ -10,7 +10,7 @@ function Logout() {
   useEffect(() => {
     dispatch(logout());
     dispatch(reset());
-    navigate("/login");
+    navigate("/login", { replace: true });
   }, [navigate, dispatch]);
 }
 

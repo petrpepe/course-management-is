@@ -16,14 +16,12 @@ import LoadingOrError from "../components/LoadingOrError";
 
 function TimetablePage() {
   const { id } = useParams();
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth);
   const { enrollments, status: enrollmentStatus } = useGetData(
     "enrollments",
     getEnrollments,
     resetEnrollments,
-    {
-      ids: id || user._id,
-    }
+    { ids: user.roles.includes("admin") ? id || user._id : user._id }
   );
   const { classes, status: classStatus } = useGetData(
     "classes",
@@ -37,7 +35,7 @@ function TimetablePage() {
     ...classes.map((c) => c.lectors),
     ...enrollments.map((e) => e.student),
   ]);
-
+  userIds.has("");
   if (classStatus === Status.Success) {
     return (
       <>
