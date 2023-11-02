@@ -37,16 +37,25 @@ function LessonAction() {
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  const lessons = useGetData("lessons", getLessons, resetLessons, {
-    ids: id,
-    detail: true,
-  });
-  const courses = useGetData("courses", getCourses, resetCourses);
+  const { lessons, status: lessonStatus } = useGetData(
+    "lessons",
+    getLessons,
+    resetLessons,
+    {
+      ids: id,
+      detail: true,
+    }
+  );
+  const { courses, status: courseStatus } = useGetData(
+    "courses",
+    getCourses,
+    resetCourses
+  );
 
   useEffect(() => {
-    if (id && lessons.status === Status.Success)
-      setFormData(lessons.lessons.filter((l) => l._id === id)[0]);
-  }, [id, lessons.status, lessons.lessons]);
+    if (id && lessonStatus === Status.Success)
+      setFormData(lessons.filter((l) => l._id === id)[0]);
+  }, [id, lessonStatus, lessons]);
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -70,11 +79,11 @@ function LessonAction() {
     }
   };
 
-  if (isCreated && lessons.status === Status.Success) {
-    navigate("/lessons/" + lessons.lessons[lessons.lessons.length - 1]._id);
+  if (isCreated && lessonStatus === Status.Success) {
+    navigate("/lessons/" + lessons[lessons.length - 1]._id);
   }
 
-  if (lessons.status === Status.Loading || courses.status === Status.Idle) {
+  if (lessonStatus === Status.Loading || courseStatus === Status.Idle) {
     return <CircularProgress />;
   }
 
@@ -147,14 +156,21 @@ function LessonAction() {
         <CustomSelect
           id="course"
           label="Select course"
-          items={courses.courses.map((c) => {
+          items={courses.map((c) => {
             return { _id: c._id, title: c.title };
           })}
-          itemsStatus={courses.status}
           formData={formData}
           setFormData={setFormData}
           multiple={false}
-          selectedItems={formData.course}
+          selectedItems={
+            courses.filter((c) => c._id === formData.course).length > 0
+              ? courses
+                  .filter((c) => c._id === formData.course)
+                  .map((c) => {
+                    return { _id: c._id, title: c.title };
+                  })
+              : null
+          }
         />
         <TextField
           id="content"
