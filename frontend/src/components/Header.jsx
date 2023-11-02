@@ -17,8 +17,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
 
 function Header({ darkTheme, setDarkTheme }) {
   const { user } = useSelector((state) => state.auth);
@@ -41,54 +41,66 @@ function Header({ darkTheme, setDarkTheme }) {
 
   const managementListItems = (
     <>
-      <ListItem key="courses" disablePadding>
-        <ListItemButton
-          component={ReactLink}
-          to="/courses"
-          sx={{ textAlign: "center" }}>
-          <ListItemText primary="Courses" />
-        </ListItemButton>
-      </ListItem>
-      <ListItem key="lessons" disablePadding>
-        <ListItemButton
-          component={ReactLink}
-          to="/lessons"
-          sx={{ textAlign: "center" }}>
-          <ListItemText primary="Lessons" />
-        </ListItemButton>
-      </ListItem>
-      <ListItem key="users" disablePadding>
-        <ListItemButton
-          component={ReactLink}
-          to="/users"
-          sx={{ textAlign: "center" }}>
-          <ListItemText primary="Users" />
-        </ListItemButton>
-      </ListItem>
-      <ListItem key="roles" disablePadding>
-        <ListItemButton
-          component={ReactLink}
-          to="/roles"
-          sx={{ textAlign: "center" }}>
-          <ListItemText primary="Roles" />
-        </ListItemButton>
-      </ListItem>
-      <ListItem key="permissions" disablePadding>
-        <ListItemButton
-          component={ReactLink}
-          to="/permissions"
-          sx={{ textAlign: "center" }}>
-          <ListItemText primary="Permissions" />
-        </ListItemButton>
-      </ListItem>
-      <ListItem key="email" disablePadding>
-        <ListItemButton
-          component={ReactLink}
-          to="/email"
-          sx={{ textAlign: "center" }}>
-          <ListItemText primary="Email" />
-        </ListItemButton>
-      </ListItem>
+      {user.rolePermissions.includes("courseGet") && (
+        <ListItem key="courses" disablePadding>
+          <ListItemButton
+            component={ReactLink}
+            to="/courses"
+            sx={{ textAlign: "center" }}>
+            <ListItemText primary="Courses" />
+          </ListItemButton>
+        </ListItem>
+      )}
+      {user.rolePermissions.includes("lessonGet") && (
+        <ListItem key="lessons" disablePadding>
+          <ListItemButton
+            component={ReactLink}
+            to="/lessons"
+            sx={{ textAlign: "center" }}>
+            <ListItemText primary="Lessons" />
+          </ListItemButton>
+        </ListItem>
+      )}
+      {user.rolePermissions.includes("userGet") && (
+        <ListItem key="users" disablePadding>
+          <ListItemButton
+            component={ReactLink}
+            to="/users"
+            sx={{ textAlign: "center" }}>
+            <ListItemText primary="Users" />
+          </ListItemButton>
+        </ListItem>
+      )}
+      {user.rolePermissions.includes("rolesManagement") && (
+        <ListItem key="roles" disablePadding>
+          <ListItemButton
+            component={ReactLink}
+            to="/roles"
+            sx={{ textAlign: "center" }}>
+            <ListItemText primary="Roles" />
+          </ListItemButton>
+        </ListItem>
+      )}
+      {user.rolePermissions.includes("permissionsManagement") && (
+        <ListItem key="permissions" disablePadding>
+          <ListItemButton
+            component={ReactLink}
+            to="/permissions"
+            sx={{ textAlign: "center" }}>
+            <ListItemText primary="Permissions" />
+          </ListItemButton>
+        </ListItem>
+      )}
+      {user.rolePermissions.includes("sendEmails") && (
+        <ListItem key="email" disablePadding>
+          <ListItemButton
+            component={ReactLink}
+            to="/email"
+            sx={{ textAlign: "center" }}>
+            <ListItemText primary="Email" />
+          </ListItemButton>
+        </ListItem>
+      )}
       {!drawerState["main"] && (
         <>
           <Divider />
@@ -111,24 +123,28 @@ function Header({ darkTheme, setDarkTheme }) {
       onKeyDown={toggleDrawer("main", false)}
       sx={{ textAlign: "center", minWidth: "200px" }}>
       <List>
-        <ListItem key="classes" disablePadding>
-          <ListItemButton
-            component={ReactLink}
-            to="/classes"
-            sx={{ textAlign: "center" }}>
-            <ListItemText primary="Classes" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem key="timetable" disablePadding>
-          <ListItemButton
-            component={ReactLink}
-            to="/timetable"
-            sx={{ textAlign: "center" }}>
-            <ListItemText primary="Timetable" />
-          </ListItemButton>
-        </ListItem>
+        {user.rolePermissions.includes("classGet") && (
+          <ListItem key="classes" disablePadding>
+            <ListItemButton
+              component={ReactLink}
+              to="/classes"
+              sx={{ textAlign: "center" }}>
+              <ListItemText primary="Classes" />
+            </ListItemButton>
+          </ListItem>
+        )}
+        {user.rolePermissions.includes("timetablesGet") && (
+          <ListItem key="timetable" disablePadding>
+            <ListItemButton
+              component={ReactLink}
+              to="/timetable"
+              sx={{ textAlign: "center" }}>
+              <ListItemText primary="Timetable" />
+            </ListItemButton>
+          </ListItem>
+        )}
         <Divider />
-        {managementListItems}
+        {user && user.rolePermissions && managementListItems}
         <Divider />
         <ListItem key="profile" disablePadding>
           <ListItemButton
@@ -137,19 +153,6 @@ function Header({ darkTheme, setDarkTheme }) {
             sx={{ textAlign: "center" }}>
             <ListItemText primary="Profile" />
           </ListItemButton>
-        </ListItem>
-        <ListItem key="darkThemeSwitcher" disablePadding>
-          <FormControlLabel
-            control={
-              <Switch
-                color="primary"
-                onChange={() => setDarkTheme(!darkTheme)}
-                checked={darkTheme}
-              />
-            }
-            label="Dark theme"
-            labelPlacement="start"
-          />
         </ListItem>
         <ListItem key="logout" disablePadding>
           <ListItemButton
@@ -192,16 +195,32 @@ function Header({ darkTheme, setDarkTheme }) {
               justifyContent: "flex-start",
               display: { xs: "none", sm: "flex" },
             }}>
-            <Button component={ReactLink} to="/classes" sx={{ color: "#fff" }}>
-              Classes
-            </Button>
-            <Button
-              component={ReactLink}
-              to="/timetable"
-              sx={{ color: "#fff" }}>
-              Timetable
-            </Button>
+            {user.rolePermissions.includes("classGet") && (
+              <Button
+                component={ReactLink}
+                to="/classes"
+                sx={{ color: "#fff" }}>
+                Classes
+              </Button>
+            )}
+            {user.rolePermissions.includes("timetablesGet") && (
+              <Button
+                component={ReactLink}
+                to="/timetable"
+                sx={{ color: "#fff" }}>
+                Timetable
+              </Button>
+            )}
           </Box>
+          {darkTheme ? (
+            <IconButton onClick={() => setDarkTheme(!darkTheme)}>
+              <LightModeIcon />
+            </IconButton>
+          ) : (
+            <IconButton onClick={() => setDarkTheme(!darkTheme)}>
+              <DarkModeIcon sx={{ color: "#fff" }} />
+            </IconButton>
+          )}
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {!user ? (
               <Button component={ReactLink} to="/login" sx={{ color: "#fff" }}>
@@ -209,18 +228,6 @@ function Header({ darkTheme, setDarkTheme }) {
               </Button>
             ) : (
               <>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      color="primary"
-                      onChange={() => setDarkTheme(!darkTheme)}
-                      checked={darkTheme}
-                    />
-                  }
-                  label="Dark theme"
-                  labelPlacement="start"
-                  sx={{ mr: 2 }}
-                />
                 <Button component={ReactLink} to="/me" sx={{ color: "#fff" }}>
                   Profile
                 </Button>
@@ -232,7 +239,7 @@ function Header({ darkTheme, setDarkTheme }) {
               </>
             )}
           </Box>
-          {user && user.roles.includes("admin") && (
+          {user && user.rolePermissions && (
             <>
               <IconButton
                 size="large"
