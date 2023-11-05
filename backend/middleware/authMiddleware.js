@@ -3,6 +3,11 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const Role = require("../models/roleModel");
 const Permission = require("../models/permissionModel");
+const Provider = require("../models/providerModel");
+const Enrollment = require("../models/enrollmentModel");
+const Class = require("../models/classModel");
+const Course = require("../models/courseModel");
+const mongoose = require("mongoose");
 
 let cache = { roles: [], permissions: [] };
 
@@ -27,6 +32,24 @@ const authenticate = asyncHandler(async (req, res, next) => {
           cache.roles.filter((cacheRole) => cacheRole._id.equals(userRole))[0]
             .name
       );
+
+      req.userClasses = await Enrollment.find({
+        student: req.user._id,
+      }).select("classId");
+
+      req.userCourses = await Course.find({
+        $or: [
+          { _id: { $in: req.userClasses.map((c) => c.classId) } },
+          { owner: { $in: req.user.provider } },
+        ],
+      });
+
+      const providerIds = req.userCourses
+        .map((c) => c.owner)
+        .concat(req.user.provider);
+
+      if (providerIds.length > 0)
+        req.userProvider = await Provider.find({ _id: { $in: providerIds } });
 
       next();
     } catch (error) {

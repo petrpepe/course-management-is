@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 
+const idNumber = mongoose.Schema(
+  {
+    number: { type: String },
+    type: { type: String },
+  },
+  { _id: false }
+);
+
 const providerSchema = mongoose.Schema({
   name: {
     type: String,
@@ -8,12 +16,7 @@ const providerSchema = mongoose.Schema({
   description: {
     type: String,
   },
-  identificationNumber: [
-    {
-      type: { type: String },
-      number: { type: String },
-    },
-  ],
+  identificationNumber: [idNumber],
 });
 
 module.exports = mongoose.model("Provider", providerSchema);

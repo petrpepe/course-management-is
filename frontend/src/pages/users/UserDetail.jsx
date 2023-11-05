@@ -5,9 +5,11 @@ import useGetData from "../../hooks/useGetData";
 import { Status } from "../../features/Status";
 import Typography from "@mui/material/Typography";
 import ActionPermLink from "../../components/form/ActionPermLink";
+import { useSelector } from "react-redux";
 
 function UserDetail() {
   const { id } = useParams();
+  const { user } = useSelector((state) => state.auth);
   const { users, status, message } = useGetData("users", getUsers, resetUsers, {
     ids: id,
     detail: true,
@@ -44,7 +46,7 @@ function UserDetail() {
           {" " + phone.type + ": " + phone.number}
         </Typography>
       ))}
-      {users.roles.includes("admin") && (
+      {user.roles.includes("admin") && (
         <ActionPermLink
           linkText="Edit"
           linkTo={"/users/" + currentUser._id + "/edit"}

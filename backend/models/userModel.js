@@ -5,7 +5,7 @@ const subPhone = mongoose.Schema(
     number: { type: String },
     type: { type: String },
   },
-  { _id: false },
+  { _id: false }
 );
 
 const userSchema = mongoose.Schema(
@@ -45,10 +45,16 @@ const userSchema = mongoose.Schema(
         ref: "Permission",
       },
     ],
+    provider: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Provider",
+      },
+    ],
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 module.exports = mongoose.model("User", userSchema);

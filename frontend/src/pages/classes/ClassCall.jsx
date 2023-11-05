@@ -22,7 +22,7 @@ function ClassCall() {
     resetTimetables,
     {
       ids: timetableId,
-    },
+    }
   );
   const user = useSelector((state) => state.auth.user);
 
@@ -50,7 +50,7 @@ function ClassCall() {
           }}>
           <JaaSMeeting
             appId="criscoderebels"
-            roomName={timetableId}
+            roomName={timetable.classId}
             configOverwrite={{
               startWithAudioMuted: true,
               disableModeratorIndicator: true,

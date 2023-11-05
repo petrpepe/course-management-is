@@ -21,7 +21,7 @@ function TimetablePage() {
     "enrollments",
     getEnrollments,
     resetEnrollments,
-    { ids: user.roles.includes("admin") ? id || user._id : user._id }
+    { ids: id || user._id }
   );
   const { classes, status: classStatus } = useGetData(
     "classes",

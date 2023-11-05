@@ -25,7 +25,7 @@ export const register = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
@@ -58,7 +58,7 @@ export const forgotPassword = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const setNewPassword = createAsyncThunk(
@@ -75,7 +75,7 @@ export const setNewPassword = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const updateAuth = createAsyncThunk(
@@ -93,19 +93,14 @@ export const updateAuth = createAsyncThunk(
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
-  },
+  }
 );
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    reset: (state) => {
-      state.isError = false;
-      state.isSuccess = false;
-      state.isLoading = false;
-      state.message = "";
-    },
+    reset: (state) => initialState,
   },
   extraReducers: (builder) => {
     builder

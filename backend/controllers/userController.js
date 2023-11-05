@@ -66,7 +66,7 @@ const createUser = asyncHandler(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(
     password ? password : Math.random().toString(36).slice(-8),
-    salt,
+    salt
   );
 
   const user = await User.create({
@@ -78,6 +78,7 @@ const createUser = asyncHandler(async (req, res) => {
     roles: req.body.roles,
     estraPerms: req.body.extraPerms,
     password: hashedPassword,
+    provider,
   });
 
   if (user) {
@@ -109,7 +110,7 @@ const createUser = asyncHandler(async (req, res) => {
           "<p>If you won't set it in a week <a href='http://localhost:3000/login/" +
           user.email +
           "'>click here</a>.</p>" +
-          "<p>crsis</p>",
+          "<p>crsis</p>"
       );
     } catch (error) {
       res.status(500);
@@ -125,6 +126,7 @@ const createUser = asyncHandler(async (req, res) => {
       phone: user.phone,
       roles: user.roles,
       estraPerms: user.extraPerms,
+      provider: user.provider,
     });
   } else {
     res.status(400);
@@ -156,6 +158,7 @@ const loginUser = asyncHandler(async (req, res) => {
       rolePermissions: permsRoles.rolePermissions,
       extraPerms: permsRoles.userPermissions,
       token: generateToken(user._id),
+      provider: user.provider,
     });
   } else {
     res.status(400);
@@ -183,7 +186,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     try {
       await sendEmail(
         "crsis@noreplycris.com",
-        email,
+        "svobodapetr803@gmail.com",
         "",
         "Forgotten password",
         "<div>" +
@@ -194,7 +197,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
           " >Click here to reset your password!</a></p>" +
           "</ br>" +
           "<p>You have a week to change it.</p>" +
-          "<p>crsis</p>",
+          "<p>crsis</p>"
       );
 
       res.status(200);
@@ -226,7 +229,7 @@ const setNewPassword = asyncHandler(async (req, res) => {
       { $set: { password: hashedPassword } },
       {
         new: true,
-      },
+      }
     );
 
     const permsRoles = await getRolesAndPermsNames(updatedUser);
@@ -298,6 +301,7 @@ const updateUser = asyncHandler(async (req, res) => {
     roles: permsRoles.userRoles,
     rolePermissions: permsRoles.rolePermissions,
     extraPerms: permsRoles.userPermissions,
+    provider: updatedUser.provider,
   });
 });
 
@@ -317,17 +321,17 @@ const deleteUser = asyncHandler(async (req, res) => {
   await Enrollment.updateMany(
     { student: user._id },
     { $pull: { student: user._id } },
-    { multi: true },
+    { multi: true }
   );
   await Class.updateMany(
     { lectors: user._id },
     { $pull: { lectors: user._id } },
-    { multi: true },
+    { multi: true }
   );
   await Timetable.updateMany(
     { extraUser: user._id },
     { $pull: { extraUser: user._id } },
-    { multi: true },
+    { multi: true }
   );
   await Attendance.deleteMany({ userId: user._id });
 
@@ -399,28 +403,13 @@ async function getRolesAndPermsNames(user) {
  * @returns rolesNames
  */
 async function getRolesNames(rolesIds) {
-  let rolesOut = [];
-
-  await Role.find({})
+  let rolesNames = await Role.find({
+    _id: { $in: rolesIds.map((r) => mongoose.Types.ObjectId(r)) },
+  })
     .select("_id name")
-    .then((roles) => {
-      rolesOut = roles;
-    })
     .catch((e) => {
       throw new Error(e);
     });
-
-  let rolesNames = new Map();
-  for (const roleId of rolesIds) {
-    let roleName = rolesOut
-      .map((role) => {
-        if (roleId.toString() === role._id.toString()) return role.name;
-        else return null;
-      })
-      .filter((role) => role != null)
-      .flat();
-    rolesNames.set(roleId, roleName);
-  }
 
   return rolesNames;
 }

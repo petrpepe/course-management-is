@@ -3,6 +3,7 @@ const Class = require("../models/classModel");
 const Lesson = require("../models/lessonModel");
 const Timetable = require("../models/timetableModel");
 const Enrollment = require("../models/enrollmentModel");
+const Role = require("../models/roleModel");
 const mongoose = require("mongoose");
 
 /**
@@ -12,17 +13,29 @@ const mongoose = require("mongoose");
  */
 const getClasses = asyncHandler(async (req, res) => {
   let arg = {};
+  const isAdmin = req.userRoles.includes("admin");
   //zápis enrollments
-  if (req.query.id && req.query.id != null) {
+  if (req.query.id) {
     const ids = Array.isArray(req.query.id)
       ? req.query.id.map((id) => new mongoose.Types.ObjectId(id))
       : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id));
     arg = { ...arg, _id: { $in: ids } };
   }
 
-  if (req.query.keyword && req.query.keyword != null) {
+  if (req.query.keyword) {
     const keyword = new RegExp(".*" + req.query.keyword + ".*", "i");
     arg = { ...arg, title: { $regex: keyword } };
+  }
+
+  if (isAdmin) {
+    arg.course = { $in: req.userCourses.map((c) => c._id) };
+  } else if (arg._id) {
+    const filteredUserClasses = req.userClasses.filter((c) =>
+      arg._id.$in.map((a) => a.toString()).includes(c.classId.toString())
+    );
+    arg._id.$in = filteredUserClasses.map((c) => c.classId);
+  } else {
+    arg._id = { $in: req.userClasses.map((c) => c.classId) };
   }
 
   const classVar = await Class.find(arg);
@@ -34,16 +47,6 @@ const getClasses = asyncHandler(async (req, res) => {
  * @desc Create Class
  * @route POST /api/classes
  * @access Private
- * courseId => get lessons (slo by taky z frontendu alespon lessonIds s orderNum a to staci?!! asi jo),
- * z frontendu: classId, datetime prvni attendance, attendees z class
- * vytvorit az tady nebo uz rovnou na frontendu? Prvni mozna frontend zbytek tu
- * req.body = {
- *   datetime: classDatetime + (7 * for pocet lekci),
- *   class: classId,
- *   lessonId: lessonId z course lessons a index je to pole,
- *   attendees: [nejdriv prazdne a pak po zapisu ucitelem],
- *   repeatCount: vytvorit attendaces s lekcemi z course jinak bez
- * }
  */
 const setClass = asyncHandler(async (req, res) => {
   const { title } = req.body;
@@ -55,7 +58,7 @@ const setClass = asyncHandler(async (req, res) => {
   req.body.course = new mongoose.Types.ObjectId(req.body.course);
 
   const lessons = await Lesson.find({ course: req.body.course }).select(
-    "-content",
+    "-content"
   );
   const classVar = await Class.create(req.body);
 
@@ -112,7 +115,7 @@ const updateClass = asyncHandler(async (req, res) => {
         {
           $and: [{ classId: timetable.classId }, { lesson: timetable.lesson }],
         },
-        timetable,
+        timetable
       );
     }
   }
