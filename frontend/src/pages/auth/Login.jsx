@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import LoginIcon from "@mui/icons-material/Login";
 import { login, forgotPassword } from "../../features/auth/authSlice";
 import { Status } from "../../features/Status";
-import { Alert, AlertTitle, Snackbar } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -63,17 +62,6 @@ function Login() {
 
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>
-      <Snackbar
-        open
-        autoHideDuration={1000}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
-        <Alert severity="error" sx={{ textAlign: "left" }}>
-          <AlertTitle>
-            <strong>Error</strong>
-          </AlertTitle>
-          This is an error alert
-        </Alert>
-      </Snackbar>
       <Typography variant="h2">
         <LoginIcon fontSize="large" />{" "}
         {isForgotPassword ? "Forgot password?" : "Login"}
