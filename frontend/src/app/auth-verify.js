@@ -1,4 +1,4 @@
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ const AuthVerify = () => {
     if (!user) navigate("/login");
     if (user && !user.token) navigate("/logout");
     if (user && user.token) {
-      const decodedJwt = jwt_decode(user.token);
+      const decodedJwt = jwtDecode(user.token);
       if (decodedJwt.exp * 1000 < Date.now()) {
         navigate("/logout");
       }

@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { JaaSMeeting } from "@jitsi/react-sdk";
 import { Status } from "../../features/Status";
 import useGetData from "../../hooks/useGetData";
-//import Typography from "@mui/material/Typography"
 import CircularProgress from "@mui/material/CircularProgress";
 import {
   getTimetables,
@@ -11,7 +10,7 @@ import {
 } from "../../features/timetables/timetableSlice";
 import Box from "@mui/material/Box";
 import ClassCallDetails from "../../components/ClassCallDetails";
-import { Paper } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import ClassLessonTitle from "../../components/ClassLessonTitle";
 
 function ClassCall() {
@@ -49,7 +48,7 @@ function ClassCall() {
             height: "500px",
           }}>
           <JaaSMeeting
-            appId="criscoderebels"
+            appId="vpaas-magic-cookie-833fb394f589407bb89b0c4484d9d7fa"
             roomName={timetable.classId}
             configOverwrite={{
               startWithAudioMuted: true,
@@ -59,14 +58,18 @@ function ClassCall() {
             }}
             interfaceConfigOverwrite={{
               DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
+              VIDEO_LAYOUT_FIT: "nocrop",
+              MOBILE_APP_PROMO: false,
+              TILE_VIEW_MAX_COLUMNS: 4,
             }}
             userInfo={{
               displayName: user.lastName + " " + user.firstName,
+              email: user.email,
             }}
-            onApiReady={(externalApi) => {
+            /*onApiReady={(externalApi) => {
               // here you can attach custom event listeners to the Jitsi Meet External API
               // you can also store it locally to execute commands
-            }}
+            }}*/
             getIFrameRef={(iframeRef) => {
               iframeRef.style.height = "100%";
             }}

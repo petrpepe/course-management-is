@@ -18,44 +18,51 @@ const authenticate = asyncHandler(async (req, res, next) => {
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
+    //try {
+    token = req.headers.authorization.split(" ")[1];
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.user = await User.findById(decoded.id).select("-password");
+    req.user = await User.findById(decoded.id).select("-password");
 
-      await populateCache();
+    await populateCache();
 
-      req.userRoles = req.user.roles.map(
-        (userRole) =>
-          cache.roles.filter((cacheRole) => cacheRole._id.equals(userRole))[0]
-            .name
-      );
+    req.userRoles = req.user.roles.map(
+      (userRole) =>
+        cache.roles.filter((cacheRole) => cacheRole._id.equals(userRole))[0]
+          .name
+    );
 
-      req.userClasses = await Enrollment.find({
-        student: req.user._id,
-      }).select("classId");
+    req.userClasses = await Enrollment.find({
+      student: req.user._id,
+    }).select("classId");
 
-      req.userCourses = await Course.find({
-        $or: [
-          { _id: { $in: req.userClasses.map((c) => c.classId) } },
-          { owner: { $in: req.user.provider } },
-        ],
-      });
+    const classesLector = await Class.find({
+      lectors: req.user._id,
+    }).select("_id");
 
-      const providerIds = req.userCourses
-        .map((c) => c.owner)
-        .concat(req.user.provider);
+    req.userClasses = req.userClasses
+      .map((c) => new mongoose.Types.ObjectId(c.classId))
+      .concat(classesLector.map((c) => new mongoose.Types.ObjectId(c._id)));
+    req.userCourses = await Course.find({
+      $or: [
+        { _id: { $in: req.userClasses } },
+        { owner: { $in: req.user.provider } },
+      ],
+    });
 
-      if (providerIds.length > 0)
-        req.userProvider = await Provider.find({ _id: { $in: providerIds } });
+    const providerIds = req.userCourses
+      .map((c) => c.owner)
+      .concat(req.user.provider);
 
-      next();
-    } catch (error) {
+    if (providerIds.length > 0)
+      req.userProvider = await Provider.find({ _id: { $in: providerIds } });
+
+    next();
+    /*} catch (error) {
       res.status(401);
       throw new Error("Unauthorized");
-    }
+    }*/
   }
 
   if (!token) {

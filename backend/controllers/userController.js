@@ -39,8 +39,18 @@ const getUsers = asyncHandler(async (req, res) => {
   }
 
   const users = await User.find(arg).select("-password");
+  const roles = await Role.find({
+    _id: { $in: users.flatMap((u) => u.roles) },
+  });
+  let filteredUsers = users.filter(
+    (u) =>
+      !roles
+        .filter((r) => u.roles.includes(r._id))
+        .map((r) => r.name)
+        .includes("admin")
+  );
 
-  res.status(200).json(users);
+  res.status(200).json(filteredUsers);
 });
 
 /**

@@ -31,11 +31,11 @@ const getClasses = asyncHandler(async (req, res) => {
     arg.course = { $in: req.userCourses.map((c) => c._id) };
   } else if (arg._id) {
     const filteredUserClasses = req.userClasses.filter((c) =>
-      arg._id.$in.map((a) => a.toString()).includes(c.classId.toString())
+      arg._id.$in.map((a) => a.toString()).includes(c.toString())
     );
-    arg._id.$in = filteredUserClasses.map((c) => c.classId);
+    arg._id.$in = filteredUserClasses;
   } else {
-    arg._id = { $in: req.userClasses.map((c) => c.classId) };
+    arg._id = { $in: req.userClasses };
   }
 
   const classVar = await Class.find(arg);
