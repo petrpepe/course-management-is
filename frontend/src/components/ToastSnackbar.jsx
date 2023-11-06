@@ -1,7 +1,19 @@
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import { useEffect, useState } from "react";
+import { Status } from "../features/Status";
 
-const ToastSnackbar = ({ open, setOpen, severity, message }) => {
+const ToastSnackbar = ({ status, message }) => {
+  const [open, setOpen] = useState(false);
+  const [severity, setSeverity] = useState("info");
+
+  useEffect(() => {
+    if (status === Status.Error) {
+      setOpen(true);
+      setSeverity("error");
+    }
+  }, [status, setOpen]);
+
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;

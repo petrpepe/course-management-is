@@ -11,9 +11,14 @@ import { Status } from "../../features/Status";
 import CircularProgress from "@mui/material/CircularProgress";
 import ActionPermLink from "../../components/form/ActionPermLink";
 import Grid from "@mui/material/Unstable_Grid2";
+import ToastSnackbar from "../../components/ToastSnackbar";
 
 function Courses() {
-  const { courses, status } = useGetData("courses", getCourses, resetCourses);
+  const { courses, message, status } = useGetData(
+    "courses",
+    getCourses,
+    resetCourses
+  );
 
   return (
     <>
@@ -24,7 +29,7 @@ function Courses() {
         linkTo="/courses/create"
         perm="courseCreate"
       />
-
+      <ToastSnackbar message={message} status={status} />
       {status === Status.Loading ? (
         <CircularProgress />
       ) : courses.length > 0 ? (
