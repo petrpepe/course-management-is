@@ -14,7 +14,7 @@ import Box from "@mui/material/Box";
 import LoadingOrError from "../LoadingOrError";
 import Button from "@mui/material/Button";
 
-function Timetable({ classes, userIds, studentId }) {
+function Timetable({ classes, userIds }) {
   const ids = classes.map((c) => c._id);
   if (userIds) ids.push(userIds);
   const { timetables, status: timetableStatus } = useGetData(
