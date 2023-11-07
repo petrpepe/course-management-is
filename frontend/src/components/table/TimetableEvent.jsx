@@ -14,9 +14,10 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { Status } from "../../features/Status";
-import { format, parseISO } from "date-fns/esm";
+import { format, parseISO, isFuture } from "date-fns/esm";
 import LoadingOrError from "../LoadingOrError";
 import { getLocale } from "../../utils";
+import { useSelector } from "react-redux";
 
 function TimetableEvent({
   timetables,
@@ -24,8 +25,8 @@ function TimetableEvent({
   lessonIds,
   lectorIds,
   classTitle,
-  isUser,
 }) {
+  const { user } = useSelector((state) => state.auth);
   const { lessons, status: lessonStatus } = useGetData(
     "lessons",
     getLessons,
@@ -37,7 +38,7 @@ function TimetableEvent({
     getAttendances,
     resetAttendances,
     {
-      ids: timetableIds,
+      ids: user._id,
     }
   );
   const { users, status: userStatus } = useGetData(
@@ -46,6 +47,7 @@ function TimetableEvent({
     resetUsers,
     { ids: lectorIds }
   );
+
   const locale = getLocale();
 
   if (
@@ -69,14 +71,20 @@ function TimetableEvent({
         .map((u) => u.email)
         .join(", ");
       userAttendance = attendances.filter((a) => a.timetableId === t._id)[0];
-      event.background = isUser
-        ? userAttendance
-          ? userAttendance.attended === "true"
-            ? "green"
-            : "red"
-          : "future/nezapsano"
-        : "normal";
-
+      event.background = userAttendance
+        ? userAttendance.attended === "true"
+          ? "green"
+          : "red"
+        : isFuture(
+            parseISO(
+              format(parseISO(event.datetime), "Pp", {
+                locale: locale,
+              })
+            )
+          )
+        ? "white"
+        : "red";
+      console.log(event.background);
       return (
         <ListItem key={t._id} sx={{ width: "100%", display: "block" }}>
           <ListItemButton component={ReactLink} to={"/classes/call/" + t._id}>

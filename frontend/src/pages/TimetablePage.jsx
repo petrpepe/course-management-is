@@ -31,6 +31,7 @@ function TimetablePage() {
       ids: id || enrollments.map((e) => e.classId),
     }
   );
+
   const userIds = new Set([
     ...classes.map((c) => c.lectors),
     ...enrollments.map((e) => e.student),

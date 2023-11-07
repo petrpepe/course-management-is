@@ -14,7 +14,7 @@ import Box from "@mui/material/Box";
 import LoadingOrError from "../LoadingOrError";
 import Button from "@mui/material/Button";
 
-function Timetable({ classes, userIds, byUser }) {
+function Timetable({ classes, userIds, studentId }) {
   const ids = classes.map((c) => c._id);
   if (userIds) ids.push(userIds);
   const { timetables, status: timetableStatus } = useGetData(
@@ -64,7 +64,6 @@ function Timetable({ classes, userIds, byUser }) {
                 classTitle={
                   classes.filter((c) => c._id === ts.classId)[0].title
                 }
-                isUser={byUser}
                 lectorIds={lectorIds}
                 lessonIds={lessonIds}
                 timetableIds={timetableIds}
