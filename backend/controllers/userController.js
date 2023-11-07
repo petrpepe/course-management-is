@@ -183,7 +183,6 @@ const loginUser = asyncHandler(async (req, res) => {
  */
 const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
-
   const user = await User.findOne({ email });
 
   if (user) {
@@ -227,8 +226,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
  */
 const setNewPassword = asyncHandler(async (req, res) => {
   const { userId, password, password1 } = req.body;
-
-  const user = await User.findOne({ userId });
+  const user = await User.findById(userId);
 
   if (user && password === password1) {
     const salt = await bcrypt.genSalt(10);

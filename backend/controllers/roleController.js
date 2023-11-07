@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Role = require("../models/roleModel");
 const User = require("../models/userModel");
+const mongoose = require("mongoose");
 
 /**
  * @desc Get Roles
@@ -8,7 +9,15 @@ const User = require("../models/userModel");
  * @access Private
  */
 const getRoles = asyncHandler(async (req, res) => {
-  const Roles = await Role.find();
+  let arg = {};
+  if (req.query.id) {
+    const ids = Array.isArray(req.query.id)
+      ? req.query.id.map((id) => new mongoose.Types.ObjectId(id))
+      : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id));
+    arg = { ...arg, _id: { $in: ids } };
+  }
+
+  const Roles = await Role.find(arg);
 
   res.status(200).json(Roles);
 });
@@ -65,7 +74,7 @@ const deleteRole = asyncHandler(async (req, res) => {
   await User.updateMany(
     { roles: role._id },
     { $pull: { roles: role._id } },
-    { multi: true },
+    { multi: true }
   );
 
   await role.deleteOne();

@@ -19,13 +19,7 @@ import LoadingOrError from "../LoadingOrError";
 import { getLocale } from "../../utils";
 import { useSelector } from "react-redux";
 
-function TimetableEvent({
-  timetables,
-  timetableIds,
-  lessonIds,
-  lectorIds,
-  classTitle,
-}) {
+function TimetableEvent({ timetables, lessonIds, lectorIds, classTitle }) {
   const { user } = useSelector((state) => state.auth);
   const { lessons, status: lessonStatus } = useGetData(
     "lessons",
@@ -71,26 +65,27 @@ function TimetableEvent({
         .map((u) => u.email)
         .join(", ");
       userAttendance = attendances.filter((a) => a.timetableId === t._id)[0];
-      event.background = userAttendance
-        ? userAttendance.attended === "true"
-          ? "green"
-          : "red"
-        : isFuture(
-            parseISO(
-              format(parseISO(event.datetime), "Pp", {
-                locale: locale,
-              })
-            )
-          )
-        ? "white"
-        : "red";
-      console.log(event.background);
+      if (user.roles.includes("student")) {
+        event.background = userAttendance
+          ? userAttendance.attended === true
+            ? "green"
+            : "red"
+          : !isFuture(
+              parseISO(
+                format(parseISO(event.datetime), "Pp", {
+                  locale: locale,
+                })
+              )
+            ) && "red";
+      }
+
       return (
         <ListItem key={t._id} sx={{ width: "100%", display: "block" }}>
           <ListItemButton component={ReactLink} to={"/classes/call/" + t._id}>
             <ListItemText
               primary={classTitle + ": " + event.lessonTitle}
               secondary={event.lectors}
+              sx={{ color: event.background }}
             />
             <ListItemText
               sx={{ flex: "none" }}

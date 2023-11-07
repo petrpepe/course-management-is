@@ -23,7 +23,7 @@ export const createRole = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const updateRole = createAsyncThunk(
@@ -41,21 +41,29 @@ export const updateRole = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
-export const getRoles = createAsyncThunk("roles/get", async (_, thunkAPI) => {
-  try {
-    const token = thunkAPI.getState().auth.user.token;
-    return await roleService.getRoles(token);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-    return thunkAPI.rejectWithValue(message);
+export const getRoles = createAsyncThunk(
+  "roles/get",
+  async (roleData, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await roleService.getRoles(
+        roleData.ids ? roleData.ids : [],
+        token
+      );
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const deleteRole = createAsyncThunk(
   "roles/delete",
@@ -72,7 +80,7 @@ export const deleteRole = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const roleSlice = createSlice({
@@ -124,7 +132,7 @@ export const roleSlice = createSlice({
       .addCase(deleteRole.fulfilled, (state, action) => {
         state.status = Status.Success;
         state.roles = state.roles.filter(
-          (role) => role._id !== action.payload.id,
+          (role) => role._id !== action.payload.id
         );
       })
       .addCase(deleteRole.rejected, (state, action) => {

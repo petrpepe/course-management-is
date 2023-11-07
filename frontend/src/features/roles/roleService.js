@@ -26,11 +26,17 @@ const updateRole = async (roleId, roleData, token) => {
   return response.data;
 };
 
-const getRoles = async (token) => {
+const getRoles = async (ids, token) => {
+  let params = new URLSearchParams();
+  if (ids)
+    typeof ids === "string"
+      ? params.append("id", ids)
+      : ids.map((id) => params.append("id", id));
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    params: params,
   };
 
   const response = await axios.get(API_URL, config);

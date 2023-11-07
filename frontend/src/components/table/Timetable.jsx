@@ -39,7 +39,6 @@ function Timetable({ classes, userIds }) {
           compareAsc(parseISO(a.datetime), parseISO(b.datetime))
         );
     }
-    const timetableIds = timetables.map((t) => t._id);
     const lessonIds = timetables.map((t) => t.lesson);
     const lectorIds = [...new Set(timetables.map((t) => t.lector))];
 
@@ -66,7 +65,6 @@ function Timetable({ classes, userIds }) {
                 }
                 lectorIds={lectorIds}
                 lessonIds={lessonIds}
-                timetableIds={timetableIds}
               />
             </List>
           </Box>

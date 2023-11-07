@@ -24,16 +24,23 @@ const updateAttendance = async (attendanceId, attendanceData, token) => {
   const response = await axios.put(
     API_URL + attendanceId,
     attendanceData,
-    config,
+    config
   );
 
   return response.data;
 };
 
-const getAttendances = async (names, itemId, token) => {
+const getAttendances = async (ids, dates, token) => {
   let params = new URLSearchParams();
-  params.append("names", names ? names : false);
-  if (itemId) params.append("itemId", itemId);
+  if (ids) {
+    typeof ids === "string"
+      ? params.append("id", ids)
+      : ids.map((id) => params.append("id", id));
+  }
+  if (dates && dates.startDatetime && dates.endDatetime) {
+    params.append("startDatetime", dates.startDatetime);
+    params.append("endDatetime", dates.endDatetime);
+  }
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,

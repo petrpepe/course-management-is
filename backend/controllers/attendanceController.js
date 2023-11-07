@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Attendance = require("../models/attendanceModel");
+const mongoose = require("mongoose");
 
 /**
  * @desc Get Attendances
@@ -71,7 +72,7 @@ const updateAttendance = asyncHandler(async (req, res) => {
   const updatedAttendance = await Attendance.findByIdAndUpdate(
     req.params.id,
     req.body,
-    { new: true },
+    { new: true }
   );
 
   res.status(200).json(updatedAttendance);

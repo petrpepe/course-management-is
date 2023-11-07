@@ -23,7 +23,7 @@ export const createAttendance = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const updateAttendance = createAsyncThunk(
@@ -34,7 +34,7 @@ export const updateAttendance = createAsyncThunk(
       return await attendanceService.updateAttendance(
         attendanceData._id,
         attendanceData,
-        token,
+        token
       );
     } catch (error) {
       const message =
@@ -45,7 +45,7 @@ export const updateAttendance = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const getAttendances = createAsyncThunk(
@@ -54,9 +54,9 @@ export const getAttendances = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await attendanceService.getAttendances(
-        data.names,
-        data.itemId ? data.itemId : "",
-        token,
+        data.ids ? data.ids : [],
+        data.dates,
+        token
       );
     } catch (error) {
       const message =
@@ -67,7 +67,7 @@ export const getAttendances = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const deleteAttendance = createAsyncThunk(
@@ -85,7 +85,7 @@ export const deleteAttendance = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const attendanceSlice = createSlice({
@@ -113,7 +113,7 @@ export const attendanceSlice = createSlice({
       .addCase(updateAttendance.fulfilled, (state, action) => {
         state.status = Status.Success;
         let index = state.attendances.findIndex(
-          (obj) => obj._id === action.payload._id,
+          (obj) => obj._id === action.payload._id
         );
         state.attendances[index] = action.payload;
       })
@@ -138,7 +138,7 @@ export const attendanceSlice = createSlice({
       .addCase(deleteAttendance.fulfilled, (state, action) => {
         state.status = Status.Success;
         state.attendances = state.attendances.filter(
-          (attendance) => attendance._id !== action.payload.id,
+          (attendance) => attendance._id !== action.payload.id
         );
       })
       .addCase(deleteAttendance.rejected, (state, action) => {

@@ -11,7 +11,7 @@ axios.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 const API_URL = "/api/users/";
@@ -41,7 +41,9 @@ const logout = () => {
 };
 
 const forgotPassword = async (userData) => {
-  const response = await axios.post(API_URL + "forgotPassword", userData);
+  const response = await axios.post(API_URL + "forgotPassword", {
+    email: userData,
+  });
 
   return response.data;
 };

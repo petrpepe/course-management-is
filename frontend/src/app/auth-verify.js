@@ -8,7 +8,6 @@ const AuthVerify = () => {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!user) navigate("/login");
     if (user && !user.token) navigate("/logout");
     if (user && user.token) {
       const decodedJwt = jwtDecode(user.token);
