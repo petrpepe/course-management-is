@@ -12,10 +12,10 @@ import Typography from "@mui/material/Typography";
 import { Status } from "../../features/Status";
 import { useEffect, useState } from "react";
 
-function AttendanceTable({ atts = [], isAdmin = [], status }) {
+function AttendanceTable({ attendances = [], title, status }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
-  const [sortedAtts, setSortedAtts] = useState(atts);
+  const [sortedAtts, setSortedAtts] = useState(attendances);
   const headers = [
     { id: "name", label: "Name" },
     { id: "description", label: "Description" },
@@ -23,9 +23,9 @@ function AttendanceTable({ atts = [], isAdmin = [], status }) {
 
   useEffect(() => {
     if (status === Status.Success) {
-      setSortedAtts(atts);
+      setSortedAtts(attendances);
     }
-  }, [status, atts]);
+  }, [status, attendances]);
 
   const setSortOrderBy = (property) => (event) => {
     const isAsc = orderBy === property && order === "asc";
@@ -40,7 +40,7 @@ function AttendanceTable({ atts = [], isAdmin = [], status }) {
           return order === "asc" ? 1 : -1;
         }
         return 0;
-      }),
+      })
     );
   };
 

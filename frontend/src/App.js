@@ -32,6 +32,7 @@ import { useMediaQuery } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { useMemo, useState } from "react";
 import Profile from "./pages/users/Profile";
+import Attendances from "./pages/Attendances";
 
 export const ProtectedRoute = ({ perm, children }) => {
   const { user } = useSelector((state) => state.auth);
@@ -230,6 +231,14 @@ function App() {
                   element={
                     <ProtectedRoute perm="timetablesGet">
                       <TimetablePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/attendances"
+                  element={
+                    <ProtectedRoute perm="attendanceGet">
+                      <Attendances />
                     </ProtectedRoute>
                   }
                 />
