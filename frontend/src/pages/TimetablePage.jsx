@@ -34,7 +34,7 @@ function TimetablePage() {
 
   const userIds = new Set([
     ...classes.map((c) => c.lectors),
-    ...enrollments.map((e) => e.student),
+    ...enrollments.map((e) => e.students),
   ]);
   userIds.has("");
   if (classStatus === Status.Success) {

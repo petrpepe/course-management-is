@@ -46,7 +46,7 @@ export const updateRole = createAsyncThunk(
 
 export const getRoles = createAsyncThunk(
   "roles/get",
-  async (roleData, thunkAPI) => {
+  async (roleData = {}, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await roleService.getRoles(

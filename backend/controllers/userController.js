@@ -327,8 +327,8 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 
   await Enrollment.updateMany(
-    { student: user._id },
-    { $pull: { student: user._id } },
+    { students: user._id },
+    { $pull: { students: user._id } },
     { multi: true }
   );
   await Class.updateMany(

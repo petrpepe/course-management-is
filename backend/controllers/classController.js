@@ -3,6 +3,7 @@ const Class = require("../models/classModel");
 const Lesson = require("../models/lessonModel");
 const Timetable = require("../models/timetableModel");
 const Enrollment = require("../models/enrollmentModel");
+const Attendance = require("../models/attendanceModel");
 const Role = require("../models/roleModel");
 const mongoose = require("mongoose");
 
@@ -137,9 +138,12 @@ const deleteClass = asyncHandler(async (req, res) => {
   }
 
   await Enrollment.deleteMany({ classId: classVar._id.toString() });
-  const timetables = await Timetable.deleteMany({
+
+  const timetables = await Timetable.find({ classId: classVar._id });
+  await Timetable.deleteMany({
     classId: classVar._id.toString(),
   });
+
   await Attendance.deleteMany({
     timetableId: { $in: timetables.map((t) => t._id.toString()) },
   });

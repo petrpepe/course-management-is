@@ -29,6 +29,7 @@ import { parseISO } from "date-fns/esm";
 function ClassAction() {
   const [isCreated, setIsCreated] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [changed, setChanged] = useState(false);
 
   let today = new Date();
   const day = today.getDate();
@@ -84,6 +85,7 @@ function ClassAction() {
   }, [id, classStatus, classes]);
 
   const onChange = (e) => {
+    setChanged(true);
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
@@ -99,10 +101,11 @@ function ClassAction() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    formData.startDateTime = formData.startDateTime.toLocaleString();
+    if (changed) {
+      formData.startDateTime = formData.startDateTime.toLocaleString();
+    }
 
     if (id) {
-      formData._id = id;
       dispatch(updateClass(formData));
       currentClassId = id;
     } else {
@@ -117,7 +120,7 @@ function ClassAction() {
   }
 
   if (
-    (id && classStatus === Status.Loading) ||
+    classStatus === Status.Loading ||
     roleStatus === Status.Loading ||
     courseStatus === Status.Loading ||
     userStatus === Status.Loading ||
@@ -227,11 +230,12 @@ function ClassAction() {
         </Button>
       </form>
       <StudentModal
-        users={{ users: users, status: userStatus }}
+        users={users}
         roles={roles}
         defaultOpened={openModal}
         setOpenModal={setOpenModal}
-        classId={currentClassId}
+        classId={currentClassId || id}
+        isCreated={isCreated}
       />
     </Paper>
   );

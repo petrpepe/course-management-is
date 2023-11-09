@@ -23,7 +23,7 @@ export const createEnrollment = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const updateEnrollment = createAsyncThunk(
@@ -32,9 +32,9 @@ export const updateEnrollment = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await enrollmentService.updateEnrollment(
-        enrollmentData.classId,
+        enrollmentData._id,
         enrollmentData,
-        token,
+        token
       );
     } catch (error) {
       const message =
@@ -45,7 +45,7 @@ export const updateEnrollment = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const getEnrollments = createAsyncThunk(
@@ -55,7 +55,7 @@ export const getEnrollments = createAsyncThunk(
       const token = thunkAPI.getState().auth.user.token;
       return await enrollmentService.getEnrollments(
         enrollmentData.ids || [],
-        token,
+        token
       );
     } catch (error) {
       const message =
@@ -66,7 +66,7 @@ export const getEnrollments = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const deleteEnrollment = createAsyncThunk(
@@ -84,7 +84,7 @@ export const deleteEnrollment = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const enrollmentSlice = createSlice({
@@ -136,7 +136,7 @@ export const enrollmentSlice = createSlice({
       .addCase(deleteEnrollment.fulfilled, (state, action) => {
         state.status = Status.Success;
         state.enrollments = state.enrollments.filter(
-          (enrollment) => enrollment._id !== action.payload.id,
+          (enrollment) => enrollment._id !== action.payload.id
         );
       })
       .addCase(deleteEnrollment.rejected, (state, action) => {

@@ -34,7 +34,7 @@ const authenticate = asyncHandler(async (req, res, next) => {
     );
 
     req.userClasses = await Enrollment.find({
-      student: req.user._id,
+      students: req.user._id,
     }).select("classId");
 
     const classesLector = await Class.find({

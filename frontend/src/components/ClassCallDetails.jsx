@@ -21,7 +21,7 @@ function ClassCallDetails({ timetable }) {
     {
       ids: timetable.lesson,
       detail: true,
-    },
+    }
   );
   const { enrollments, status: enrollmentStatus } = useGetData(
     "enrollments",
@@ -29,7 +29,7 @@ function ClassCallDetails({ timetable }) {
     resetEnrollments,
     {
       ids: timetable.classId,
-    },
+    }
   );
 
   if (lessonStatus === Status.Loading || enrollmentStatus === Status.Loading) {
@@ -55,7 +55,7 @@ function ClassCallDetails({ timetable }) {
       {enrollmentStatus === Status.Success && (
         <LessonAttendanceTable
           timetable={timetable}
-          enrolledUsers={enrollments.flatMap((e) => e.student)}
+          enrolledUsers={enrollments.flatMap((e) => e.students)}
         />
       )}
     </Box>

@@ -15,6 +15,7 @@ import {
 import UsersList from "../../components/users/UsersList";
 import Timetable from "../../components/table/Timetable";
 import ActionPermLink from "../../components/form/ActionPermLink";
+import { useEffect, useState } from "react";
 
 function ClassDetail() {
   const { id } = useParams();
@@ -30,6 +31,13 @@ function ClassDetail() {
     resetEnrollments,
     { ids: id }
   );
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    if (enrollmentStatus === Status.Success) {
+      setStudents(enrollments[0].students);
+    }
+  }, [enrollmentStatus, enrollments]);
 
   if (
     classStatus === Status.Loading ||
@@ -45,10 +53,7 @@ function ClassDetail() {
       <Typography variant="h3">{classes[0].description}</Typography>
       <CourseTitleLink courseId={classes[0].course} />
       <Timetable classIds={id} classes={classes} />
-      <UsersList
-        usersIds={enrollments.flatMap((e) => e.student)}
-        heading="students"
-      />
+      <UsersList usersIds={students} heading="students" />
       <UsersList usersIds={classes[0].lectors} heading="lectors" />
       <ActionPermLink
         linkText="Edit"
