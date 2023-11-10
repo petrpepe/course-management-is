@@ -13,6 +13,8 @@ import Typography from "@mui/material/Typography";
 import Timetable from "../components/table/Timetable";
 import { Status } from "../features/Status";
 import LoadingOrError from "../components/LoadingOrError";
+import CustomSelect from "../components/form/CustomSelect";
+import { getUsers, reset as resetUsers } from "../features/users/userSlice";
 
 function TimetablePage() {
   const { id } = useParams();
@@ -31,12 +33,17 @@ function TimetablePage() {
       ids: id || enrollments.map((e) => e.classId),
     }
   );
-
   const userIds = new Set([
     ...classes.map((c) => c.lectors),
     ...enrollments.map((e) => e.students),
   ]);
-  userIds.has("");
+  const { users, status: userStatus } = useGetData(
+    "users",
+    getUsers,
+    resetUsers,
+    { ids: userIds }
+  );
+
   if (classStatus === Status.Success) {
     return (
       <>

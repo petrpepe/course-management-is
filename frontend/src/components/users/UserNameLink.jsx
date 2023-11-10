@@ -9,7 +9,7 @@ function UserNameLink({ userId }) {
   const { users, status } = useGetData("users", getUsers, resetUsers, {
     ids: userId,
   });
-
+  console.log(userId);
   if (status === Status.Loading || status === Status.Idle) {
     return <CircularProgress />;
   }

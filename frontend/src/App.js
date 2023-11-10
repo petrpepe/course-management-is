@@ -219,7 +219,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/timetable"
+                  path="/timetable(/:id)(/:specId)"
                   element={
                     <ProtectedRoute perm="timetablesGet">
                       <TimetablePage />
@@ -227,15 +227,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/timetable/:id"
-                  element={
-                    <ProtectedRoute perm="timetablesGet">
-                      <TimetablePage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/attendances"
+                  path="/attendances(/:id)(/:specId)"
                   element={
                     <ProtectedRoute perm="attendanceGet">
                       <Attendances />

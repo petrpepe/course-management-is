@@ -70,13 +70,7 @@ function TimetableEvent({ timetables, lessonIds, lectorIds, classTitle }) {
           ? userAttendance.attended === true
             ? "green"
             : "red"
-          : !isFuture(
-              parseISO(
-                format(parseISO(event.datetime), "Pp", {
-                  locale: locale,
-                })
-              )
-            ) && "red";
+          : !isFuture(parseISO(event.datetime)) && "red";
       }
 
       return (

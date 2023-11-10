@@ -7,7 +7,6 @@ import useGetData from "../../hooks/useGetData";
 import { Status } from "../../features/Status";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import UserNameLink from "../../components/users/UserNameLink";
 import LessonsList from "../../components/LessonsList";
 import ActionPermLink from "../../components/form/ActionPermLink";
 
@@ -37,7 +36,6 @@ function CourseDetail() {
           Academic term {course.academicTerm}
         </Typography>
         <Typography variant="subtitle1">{course.description}</Typography>
-        <UserNameLink userId={course.owner} />
         <LessonsList courseId={course._id} />
         <ActionPermLink
           linkText="Edit"
