@@ -11,7 +11,7 @@ const getAttendances = asyncHandler(async (req, res) => {
   const { id, startDatetime, endDatetime } = req.query;
   let arg = {};
 
-  if (id) {
+  if (id && id.length > 0) {
     const ids = Array.isArray(id)
       ? id.map((id) => new mongoose.Types.ObjectId(id))
       : id.split(",").map((id) => new mongoose.Types.ObjectId(id));

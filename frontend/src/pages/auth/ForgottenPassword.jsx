@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import KeyIcon from "@mui/icons-material/Key";
-import { setNewPassword, reset } from "../../features/auth/authSlice";
-import { Status } from "../../features/Status";
+import { setNewPassword } from "../../features/auth/authSlice";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 
 function ForgottenPassword() {
@@ -18,17 +16,7 @@ function ForgottenPassword() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { userId } = useParams();
-
-  const { user, status, message } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (status === Status.Success || user) {
-      navigate("/");
-    }
-
-    dispatch(reset());
-  }, [user, status, message, navigate, dispatch]);
+  const { token } = useParams();
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -42,15 +30,12 @@ function ForgottenPassword() {
 
     const userData = {
       ...formData,
-      userId,
+      token,
     };
 
     dispatch(setNewPassword(userData));
+    navigate("/login");
   };
-
-  if (status === Status.Loading) {
-    return <CircularProgress />;
-  }
 
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>

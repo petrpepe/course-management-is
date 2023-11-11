@@ -71,7 +71,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/login/:userEmail" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/:userId/:token" element={<ForgottenPassword />} />
+            <Route path="/:token" element={<ForgottenPassword />} />
             {user && (
               <>
                 <Route
@@ -219,7 +219,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/timetable(/:id)(/:specId)"
+                  path="/timetable/:id?/:specId?"
                   element={
                     <ProtectedRoute perm="timetablesGet">
                       <TimetablePage />
@@ -227,7 +227,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/attendances(/:id)(/:specId)"
+                  path="/attendances/:id?/:specId?"
                   element={
                     <ProtectedRoute perm="attendanceGet">
                       <Attendances />

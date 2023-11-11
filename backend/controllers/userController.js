@@ -19,21 +19,22 @@ const Attendance = require("../models/attendanceModel");
  */
 const getUsers = asyncHandler(async (req, res) => {
   let arg = {};
+  const { id, keyword } = req.query;
 
-  if (req.query.id) {
-    const ids = Array.isArray(req.query.id)
-      ? req.query.id.map((id) => new mongoose.Types.ObjectId(id))
-      : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id));
+  if (id && id.length > 0) {
+    const ids = Array.isArray(id)
+      ? id.map((id) => new mongoose.Types.ObjectId(id))
+      : id.split(",").map((id) => new mongoose.Types.ObjectId(id));
     arg = { _id: { $in: ids } };
   }
 
-  if (req.query.keyword) {
-    const keyword = new RegExp(".*" + req.query.keyword + ".*", "i");
+  if (keyword) {
+    const keywordRE = new RegExp(".*" + keyword + ".*", "i");
     arg = {
       ...arg,
       $or: [
-        { firstName: { $regex: keyword } },
-        { lastName: { $regex: keyword } },
+        { firstName: { $regex: keywordRE } },
+        { lastName: { $regex: keywordRE } },
       ],
     };
   }
@@ -225,7 +226,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
  * @access Public
  */
 const setNewPassword = asyncHandler(async (req, res) => {
-  const { userId, password, password1 } = req.body;
+  const { token, password, password1 } = req.body;
+  const userId = jwt.decode(token).id;
+  console.log(userId);
   const user = await User.findById(userId);
 
   if (user && password === password1) {

@@ -12,6 +12,7 @@ function CustomSelect({
   formData,
   setFormData,
   multiple,
+  selectChange,
 }) {
   const [selected, setSelected] = React.useState(selectedItems);
 
@@ -37,7 +38,7 @@ function CustomSelect({
           multiple={multiple}
           disableCloseOnSelect={multiple}
           value={selected || null}
-          onChange={onSelectChange}
+          onChange={selectChange || onSelectChange}
           renderInput={(params) => <TextField {...params} label={label} />}
           options={items}
           getOptionLabel={(option) => option.title}

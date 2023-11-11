@@ -14,18 +14,19 @@ const mongoose = require("mongoose");
  */
 const getClasses = asyncHandler(async (req, res) => {
   let arg = {};
+  const { id, keyword } = req.query;
   const isAdmin = req.userRoles.includes("admin");
   //zápis enrollments
-  if (req.query.id) {
-    const ids = Array.isArray(req.query.id)
-      ? req.query.id.map((id) => new mongoose.Types.ObjectId(id))
-      : req.query.id.split(",").map((id) => new mongoose.Types.ObjectId(id));
+  if (id && id.length > 0) {
+    const ids = Array.isArray(id)
+      ? id.map((id) => new mongoose.Types.ObjectId(id))
+      : id.split(",").map((id) => new mongoose.Types.ObjectId(id));
     arg = { ...arg, _id: { $in: ids } };
   }
 
-  if (req.query.keyword) {
-    const keyword = new RegExp(".*" + req.query.keyword + ".*", "i");
-    arg = { ...arg, title: { $regex: keyword } };
+  if (keyword) {
+    const keywordRE = new RegExp(".*" + keyword + ".*", "i");
+    arg = { ...arg, title: { $regex: keywordRE } };
   }
 
   if (isAdmin) {

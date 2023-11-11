@@ -16,35 +16,41 @@ import {
 import { useState } from "react";
 import { Status } from "../features/Status";
 import LoadingOrError from "../components/LoadingOrError";
+import { useNavigate, useParams } from "react-router-dom";
 
 function Attendances() {
+  const { id, specId } = useParams();
   const { user } = useSelector((state) => state.auth);
-  const [formData, setFormData] = useState({
-    userId: user.roles.includes("student") ? user._id : "",
-    classId: "",
-  });
+  const navigate = useNavigate();
+  const [selected, setSelected] = useState([]);
+  const idArray = [id, specId].filter((i) => i !== undefined);
   const { users, status: userStatus } = useGetData(
     "users",
     getUsers,
     resetUsers,
-    { ids: formData.userId || "null" }
+    { ids: idArray }
   );
   const { classes, status: classStatus } = useGetData(
     "classes",
     getClasses,
     resetClasses,
-    { ids: formData.classId || "null" }
+    { ids: idArray }
   );
   const { attendances, status: attendanceStatus } = useGetData(
     "attendances",
     getAttendances,
     resetAttendances,
-    { ids: [formData.userId, formData.classId] }
+    { ids: idArray }
   );
 
-  const userItem = users.filter((u) => u._id === formData.userId)[0];
-  const classItem = classes.filter((c) => c._id === formData.classId)[0];
+  const userItem = users.filter((u) => u._id === id || u._id === specId)[0];
+  const classItem = classes.filter((c) => c._id === id || c._id === specId)[0];
 
+  const selectChange = (e, value) => {
+    setSelected(value);
+    console.log(value);
+  };
+  console.log(users);
   return (
     <>
       <Typography variant="h2">Attendances Dashboard</Typography>
@@ -53,13 +59,11 @@ function Attendances() {
           <CustomSelect
             id="user"
             label="Select user"
-            items={{
-              _id: userItem._id,
-              title: userItem.lastName + " " + userItem.firstName,
-            }}
-            formData={formData}
-            selectedItems={formData}
-            setFormData={setFormData}
+            items={users.map((u) => {
+              return { _id: u._id, title: u.lastName + " " + u.firstName };
+            })}
+            selectedItems={selected}
+            selectChange={selectChange}
           />
         ) : (
           <LoadingOrError status={userStatus} />
@@ -68,13 +72,11 @@ function Attendances() {
           <CustomSelect
             id="class"
             label="Select class"
-            items={{
-              _id: classItem._id,
-              title: classItem.name,
-            }}
-            formData={formData}
-            selectedItems={formData}
-            setFormData={setFormData}
+            items={classes.map((c) => {
+              return { _id: c._id, title: c.title };
+            })}
+            selectedItems={selected}
+            selectChange={selectChange}
           />
         ) : (
           <LoadingOrError status={classStatus} />
