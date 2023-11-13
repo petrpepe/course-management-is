@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Attendance = require("../models/attendanceModel");
+const Timetable = require("../models/timetableModel");
 const mongoose = require("mongoose");
 
 /**

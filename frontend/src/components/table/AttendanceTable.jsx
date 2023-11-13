@@ -11,16 +11,20 @@ import { visuallyHidden } from "@mui/utils";
 import Typography from "@mui/material/Typography";
 import { Status } from "../../features/Status";
 import { useEffect, useState } from "react";
+import { format, parseISO } from "date-fns/esm";
+import { getLocale } from "../../utils";
 
 function AttendanceTable({ attendances = [], title, status }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
   const [sortedAtts, setSortedAtts] = useState(attendances);
   const headers = [
-    { id: "name", label: "Name" },
-    { id: "description", label: "Description" },
+    { id: "datetime", label: "Datetime" },
+    { id: "timetableId", label: "Timetable" },
+    { id: "userId", label: "User" },
+    { id: "attended", label: "Attended" },
   ];
-
+  const locale = getLocale();
   useEffect(() => {
     if (status === Status.Success) {
       setSortedAtts(attendances);
@@ -71,17 +75,21 @@ function AttendanceTable({ attendances = [], title, status }) {
                 </TableSortLabel>
               </TableCell>
             ))}
-            <TableCell>Permissions</TableCell>
-            <TableCell align="center">Actions</TableCell>
+            <TableCell>Note</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortedAtts.map((perm) => (
+          {sortedAtts.map((att) => (
             <TableRow
-              key={perm.name}
+              key={att._id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell scope="row">{perm.name}</TableCell>
-              <TableCell>{perm.description}</TableCell>
+              <TableCell scope="row">
+                {format(parseISO(att.datetime), "Pp", { locale: locale })}
+              </TableCell>
+              <TableCell>{att.timetableId}</TableCell>
+              <TableCell>{att.userId}</TableCell>
+              <TableCell>{att.attended === true ? "X" : "O"}</TableCell>
+              <TableCell>{att.note}</TableCell>
             </TableRow>
           ))}
         </TableBody>

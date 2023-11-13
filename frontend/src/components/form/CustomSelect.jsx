@@ -17,10 +17,8 @@ function CustomSelect({
   const [selected, setSelected] = React.useState(selectedItems);
 
   React.useEffect(() => {
-    if (selected && selected.length !== selectedItems.length) {
-      setSelected(selectedItems);
-    }
-  }, [selected, selectedItems]);
+    setSelected(selectedItems);
+  }, [selectedItems]);
 
   const onSelectChange = (e, value) => {
     setSelected(value);
