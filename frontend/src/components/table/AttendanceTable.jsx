@@ -8,28 +8,51 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
-import Typography from "@mui/material/Typography";
 import { Status } from "../../features/Status";
 import { useEffect, useState } from "react";
 import { format, parseISO } from "date-fns/esm";
 import { getLocale } from "../../utils";
+import useGetData from "../../hooks/useGetData";
+import {
+  getTimetables,
+  reset as resetTimetables,
+} from "../../features/timetables/timetableSlice";
+import {
+  getLessons,
+  reset as resetLessons,
+} from "../../features/lessons/lessonSlice";
+import { useSelector } from "react-redux";
 
-function AttendanceTable({ attendances = [], title, status }) {
+function AttendanceTable({ attendances = [], classItem, userItem }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
   const [sortedAtts, setSortedAtts] = useState(attendances);
+  const { classes } = useSelector((state) => state.classes);
+  const { timetables, status: timetableStatus } = useGetData(
+    "timetables",
+    getTimetables,
+    resetTimetables,
+    { ids: attendances.map((a) => a.timetableId) }
+  );
+  const { lessons, status: lessonStatus } = useGetData(
+    "lessons",
+    getLessons,
+    resetLessons,
+    { ids: timetables.map((t) => t.lesson) }
+  );
   const headers = [
-    { id: "datetime", label: "Datetime" },
-    { id: "timetableId", label: "Timetable" },
+    { id: "classId", label: "Class" },
+    { id: "lessonId", label: "Lesson" },
     { id: "userId", label: "User" },
+    { id: "datetime", label: "Datetime" },
     { id: "attended", label: "Attended" },
   ];
   const locale = getLocale();
   useEffect(() => {
-    if (status === Status.Success) {
-      setSortedAtts(attendances);
+    if (lessonStatus === Status.Success) {
+      setSortedAtts(timetables);
     }
-  }, [status, attendances]);
+  }, [lessonStatus, timetables]);
 
   const setSortOrderBy = (property) => (event) => {
     const isAsc = orderBy === property && order === "asc";
@@ -84,10 +107,30 @@ function AttendanceTable({ attendances = [], title, status }) {
               key={att._id}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
               <TableCell scope="row">
+                {
+                  classes.filter(
+                    (c) =>
+                      c._id ===
+                      timetables.filter((t) => t._id === att.timetableId)[0]
+                        .classId
+                  )[0].title
+                }
+              </TableCell>
+              <TableCell>
+                {
+                  lessons.filter(
+                    (l) =>
+                      l._id ===
+                      timetables.filter((t) => t._id === att.timetableId)[0]
+                        .lesson
+                  )[0].title
+                }
+              </TableCell>
+              <TableCell>{att.userId}</TableCell>
+              <TableCell>
                 {format(parseISO(att.datetime), "Pp", { locale: locale })}
               </TableCell>
-              <TableCell>{att.timetableId}</TableCell>
-              <TableCell>{att.userId}</TableCell>
+              <TableCell scope="row">{att.timetableId}</TableCell>
               <TableCell>{att.attended === true ? "X" : "O"}</TableCell>
               <TableCell>{att.note}</TableCell>
             </TableRow>

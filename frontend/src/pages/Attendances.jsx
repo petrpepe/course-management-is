@@ -25,6 +25,7 @@ function Attendances() {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const idArray = [id, specId].filter((i) => i !== undefined);
+  console.log(idArray);
   const { users, status: userStatus } = useGetData(
     "users",
     getUsers,
@@ -43,7 +44,7 @@ function Attendances() {
     resetAttendances,
     { ids: idArray }
   );
-  console.log(attendances);
+
   const userItem = users.filter((u) => u._id === id || u._id === specId)[0];
   const classItem = classes.filter((c) => c._id === id || c._id === specId)[0];
 
@@ -100,7 +101,8 @@ function Attendances() {
       {attendances.length > 0 ? (
         <AttendanceTable
           attendances={attendances}
-          title={users.length > 0 ? users[0] : classes[0]}
+          userItem={userItem}
+          classItem={classItem}
         />
       ) : (
         <Typography variant="h3">You haven't set any attendance</Typography>
