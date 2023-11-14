@@ -22,6 +22,7 @@ import {
   reset as resetLessons,
 } from "../../features/lessons/lessonSlice";
 import { useSelector } from "react-redux";
+import LoadingOrError from "../LoadingOrError";
 
 function AttendanceTable({ attendances = [], classItem, userItem }) {
   const [order, setOrder] = useState("asc");
@@ -50,9 +51,9 @@ function AttendanceTable({ attendances = [], classItem, userItem }) {
   const locale = getLocale();
   useEffect(() => {
     if (lessonStatus === Status.Success) {
-      setSortedAtts(timetables);
+      setSortedAtts(attendances);
     }
-  }, [lessonStatus, timetables]);
+  }, [lessonStatus, attendances]);
 
   const setSortOrderBy = (property) => (event) => {
     const isAsc = orderBy === property && order === "asc";
@@ -70,6 +71,10 @@ function AttendanceTable({ attendances = [], classItem, userItem }) {
       })
     );
   };
+
+  if (timetableStatus === Status.Loading) {
+    return <LoadingOrError status={Status.Loading} />;
+  }
 
   return (
     <TableContainer component={Paper} sx={{ mx: 3, width: "auto" }}>
@@ -102,39 +107,39 @@ function AttendanceTable({ attendances = [], classItem, userItem }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sortedAtts.map((att) => (
-            <TableRow
-              key={att._id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell scope="row">
-                {
-                  classes.filter(
-                    (c) =>
-                      c._id ===
-                      timetables.filter((t) => t._id === att.timetableId)[0]
-                        .classId
-                  )[0].title
-                }
-              </TableCell>
-              <TableCell>
-                {
-                  lessons.filter(
-                    (l) =>
-                      l._id ===
-                      timetables.filter((t) => t._id === att.timetableId)[0]
-                        .lesson
-                  )[0].title
-                }
-              </TableCell>
-              <TableCell>{att.userId}</TableCell>
-              <TableCell>
-                {format(parseISO(att.datetime), "Pp", { locale: locale })}
-              </TableCell>
-              <TableCell scope="row">{att.timetableId}</TableCell>
-              <TableCell>{att.attended === true ? "X" : "O"}</TableCell>
-              <TableCell>{att.note}</TableCell>
-            </TableRow>
-          ))}
+          {timetableStatus === Status.Success &&
+            sortedAtts.map((att) => (
+              <TableRow
+                key={att._id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell scope="row">
+                  {
+                    classes.filter(
+                      (c) =>
+                        c._id ===
+                        timetables.filter((t) => t._id === att.timetableId)[0]
+                          .classId
+                    )[0].title
+                  }
+                </TableCell>
+                <TableCell>
+                  {lessonStatus === Status.Success &&
+                    lessons.filter(
+                      (l) =>
+                        l._id ===
+                        timetables.filter((t) => t._id === att.timetableId)[0]
+                          .lesson
+                    )[0].title}
+                </TableCell>
+                <TableCell>{att.userId}</TableCell>
+                <TableCell>
+                  {format(parseISO(att.datetime), "Pp", { locale: locale })}
+                </TableCell>
+                <TableCell scope="row">{att.timetableId}</TableCell>
+                <TableCell>{att.attended === true ? "X" : "O"}</TableCell>
+                <TableCell>{att.note}</TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>

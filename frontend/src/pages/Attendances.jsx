@@ -25,7 +25,7 @@ function Attendances() {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const idArray = [id, specId].filter((i) => i !== undefined);
-  console.log(idArray);
+
   const { users, status: userStatus } = useGetData(
     "users",
     getUsers,
