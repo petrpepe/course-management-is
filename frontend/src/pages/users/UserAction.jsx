@@ -67,7 +67,7 @@ function UserAction() {
   }, [id, user, userStatus, users, navigate]);
 
   if (isCreated && userStatus === Status.Success) {
-    navigate("/users/" + users[users.length - 1]._id);
+    return navigate("/users/" + users[users.length - 1]._id);
   }
 
   if (

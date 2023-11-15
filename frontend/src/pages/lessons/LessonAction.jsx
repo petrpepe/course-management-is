@@ -80,7 +80,7 @@ function LessonAction() {
   };
 
   if (isCreated && lessonStatus === Status.Success) {
-    navigate("/lessons/" + lessons[lessons.length - 1]._id);
+    return navigate("/lessons/" + lessons[lessons.length - 1]._id);
   }
 
   if (

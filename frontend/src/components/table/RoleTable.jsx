@@ -51,7 +51,7 @@ function RoleTable({ roles, rolesStatus }) {
     e.preventDefault();
 
     dispatch(createRole(role));
-    setState({});
+    setState({ name: "", description: "", permissions: [] });
   };
 
   const handleEditClick = (id) => {
@@ -171,6 +171,7 @@ function RoleTable({ roles, rolesStatus }) {
             size="medium"
             fullWidth
             sx={{ my: 1 }}
+            value={role.name}
           />
           <TextField
             id="description"
@@ -181,6 +182,7 @@ function RoleTable({ roles, rolesStatus }) {
             size="medium"
             fullWidth
             sx={{ my: 1 }}
+            value={role.description}
           />
           <CustomSelect
             id="permissions"
@@ -191,6 +193,11 @@ function RoleTable({ roles, rolesStatus }) {
             formData={role}
             setFormData={setState}
             multiple={true}
+            selectedItems={permissions
+              .filter((p) => role.permissions.includes(p._id))
+              .map((p) => {
+                return { _id: p._id, title: p.name };
+              })}
           />
           <Button
             type="submit"

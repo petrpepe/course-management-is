@@ -13,6 +13,7 @@ function CustomSelect({
   setFormData,
   multiple,
   selectChange,
+  changed,
 }) {
   const [selected, setSelected] = React.useState(selectedItems);
 
@@ -24,8 +25,9 @@ function CustomSelect({
     setSelected(value);
     setFormData({
       ...formData,
-      [id]: value._id ? value._id : value.map((v) => v._id),
+      [id]: multiple ? value.map((v) => v._id) : value._id,
     });
+    if (changed) changed(true);
   };
 
   return (

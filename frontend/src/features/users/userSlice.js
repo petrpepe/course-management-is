@@ -23,7 +23,7 @@ export const createUser = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const updateUser = createAsyncThunk(
@@ -41,7 +41,7 @@ export const updateUser = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const getUsers = createAsyncThunk(
@@ -50,9 +50,9 @@ export const getUsers = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await userService.getUsers(
-        userData.ids ? userData.ids : [],
+        userData.ids ? userData.ids.flat() : [],
         userData.keyword,
-        token,
+        token
       );
     } catch (error) {
       const message =
@@ -63,7 +63,7 @@ export const getUsers = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const deleteUser = createAsyncThunk(
@@ -83,7 +83,7 @@ export const deleteUser = createAsyncThunk(
         error.toString();
       return thunkAPI.rejectWithValue(message);
     }
-  },
+  }
 );
 
 export const userSlice = createSlice({
@@ -142,7 +142,7 @@ export const userSlice = createSlice({
       .addCase(deleteUser.fulfilled, (state, action) => {
         state.status = Status.Success;
         state.users = state.users.filter(
-          (user) => user._id !== action.payload.id,
+          (user) => user._id !== action.payload.id
         );
       })
       .addCase(deleteUser.rejected, (state, action) => {

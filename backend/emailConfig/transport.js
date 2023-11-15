@@ -78,7 +78,7 @@ async function buildAttachment(attachment) {
         attachment.encoding === "base64"
           ? attachment.content
           : Buffer.from(attachment.content, attachment.encoding).toString(
-              "base64",
+              "base64"
             ),
     };
   }
@@ -191,7 +191,7 @@ class Transport {
               }
 
               if (res.statusCode >= 400) {
-                return reject(new Error(responseErrorMessage(res, body)));
+                console.log(new Error(responseErrorMessage(res, body)));
               }
 
               resolve({
@@ -199,7 +199,7 @@ class Transport {
                 envelope,
               });
             });
-        },
+        }
       );
 
       req.on("error", reject);

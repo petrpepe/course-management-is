@@ -20,7 +20,6 @@ const updateEnrollment = async (enrollmentId, enrollmentData, token) => {
       Authorization: `Bearer ${token}`,
     },
   };
-
   const response = await axios.put(
     API_URL + enrollmentId,
     enrollmentData,

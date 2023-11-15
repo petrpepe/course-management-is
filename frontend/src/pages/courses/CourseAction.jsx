@@ -70,7 +70,7 @@ function CourseAction() {
   };
 
   if (isCreated && courseStatus === Status.Success) {
-    navigate("/courses/" + courses[courses.length - 1]._id);
+    return navigate("/courses/" + courses[courses.length - 1]._id);
   }
 
   if (courseStatus === Status.Loading || providerStatus === Status.Loading) {
@@ -124,7 +124,14 @@ function CourseAction() {
           formData={formData}
           setFormData={setFormData}
           multiple={false}
-          selectedItems={formData.owner}
+          selectedItems={
+            formData.owner &&
+            providers
+              .filter((p) => p._id === formData.owner)
+              .map((p) => {
+                return { _id: p._id, title: p.name };
+              })[0]
+          }
         />
         <Button
           type="submit"

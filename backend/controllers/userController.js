@@ -89,7 +89,7 @@ const createUser = asyncHandler(async (req, res) => {
     roles: req.body.roles,
     estraPerms: req.body.extraPerms,
     password: hashedPassword,
-    provider,
+    provider: req.body.provider,
   });
 
   if (user) {

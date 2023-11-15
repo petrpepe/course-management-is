@@ -31,6 +31,7 @@ export const updateEnrollment = createAsyncThunk(
   async (enrollmentData, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
+      console.log(enrollmentData);
       return await enrollmentService.updateEnrollment(
         enrollmentData._id,
         enrollmentData,

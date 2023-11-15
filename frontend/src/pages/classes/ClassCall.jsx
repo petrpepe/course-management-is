@@ -55,6 +55,9 @@ function ClassCall() {
               disableModeratorIndicator: true,
               startScreenSharing: true,
               enableEmailInStats: false,
+              prejoinConfig: {
+                enabled: true,
+              },
             }}
             interfaceConfigOverwrite={{
               DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,

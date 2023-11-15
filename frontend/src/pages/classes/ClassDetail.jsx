@@ -15,10 +15,17 @@ import {
 import UsersList from "../../components/users/UsersList";
 import Timetable from "../../components/table/Timetable";
 import ActionPermLink from "../../components/form/ActionPermLink";
-import { useEffect, useState } from "react";
+import { getUsers, reset as resetUsers } from "../../features/users/userSlice";
 
 function ClassDetail() {
   const { id } = useParams();
+  let classItem = {
+    _id: id,
+    title: "",
+    description: "",
+    lectors: [],
+    course: "",
+  };
   const { classes, status: classStatus } = useGetData(
     "classes",
     getClasses,
@@ -31,13 +38,18 @@ function ClassDetail() {
     resetEnrollments,
     { ids: id }
   );
-  const [students, setStudents] = useState([]);
 
-  useEffect(() => {
-    if (enrollmentStatus === Status.Success) {
-      setStudents(enrollments[0].students);
+  const { users, status: userStatus } = useGetData(
+    "users",
+    getUsers,
+    resetUsers,
+    {
+      ids:
+        enrollments.length > 0
+          ? enrollments[0].students.concat(classItem.lectors)
+          : classItem.lectors,
     }
-  }, [enrollmentStatus, enrollments]);
+  );
 
   if (
     classStatus === Status.Loading ||
@@ -47,17 +59,25 @@ function ClassDetail() {
     return <CircularProgress sx={{ position: "absolute", top: "50%" }} />;
   }
 
+  classItem = classes.filter((c) => c._id === id)[0];
+
   return (
     <>
-      <Typography variant="h2">Class: {classes[0].title}</Typography>
-      <Typography variant="h3">{classes[0].description}</Typography>
-      <CourseTitleLink courseId={classes[0].course} />
+      <Typography variant="h2">Class: {classItem.title}</Typography>
+      <Typography variant="h3">{classItem.description}</Typography>
+      <CourseTitleLink courseId={classItem.course} />
       <Timetable classIds={id} classes={classes} />
-      <UsersList usersIds={students} heading="students" />
-      <UsersList usersIds={classes[0].lectors} heading="lectors" />
+      <UsersList
+        users={users.filter((u) => enrollments[0].students.includes(u._id))}
+        heading="students"
+      />
+      <UsersList
+        users={users.filter((u) => classItem.lectors.includes(u._id))}
+        heading="lectors"
+      />
       <ActionPermLink
         linkText="Edit"
-        linkTo={"/classes/" + classes[0]._id + "/edit"}
+        linkTo={"/classes/" + classItem._id + "/edit"}
         perm="classUpdate"
       />
     </>

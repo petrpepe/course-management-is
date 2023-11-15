@@ -68,7 +68,8 @@ function ClassAction() {
   const { classes, status: classStatus } = useGetData(
     "classes",
     getClasses,
-    resetClasses
+    resetClasses,
+    { ids: id }
   );
   const { roles, status: roleStatus } = useGetData(
     "roles",

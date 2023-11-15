@@ -63,7 +63,7 @@ const updateCourse = asyncHandler(async (req, res) => {
     req.body,
     {
       new: true,
-    },
+    }
   );
 
   res.status(200).json(updatedCourse);
@@ -76,7 +76,7 @@ const updateCourse = asyncHandler(async (req, res) => {
  */
 const deleteCourse = asyncHandler(async (req, res) => {
   const course = await Course.findById(req.params.id);
-
+  let smt = false;
   if (!course) {
     res.status(400);
     throw new Error("Course not find");
@@ -85,9 +85,11 @@ const deleteCourse = asyncHandler(async (req, res) => {
   await Class.updateMany(
     { course: course._id },
     { $pull: { course: course._id } },
-    { multi: true },
+    { multi: true }
   );
-  await Lesson.daleteMany({ course: course._id });
+  if (smt === true) {
+    await Lesson.deleteMany({ course: course._id });
+  }
 
   await course.deleteOne();
 

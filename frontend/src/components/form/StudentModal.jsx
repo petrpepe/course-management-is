@@ -33,6 +33,7 @@ const StudentModal = ({
   );
 
   const [formData, setFormData] = React.useState({ classId: "", students: [] });
+  const [anyChange, setAnyChange] = React.useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -52,7 +53,7 @@ const StudentModal = ({
     if (enrollments.length === 0) {
       formData.classId = classId;
       dispatch(createEnrollment(formData));
-    } else {
+    } else if (anyChange) {
       formData._id = enrollments[0]._id;
       dispatch(updateEnrollment(formData));
     }
@@ -89,6 +90,7 @@ const StudentModal = ({
                 title: u.lastName + " " + u.firstName,
               };
             })}
+          changed={setAnyChange}
         />
       </DialogContent>
       <DialogActions>
