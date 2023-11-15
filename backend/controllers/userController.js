@@ -223,7 +223,6 @@ const forgotPassword = asyncHandler(async (req, res) => {
 const setNewPassword = asyncHandler(async (req, res) => {
   const { token, password, password1 } = req.body;
   const userId = jwt.decode(token).id;
-  console.log(userId);
   const user = await User.findById(userId);
 
   if (user && password === password1) {
