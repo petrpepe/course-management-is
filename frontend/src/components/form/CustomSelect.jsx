@@ -44,7 +44,7 @@ function CustomSelect({
           getOptionLabel={(option) => option.title}
           renderOption={(props, option, { selected }) => {
             return (
-              <li {...props}>
+              <li {...props} key={option._id}>
                 {multiple && <Checkbox checked={selected} />}
                 {option.title}
               </li>

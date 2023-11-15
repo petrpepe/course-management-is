@@ -119,7 +119,7 @@ function AttendanceTable({ attendances = [], classItem, userItem }) {
                         c._id ===
                         timetables.filter((t) => t._id === att.timetableId)[0]
                           .classId
-                    )[0].title
+                    )[0]?.title
                   }
                 </TableCell>
                 <TableCell>
@@ -129,13 +129,12 @@ function AttendanceTable({ attendances = [], classItem, userItem }) {
                         l._id ===
                         timetables.filter((t) => t._id === att.timetableId)[0]
                           .lesson
-                    )[0].title}
+                    )[0]?.title}
                 </TableCell>
                 <TableCell>{att.userId}</TableCell>
                 <TableCell>
                   {format(parseISO(att.datetime), "Pp", { locale: locale })}
                 </TableCell>
-                <TableCell scope="row">{att.timetableId}</TableCell>
                 <TableCell>{att.attended === true ? "X" : "O"}</TableCell>
                 <TableCell>{att.note}</TableCell>
               </TableRow>

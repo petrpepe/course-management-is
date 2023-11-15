@@ -22,31 +22,40 @@ function Attendances() {
   const { id, specId } = useParams();
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const [selectedUser, setSelectedUser] = useState("");
-  const [selectedClass, setSelectedClass] = useState("");
-  const idArray = [id, specId].filter((i) => i !== undefined);
-
+  const [idArray, setIdArray] = useState({ userId: id, classId: specId });
+  const valIdArray = Object.values(idArray).filter((v) => v !== undefined);
   const { users, status: userStatus } = useGetData(
     "users",
     getUsers,
-    resetUsers,
-    { ids: idArray }
+    resetUsers
   );
   const { classes, status: classStatus } = useGetData(
     "classes",
     getClasses,
     resetClasses,
-    { ids: idArray }
+    { ids: idArray.userId }
   );
   const { attendances, status: attendanceStatus } = useGetData(
     "attendances",
     getAttendances,
     resetAttendances,
-    { ids: idArray }
+    { ids: valIdArray }
   );
 
   const userItem = users.filter((u) => u._id === id || u._id === specId)[0];
   const classItem = classes.filter((c) => c._id === id || c._id === specId)[0];
+
+  const [selectedUser, setSelectedUser] = useState(
+    userItem
+      ? {
+          _id: userItem._id,
+          title: userItem.lastName + " " + userItem.firstName,
+        }
+      : ""
+  );
+  const [selectedClass, setSelectedClass] = useState(
+    classItem ? { _id: classItem._id, title: classItem.title } : ""
+  );
 
   const selectChange = (type, e, value) => {
     if (type === "user") {
@@ -56,6 +65,10 @@ function Attendances() {
           (value ? value._id + "/" : "") +
           (classItem ? classItem._id : "")
       );
+      setIdArray({
+        userId: value ? value._id : "",
+        classId: classItem ? classItem._id : "",
+      });
     }
     if (type === "class") {
       setSelectedClass(value);
@@ -64,6 +77,10 @@ function Attendances() {
           (userItem ? userItem._id + "/" : "") +
           (value ? value._id : "")
       );
+      setIdArray({
+        userId: userItem ? userItem._id : "",
+        classId: value ? value._id : "",
+      });
     }
   };
 

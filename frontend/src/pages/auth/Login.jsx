@@ -54,11 +54,8 @@ function Login() {
     const userData = formData.email;
 
     dispatch(forgotPassword(userData));
+    setforgotPassword(false);
   };
-
-  if (status === Status.Loading) {
-    return <CircularProgress />;
-  }
 
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>

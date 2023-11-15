@@ -187,12 +187,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user) {
-    const url =
-      process.env.FRONTEND_URL +
-      "/" +
-      user._id.toString() +
-      "/" +
-      generateToken(user._id);
+    const url = process.env.FRONTEND_URL + "/" + generateToken(user._id);
     try {
       await sendEmail(
         "crsis@noreplycris.com",

@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Attendance = require("../models/attendanceModel");
 const Timetable = require("../models/timetableModel");
+const Enrollment = require("../models/enrollmentModel");
 const mongoose = require("mongoose");
 
 /**
@@ -11,11 +12,15 @@ const mongoose = require("mongoose");
 const getAttendances = asyncHandler(async (req, res) => {
   const { id, startDatetime, endDatetime } = req.query;
   let arg = {};
+
   if (id && id.length > 0) {
     const ids = Array.isArray(id)
       ? id.map((id) => new mongoose.Types.ObjectId(id))
       : id.split(",").map((id) => new mongoose.Types.ObjectId(id));
-    const timetables = await Timetable.find({ classId: { $in: ids } });
+    const enrollments = await Enrollment.find({ students: { $in: ids } });
+    const timetables = await Timetable.find({
+      classId: { $in: ids.concat(enrollments.map((e) => e.classId)) },
+    });
     arg = {
       $or: [
         { timetableId: { $in: timetables.map((t) => t._id).concat(ids) } },
