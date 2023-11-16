@@ -71,7 +71,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/login/:userEmail" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/:token" element={<ForgottenPassword />} />
+            <Route
+              path="/forgottenPassword/:token"
+              element={<ForgottenPassword />}
+            />
             {user && (
               <>
                 <Route

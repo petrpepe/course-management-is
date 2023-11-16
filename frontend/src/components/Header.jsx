@@ -189,7 +189,7 @@ function Header({ darkTheme, setDarkTheme }) {
             noWrap
             component="div"
             sx={{ flexGrow: { xs: 1, sm: "unset" }, textAlign: "left", mr: 2 }}>
-            <Link component={ReactLink} to="/" sx={{ color: "#fff" }}>
+            <Link component={ReactLink} to={user && "/"} sx={{ color: "#fff" }}>
               System
             </Link>
           </Typography>
