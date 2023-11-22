@@ -44,11 +44,7 @@ function TimetableEvent({ timetables, lessonIds, lectorIds, classTitle }) {
 
   const locale = getLocale();
 
-  if (
-    lessonStatus === Status.Success &&
-    userStatus === Status.Success &&
-    attendanceStatus === Status.Success
-  ) {
+  if (lessonStatus === Status.Success && attendanceStatus === Status.Success) {
     return timetables.map((t) => {
       let userAttendance = {};
       const event = {

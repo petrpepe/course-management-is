@@ -33,22 +33,17 @@ function TimetablePage() {
       ids: id || enrollments.map((e) => e.classId),
     }
   );
+
   const userIds = new Set([
     ...classes.map((c) => c.lectors),
     ...enrollments.map((e) => e.students),
   ]);
-  const { users, status: userStatus } = useGetData(
-    "users",
-    getUsers,
-    resetUsers,
-    { ids: userIds }
-  );
 
   if (classStatus === Status.Success) {
     return (
       <>
         <Typography variant="h2">Rozvrh</Typography>
-        <Timetable classes={classes} />
+        <Timetable classes={classes} userIds={userIds} />
       </>
     );
   } else
