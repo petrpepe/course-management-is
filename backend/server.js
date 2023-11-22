@@ -13,7 +13,7 @@ const corsOptions = {
   origin: [
     "http://localhost:3000",
     "https://sis-cr-fe.onrender.com",
-    "https://sis-cr.onrender.com",
+    "https://sis-cr.onrender.com"
   ],
   methods: "GET,POST,PUT,DELETE",
   optionsSuccessStatus: 200,
