@@ -12,9 +12,9 @@ import axios from "axios";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
-
-axios.defaults.baseURL =
-  window.location.protocol + "//" + window.location.hostname + ":5000/";
+let hostname = window.location.hostname;
+if (hostname.includes("onrender")) hostname = "sis-cr.onrender.com";
+axios.defaults.baseURL = window.location.protocol + "//" + hostname + ":5000/";
 
 root.render(
   <React.StrictMode>
