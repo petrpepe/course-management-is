@@ -13,7 +13,8 @@ import axios from "axios";
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-axios.defaults.baseURL = "http://localhost:5000";
+axios.defaults.baseURL =
+  window.location.protocol + "//" + window.location.hostname + ":5000/";
 
 root.render(
   <React.StrictMode>
