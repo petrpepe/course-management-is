@@ -13,9 +13,10 @@ import axios from "axios";
 const container = document.getElementById("root");
 const root = createRoot(container);
 let hostname = window.location.hostname;
+let port = "";
 if (hostname.includes("onrender")) hostname = "sis-cr.onrender.com";
-axios.defaults.baseURL =
-  window.location.protocol + "//" + window.location.hostname + ":5000/";
+if (hostname.includes("localhost")) port = ":5000";
+axios.defaults.baseURL = window.location.protocol + "//" + hostname + port;
 
 root.render(
   <React.StrictMode>
