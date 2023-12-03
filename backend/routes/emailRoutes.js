@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { authenticate, authorize } = require("../middleware/authMiddleware");
+const {
+  authenticate,
+  authorize,
+} = require("../middleware/authenticateMiddleware");
 const { sendEmail } = require("../controllers/emailController");
 
 router.use(authenticate);

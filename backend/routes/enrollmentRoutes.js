@@ -7,7 +7,10 @@ const {
   deleteEnrollment,
 } = require("../controllers/enrollmentController");
 
-const { authenticate, authorize } = require("../middleware/authMiddleware");
+const {
+  authenticate,
+  authorize,
+} = require("../middleware/authenticateMiddleware");
 
 router.use(authenticate);
 

@@ -7,7 +7,10 @@ const {
   deleteTimetable,
 } = require("../controllers/timetableController");
 
-const { authenticate, authorize } = require("../middleware/authMiddleware");
+const {
+  authenticate,
+  authorize,
+} = require("../middleware/authenticateMiddleware");
 
 router.use(authenticate);
 

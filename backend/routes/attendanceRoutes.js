@@ -7,7 +7,10 @@ const {
   deleteAttendance,
 } = require("../controllers/attendanceController");
 
-const { authenticate, authorize } = require("../middleware/authMiddleware");
+const {
+  authenticate,
+  authorize,
+} = require("../middleware/authenticateMiddleware");
 
 router.use(authenticate);
 
