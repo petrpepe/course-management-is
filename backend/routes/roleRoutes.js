@@ -7,10 +7,8 @@ const {
   deleteRole,
 } = require("../controllers/roleController");
 
-const {
-  authenticate,
-  authorize,
-} = require("../middleware/authenticateMiddleware");
+const { authenticate } = require("../middleware/authenticateMiddleware");
+const { authorize } = require("../middleware/authorizeMiddleware");
 
 router.use(authenticate);
 router.use(authorize("rolesManagement"));

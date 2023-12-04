@@ -7,10 +7,8 @@ const {
   deleteCourse,
 } = require("../controllers/courseController");
 
-const {
-  authenticate,
-  authorize,
-} = require("../middleware/authenticateMiddleware");
+const { authenticate } = require("../middleware/authenticateMiddleware");
+const { authorize } = require("../middleware/authorizeMiddleware");
 
 router.use(authenticate);
 

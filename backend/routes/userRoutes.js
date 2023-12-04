@@ -9,10 +9,9 @@ const {
   updateUser,
   deleteUser,
 } = require("../controllers/userController");
-const {
-  authenticate,
-  authorize,
-} = require("../middleware/authenticateMiddleware");
+
+const { authenticate } = require("../middleware/authenticateMiddleware");
+const { authorize } = require("../middleware/authorizeMiddleware");
 
 router.post("/login", loginUser);
 router.post("/forgotPassword", forgotPassword);
