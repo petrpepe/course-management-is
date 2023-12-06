@@ -6,6 +6,7 @@ const {
   updateAttendance,
   deleteAttendance,
 } = require("../controllers/attendanceController");
+const { getAttendanceParams } = require("../services/attendanceService");
 
 const { authenticate } = require("../middleware/authenticateMiddleware");
 const { authorize } = require("../middleware/authorizeMiddleware");
@@ -14,7 +15,7 @@ router.use(authenticate);
 
 router
   .route("/")
-  .get(authorize("attendanceGet"), getAttendances)
+  .get(authorize("attendanceGet"), getAttendanceParams, getAttendances)
   .post(authorize("attendanceCreate"), setAttendance);
 router
   .route("/:id")

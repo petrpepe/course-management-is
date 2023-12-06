@@ -1,4 +1,12 @@
-async function getAttendancesParams(params) {
+const asyncHandler = require("express-async-handler");
+const mongoose = require("mongoose");
+const Timetable = require("../models/timetableModel");
+const Enrollment = require("../models/enrollmentModel");
+
+const getAttendanceParams = asyncHandler(async (req, res, next) => {
+  const { id, startDatetime, endDatetime } = req.query;
+  let arg = {};
+
   if (id && id.length > 0) {
     const ids = Array.isArray(id)
       ? id.map((id) => new mongoose.Types.ObjectId(id))
@@ -24,4 +32,11 @@ async function getAttendancesParams(params) {
       datetime: { $gte: start.toISOString(), $lte: end.toISOString() },
     };
   }
-}
+
+  req.arg = arg;
+  next();
+});
+
+module.exports = {
+  getAttendanceParams,
+};
