@@ -7,14 +7,18 @@ function Profile() {
 
   return (
     <>
-      <Typography variant="h2">Your profile</Typography>
-      <Typography variant="h3">
+      <Typography variant="h3" component="h1">
+        Your profile
+      </Typography>
+      <Typography variant="h4" component="h2">
         Whole name:{" "}
         {user.firstName +
           (user.otherNames ? " " + user.otherNames.join(" ") + " " : " ") +
           user.lastName}
       </Typography>
-      <Typography variant="h4">Email: {user.email}</Typography>
+      <Typography variant="h4" component="h2">
+        Email: {user.email}
+      </Typography>
       <Typography variant="body1">Phones</Typography>
       {user.phone.map((phone) => (
         <Typography variant="body1" key={phone.type}>

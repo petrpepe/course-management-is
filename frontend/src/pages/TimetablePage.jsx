@@ -42,7 +42,9 @@ function TimetablePage() {
   if (classStatus === Status.Success) {
     return (
       <>
-        <Typography variant="h2">Rozvrh</Typography>
+        <Typography variant="h3" component="h1">
+          Rozvrh
+        </Typography>
         <Timetable classes={classes} userIds={userIds} />
       </>
     );

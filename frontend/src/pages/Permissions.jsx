@@ -22,7 +22,7 @@ function Permissions() {
   const { permissions, status } = useGetData(
     "permissions",
     getPermissions,
-    resetPermissions,
+    resetPermissions
   );
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("name");
@@ -51,7 +51,7 @@ function Permissions() {
           return order === "asc" ? 1 : -1;
         }
         return 0;
-      }),
+      })
     );
   };
 
@@ -61,7 +61,9 @@ function Permissions() {
 
   return (
     <>
-      <Typography variant="h2">Permissions Dashboard</Typography>
+      <Typography variant="h3" component="h1">
+        Permissions Dashboard
+      </Typography>
 
       {permissions.length > 0 ? (
         <TableContainer component={Paper} sx={{ mx: 3, width: "auto" }}>
@@ -105,7 +107,9 @@ function Permissions() {
           </Table>
         </TableContainer>
       ) : (
-        <Typography variant="h3">You haven't set any permission</Typography>
+        <Typography variant="h4" component="h2">
+          You haven't set any permission
+        </Typography>
       )}
     </>
   );

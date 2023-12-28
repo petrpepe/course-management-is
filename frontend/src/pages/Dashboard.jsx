@@ -16,10 +16,12 @@ function Dashboard() {
 
   return (
     <>
-      <Typography variant="h2">
+      <Typography variant="h3" component="h1">
         Welcome {user && user.firstName + " " + user.lastName}
       </Typography>
-      <Typography variant="h3">Main Dashboard</Typography>
+      <Typography variant="h4" component="h2">
+        Main Dashboard
+      </Typography>
 
       {classes.length > 0 && status === Status.Success ? (
         <Grid container spacing={3} justifyContent="space-evenly">
@@ -36,7 +38,9 @@ function Dashboard() {
           ))}
         </Grid>
       ) : (
-        <Typography variant="h4">You don't have any class today</Typography>
+        <Typography variant="h4" component="h2">
+          You don't have any class today
+        </Typography>
       )}
     </>
   );

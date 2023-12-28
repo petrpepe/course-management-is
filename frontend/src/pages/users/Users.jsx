@@ -17,7 +17,9 @@ function Users() {
 
   return (
     <>
-      <Typography variant="h2">Users Dashboard</Typography>
+      <Typography variant="h3" component="h1">
+        Users Dashboard
+      </Typography>
       <Search getData={getUsers} resetData={resetUsers} />
       <ActionPermLink
         linkText="Register new User"
@@ -44,7 +46,9 @@ function Users() {
           ))}
         </Grid>
       ) : (
-        <Typography variant="h3">There are no users</Typography>
+        <Typography variant="h4" component="h2">
+          There are no users
+        </Typography>
       )}
     </>
   );

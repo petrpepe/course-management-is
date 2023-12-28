@@ -59,7 +59,7 @@ function Login() {
 
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>
-      <Typography variant="h2">
+      <Typography variant="h3" component="h1">
         <LoginIcon fontSize="large" />{" "}
         {isForgotPassword ? "Forgot password?" : "Login"}
       </Typography>

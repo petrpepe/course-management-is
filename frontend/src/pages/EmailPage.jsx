@@ -39,7 +39,7 @@ function EmailPage() {
 
   return (
     <>
-      <Typography variant="h2">
+      <Typography variant="h3" component="h1">
         <EmailIcon fontSize="large" /> Send Emails to people
       </Typography>
       <Typography variant="body1">It can be send to whoever</Typography>

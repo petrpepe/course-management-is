@@ -15,7 +15,7 @@ function ClassLessonTitle({ classId, lessonId }) {
     "classes",
     getClasses,
     resetClasses,
-    { ids: classId },
+    { ids: classId }
   );
   const { lessons, status: lessonStatus } = useGetData(
     "lessons",
@@ -24,7 +24,7 @@ function ClassLessonTitle({ classId, lessonId }) {
     {
       ids: lessonId,
       detail: true,
-    },
+    }
   );
 
   if (classStatus === Status.Success && lessonStatus === Status.Success) {
@@ -32,7 +32,10 @@ function ClassLessonTitle({ classId, lessonId }) {
     const lesson = lessons.filter((l) => l._id === lessonId)[0];
     return (
       <>
-        <Typography variant="h2" sx={{ display: "block", width: "100%" }}>
+        <Typography
+          variant="h3"
+          component="h1"
+          sx={{ display: "block", width: "100%" }}>
           {classVar.title + ": " + lesson.title}
         </Typography>
         <Typography variant="body1">{lesson.materials}</Typography>

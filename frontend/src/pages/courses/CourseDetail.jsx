@@ -31,7 +31,9 @@ function CourseDetail() {
     const course = courses[0];
     return (
       <>
-        <Typography variant="h2">Course {course.title}</Typography>
+        <Typography variant="h3" component="h1">
+          Course {course.title}
+        </Typography>
         <Typography variant="subtitle1">
           Academic term {course.academicTerm}
         </Typography>

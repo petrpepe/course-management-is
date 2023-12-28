@@ -8,7 +8,9 @@ function Roles() {
 
   return (
     <>
-      <Typography variant="h2">Roles</Typography>
+      <Typography variant="h3" component="h1">
+        Roles
+      </Typography>
       <RoleTable roles={roles} rolesStatus={status} />
     </>
   );

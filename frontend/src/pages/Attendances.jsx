@@ -86,7 +86,9 @@ function Attendances() {
 
   return (
     <>
-      <Typography variant="h2">Attendances Dashboard</Typography>
+      <Typography variant="h3" component="h1">
+        Attendances Dashboard
+      </Typography>
       <Box>
         {userStatus === Status.Success ? (
           <CustomSelect
@@ -122,7 +124,9 @@ function Attendances() {
           classItem={classItem}
         />
       ) : (
-        <Typography variant="h3">You haven't set any attendance</Typography>
+        <Typography variant="h4" component="h2">
+          You haven't set any attendance
+        </Typography>
       )}
     </>
   );

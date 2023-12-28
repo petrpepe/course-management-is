@@ -63,8 +63,12 @@ function ClassDetail() {
 
   return (
     <>
-      <Typography variant="h2">Class: {classItem.title}</Typography>
-      <Typography variant="h3">{classItem.description}</Typography>
+      <Typography variant="h3" component="h1">
+        Class: {classItem.title}
+      </Typography>
+      <Typography variant="h4" component="h2">
+        {classItem.description}
+      </Typography>
       <CourseTitleLink courseId={classItem.course} />
       <Timetable classIds={id} classes={classes} />
       <UsersList

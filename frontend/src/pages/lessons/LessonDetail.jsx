@@ -29,10 +29,12 @@ function LessonDetail() {
 
   return (
     <>
-      <Typography variant="h2">
+      <Typography variant="h3" component="h1">
         Lesson {lesson.lessonNum}: {lessons.title}
       </Typography>
-      <Typography variant="h3">{lesson.description}</Typography>
+      <Typography variant="h4" component="h2">
+        {lesson.description}
+      </Typography>
       <CourseTitleLink courseId={lesson.course} />
       <Typography variant="body1" fontSize="large">
         {lesson.materials}

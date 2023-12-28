@@ -183,12 +183,16 @@ function Header({ darkTheme, setDarkTheme }) {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed">
-        <Toolbar>
+        <Toolbar sx={{ py: 1, px: 3 }}>
           <Typography
             variant="h5"
             noWrap
             component="div"
-            sx={{ flexGrow: { xs: 1, sm: "unset" }, textAlign: "left", mr: 2 }}>
+            sx={{
+              flexGrow: { xs: 1, sm: "unset" },
+              textAlign: "left",
+              mr: 2,
+            }}>
             <Link component={ReactLink} to={user && "/"} sx={{ color: "#fff" }}>
               System
             </Link>
@@ -221,11 +225,11 @@ function Header({ darkTheme, setDarkTheme }) {
               )}
           </Box>
           {darkTheme ? (
-            <IconButton onClick={() => setDarkTheme(!darkTheme)}>
+            <IconButton size="large" onClick={() => setDarkTheme(!darkTheme)}>
               <LightModeIcon />
             </IconButton>
           ) : (
-            <IconButton onClick={() => setDarkTheme(!darkTheme)}>
+            <IconButton size="large" onClick={() => setDarkTheme(!darkTheme)}>
               <DarkModeIcon sx={{ color: "#fff" }} />
             </IconButton>
           )}
@@ -247,7 +251,11 @@ function Header({ darkTheme, setDarkTheme }) {
                 edge="start"
                 color="inherit"
                 aria-label="open drawer"
-                sx={{ display: { xs: "none", sm: "block" }, ml: 2 }}
+                sx={{
+                  display: { xs: "none", sm: "flex" },
+                  ml: 2,
+                  alignItems: "center",
+                }}
                 onClick={toggleDrawer(
                   "management",
                   !drawerState["management"]
@@ -270,7 +278,11 @@ function Header({ darkTheme, setDarkTheme }) {
                 edge="start"
                 color="inherit"
                 aria-label="open drawer"
-                sx={{ display: { xs: "block", sm: "none" }, ml: 2 }}
+                sx={{
+                  display: { xs: "flex", sm: "none" },
+                  ml: 2,
+                  alignItems: "center",
+                }}
                 onClick={toggleDrawer("main", !drawerState["main"])}>
                 <MenuIcon />
               </IconButton>

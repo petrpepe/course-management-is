@@ -155,10 +155,14 @@ function RoleTable({ roles, rolesStatus }) {
           </Table>
         </TableContainer>
       ) : (
-        <Typography variant="h3">You haven't set any role</Typography>
+        <Typography variant="h4" component="h2">
+          You haven't set any role
+        </Typography>
       )}
 
-      <Typography variant="h2">Add a Role</Typography>
+      <Typography variant="h3" component="h1">
+        Add a Role
+      </Typography>
       <Paper elevation={0} sx={{ mx: "auto", maxWidth: "1000px" }}>
         <form onSubmit={onSubmitAdd}>
           <TextField

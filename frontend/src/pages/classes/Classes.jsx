@@ -68,7 +68,9 @@ function Classes() {
 
   return (
     <>
-      <Typography variant="h2">Classes Dashboard</Typography>
+      <Typography variant="h3" component="h1">
+        Classes Dashboard
+      </Typography>
       <Search getData={getClasses} resetData={resetClasses} />
       <ActionPermLink
         linkText="Create new Class"
@@ -105,7 +107,7 @@ function Classes() {
           </Box>
         ))
       ) : (
-        <Typography variant="h3">
+        <Typography variant="h4" component="h2">
           You are not enrolled in any classes
         </Typography>
       )}

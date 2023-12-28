@@ -139,7 +139,7 @@ function ClassAction() {
 
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>
-      <Typography variant="h2">
+      <Typography variant="h3" component="h1">
         <CoPresentIcon fontSize="large" />{" "}
         {id ? "Editing class: " + formData.title : "Create class"}
       </Typography>

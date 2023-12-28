@@ -49,7 +49,7 @@ function Timetable({ classes, userIds }) {
             key={ts.classId}
             sx={{
               m: 1,
-              width: { xs: "100%", md: "50%", lg: "40%" },
+              width: { xs: "100%", sm: "80%", md: "60%", lg: "50%" },
               display: "inline-block",
             }}>
             {sortedTimetables.length > 1 && (

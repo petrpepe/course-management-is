@@ -27,19 +27,21 @@ function UserDetail() {
 
   return (
     <>
-      <Typography variant="h2">
+      <Typography variant="h3" component="h1">
         {id
           ? "Profile: " + currentUser.firstName + " " + currentUser.lastName
           : "Your profile"}
       </Typography>
-      <Typography variant="h3">
+      <Typography variant="h4" component="h2">
         Whole name:{" "}
         {currentUser.firstName +
           (currentUser.otherNames &&
             " " + currentUser.otherNames.join(" ") + " ") +
           currentUser.lastName}
       </Typography>
-      <Typography variant="h4">Email: {currentUser.email}</Typography>
+      <Typography variant="h4" component="h2">
+        Email: {currentUser.email}
+      </Typography>
       <Typography variant="body1">Phones</Typography>
       {currentUser.phone.map((phone) => (
         <Typography variant="body1" key={phone.type}>

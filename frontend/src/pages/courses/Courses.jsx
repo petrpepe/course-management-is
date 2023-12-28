@@ -22,7 +22,9 @@ function Courses() {
 
   return (
     <>
-      <Typography variant="h2">Courses Dashboard</Typography>
+      <Typography variant="h3" component="h1">
+        Courses Dashboard
+      </Typography>
       <Search getData={getCourses} resetData={resetCourses} />
       <ActionPermLink
         linkText="Create new Course"
@@ -47,7 +49,7 @@ function Courses() {
           ))}
         </Grid>
       ) : (
-        <Typography variant="h3">
+        <Typography variant="h4" component="h2">
           You are not enrolled in any courses
         </Typography>
       )}

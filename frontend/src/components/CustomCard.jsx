@@ -23,7 +23,7 @@ function CustomCard({
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ width: 320 }}>
       {imgSrc && (
         <CardMedia
           component="img"
@@ -43,14 +43,19 @@ function CustomCard({
           {desc ? desc : data.description}
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
-        <Button component={ReactLink} size="small" to={link + data._id}>
+      <CardActions disableSpacing sx={{ justifyContent: "space-evenly" }}>
+        <Button
+          component={ReactLink}
+          size="small"
+          sx={{ p: "5px", pt: "6px" }}
+          to={link + data._id}>
           View detail
         </Button>
         {user.rolePermissions.includes(editPerm) && (
           <Button
             component={ReactLink}
             size="small"
+            sx={{ p: "5px", pt: "6px" }}
             to={link + data._id + "/edit"}>
             Edit
           </Button>

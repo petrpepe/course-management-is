@@ -6,7 +6,9 @@ function Page404() {
   const navigate = useNavigate();
   return (
     <>
-      <Typography variant="h2">404 Not found or 403 not authorized</Typography>
+      <Typography variant="h3" component="h1">
+        404 Not found or 403 not authorized
+      </Typography>
       <Button
         onClick={() => navigate(-1)}
         size="large"

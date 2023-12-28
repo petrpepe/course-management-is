@@ -17,7 +17,9 @@ function Lessons() {
 
   return (
     <>
-      <Typography variant="h2">Lessons Dashboard</Typography>
+      <Typography variant="h3" component="h1">
+        Lessons Dashboard
+      </Typography>
       <Search getData={getLessons} resetData={resetLessons} />
       <ActionPermLink
         linkText="Create new Lesson"
@@ -42,7 +44,9 @@ function Lessons() {
           ))}
         </Grid>
       ) : (
-        <Typography variant="h3">You haven't set any lesson</Typography>
+        <Typography variant="h4" component="h2">
+          You haven't set any lesson
+        </Typography>
       )}
     </>
   );

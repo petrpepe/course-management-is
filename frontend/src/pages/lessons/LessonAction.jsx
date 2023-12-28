@@ -94,7 +94,7 @@ function LessonAction() {
 
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>
-      <Typography variant="h2">
+      <Typography variant="h3" component="h1">
         <SchoolIcon fontSize="large" />{" "}
         {id ? "Editing lesson: " + formData.title : "Create lesson"}
       </Typography>
