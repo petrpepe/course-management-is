@@ -23,7 +23,7 @@ function CustomCard({
   const { user } = useSelector((state) => state.auth);
 
   return (
-    <Card sx={{ width: 320 }}>
+    <Card sx={{ width: { xs: 290, sm: 320 } }}>
       {imgSrc && (
         <CardMedia
           component="img"
