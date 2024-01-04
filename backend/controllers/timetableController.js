@@ -46,9 +46,9 @@ const getTimetables = asyncHandler(async (req, res) => {
  * @access Private
  */
 const setTimetable = asyncHandler(async (req, res) => {
-  if (!req.body.name) {
+  if (!req.body.datetime) {
     res.status(400);
-    throw new Error("Please add text");
+    throw new Error("Please add datetime");
   }
 
   const timetable = await Timetable.create(req.body);

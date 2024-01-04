@@ -83,7 +83,7 @@ function Classes() {
       ) : sortedClasses.length > 0 ? (
         courses.map((c) => (
           <Box
-            sx={{ border: 1, px: 2, pb: 2, pt: 1, borderRadius: 1 }}
+            sx={{ border: 1, px: 2, pb: 2, pt: 1, m: 2, borderRadius: 1 }}
             key={c._id}>
             <Button
               component={ReactLink}
@@ -92,17 +92,19 @@ function Classes() {
               {c.title}
             </Button>
             <Grid container spacing={3} justifyContent="space-evenly">
-              {sortedClasses.map((classVar) => (
-                <Grid key={classVar._id}>
-                  <CustomCard
-                    data={classVar}
-                    link="/classes/"
-                    deleteAction={deleteClass}
-                    deletePerm="classDelete"
-                    editPerm="classUpdate"
-                  />
-                </Grid>
-              ))}
+              {sortedClasses
+                .filter((cl) => cl.course === c._id)
+                .map((classVar) => (
+                  <Grid key={classVar._id}>
+                    <CustomCard
+                      data={classVar}
+                      link="/classes/"
+                      deleteAction={deleteClass}
+                      deletePerm="classDelete"
+                      editPerm="classUpdate"
+                    />
+                  </Grid>
+                ))}
             </Grid>
           </Box>
         ))

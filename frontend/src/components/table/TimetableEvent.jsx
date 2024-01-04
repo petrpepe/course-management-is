@@ -62,7 +62,8 @@ function TimetableEvent({
         lectors: [],
         background: "normal",
       };
-      const lesson = lessons.filter((l) => l._id === t.lesson)[0];
+      const lesson =
+        lessons.length > 0 && lessons.filter((l) => l._id === t.lesson)[0];
       event.lessonTitle = lesson && lesson.title;
       event.lectors = users
         .filter((u) => t.lectors.includes(u._id))
@@ -90,9 +91,7 @@ function TimetableEvent({
               </IconButton>
             )
           }>
-          <ListItemButton
-            component={ReactLink}
-            to={"/classes/call/" + t._id + "/" + classId}>
+          <ListItemButton component={ReactLink} to={"/classes/call/" + t._id}>
             <ListItemText
               primary={classTitle + ": " + event.lessonTitle}
               secondary={event.lectors}

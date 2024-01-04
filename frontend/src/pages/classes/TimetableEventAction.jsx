@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
 import {
   getClasses,
@@ -13,6 +13,10 @@ import {
   reset as resetTimetables,
   updateTimetable,
 } from "../../features/timetables/timetableSlice";
+import {
+  getLessons,
+  reset as resetLessons,
+} from "../../features/lessons/lessonSlice";
 import {
   getEnrollments,
   reset as resetEnrollments,
@@ -30,7 +34,7 @@ import { parseISO } from "date-fns/esm";
 
 function TimetableEventAction() {
   const [isCreated, setIsCreated] = useState(false);
-  const [changed, setChanged] = useState(false);
+  const { id, classId } = useParams();
 
   let today = new Date();
   const day = today.getDate();
@@ -45,17 +49,15 @@ function TimetableEventAction() {
     "T12:00";
 
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    place: "",
-    startDateTime: today,
-    course: "",
+    classId: classId,
+    datetime: "",
     lectors: [],
+    extraUser: [],
+    lesson: "",
   });
 
   const dispatch = useDispatch();
 
-  const { id, classId } = useParams();
   const { users, status: userStatus } = useGetData(
     "users",
     getUsers,
@@ -72,6 +74,12 @@ function TimetableEventAction() {
     getClasses,
     resetClasses,
     { ids: classId }
+  );
+  const { lessons, status: lessonStatus } = useGetData(
+    "lessons",
+    getLessons,
+    resetLessons,
+    classes.length > 0 && { ids: classes[0].course }
   );
   const { enrollments, status: enrollmentStatus } = useGetData(
     "enrollments",
@@ -102,9 +110,6 @@ function TimetableEventAction() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (changed) {
-      formData.startDateTime = formData.startDateTime.toLocaleString();
-    }
 
     if (id) {
       dispatch(updateTimetable(formData));
@@ -122,7 +127,9 @@ function TimetableEventAction() {
   if (
     classStatus === Status.Loading ||
     roleStatus === Status.Loading ||
-    userStatus === Status.Loading
+    userStatus === Status.Loading ||
+    lessonStatus === Status.Loading ||
+    timetableStatus === Status.Loading
   ) {
     return <LoadingOrError status={Status.Loading} />;
   }
@@ -159,6 +166,25 @@ function TimetableEventAction() {
           sx={{ my: 1, width: "100%" }}
         />
         <CustomSelect
+          id="lesson"
+          label="Select lesson"
+          selectedItems={
+            lessons
+              .filter((l) => formData.lesson === l._id)
+              .map((l) => {
+                return {
+                  _id: l._id,
+                  title: l.title,
+                };
+              }) || []
+          }
+          items={lessons.map((l) => {
+            return { _id: l._id, title: l.title };
+          })}
+          formData={formData}
+          setFormData={setFormData}
+        />
+        <CustomSelect
           id="lectors"
           label="Select lectors"
           selectedItems={lectorsOptions
@@ -180,7 +206,7 @@ function TimetableEventAction() {
           id="extraUser"
           label="Select extra students"
           selectedItems={studentsOptions
-            .filter((u) => formData.lectors.includes(u._id))
+            .filter((u) => formData.extraUser.includes(u._id))
             .map((u) => {
               return {
                 _id: u._id,

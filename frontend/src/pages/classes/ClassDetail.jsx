@@ -16,6 +16,8 @@ import UsersList from "../../components/users/UsersList";
 import Timetable from "../../components/table/Timetable";
 import ActionPermLink from "../../components/form/ActionPermLink";
 import { getUsers, reset as resetUsers } from "../../features/users/userSlice";
+import { Button } from "@mui/material";
+import { Link as ReactLink } from "react-router-dom";
 
 function ClassDetail() {
   const { id } = useParams();
@@ -70,9 +72,18 @@ function ClassDetail() {
         {classItem.description}
       </Typography>
       <CourseTitleLink courseId={classItem.course} />
+      <Typography variant="body1">
+        <Button component={ReactLink} to={"/timetableEvent/" + id}>
+          Cover lesson
+        </Button>
+      </Typography>
       <Timetable classIds={id} classes={classes} />
       <UsersList
-        users={users.filter((u) => enrollments[0].students.includes(u._id))}
+        users={
+          enrollments.length > 0
+            ? users.filter((u) => enrollments[0].students.includes(u._id))
+            : []
+        }
         heading="students"
       />
       <UsersList

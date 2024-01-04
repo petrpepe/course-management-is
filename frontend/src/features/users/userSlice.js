@@ -123,14 +123,7 @@ export const userSlice = createSlice({
       })
       .addCase(getUsers.fulfilled, (state, action) => {
         state.status = Status.Success;
-        action.payload.map((u) => {
-          if (state.users.map((su) => su._id).includes(u._id))
-            state.users[state.users.findIndex((obj) => obj._id === u._id)] = u;
-          else {
-            state.users.push(u);
-          }
-          return null;
-        });
+        state.users = action.payload;
       })
       .addCase(getUsers.rejected, (state, action) => {
         state.status = Status.Error;

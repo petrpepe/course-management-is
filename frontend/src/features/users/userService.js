@@ -33,6 +33,7 @@ const getUsers = async (ids, keyword, token) => {
       ? params.append("id", ids)
       : ids.map((id) => params.append("id", id));
   if (keyword) params.append("keyword", keyword);
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
