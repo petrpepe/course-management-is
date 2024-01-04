@@ -50,7 +50,7 @@ export const getUsers = createAsyncThunk(
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await userService.getUsers(
-        userData.ids ? userData.ids.flat() : [],
+        userData.ids ? userData.ids : [],
         userData.keyword,
         token
       );

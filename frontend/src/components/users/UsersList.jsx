@@ -39,7 +39,7 @@ function UsersList({ users = [], heading }) {
                 }}>
                 <ListItemButton component={ReactLink} to={"/users/" + user._id}>
                   <ListItemText
-                    primary={user.firstName + ". " + user.lastName}
+                    primary={user.firstName + " " + user.lastName}
                     secondary={user.email}
                   />
                 </ListItemButton>

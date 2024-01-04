@@ -28,7 +28,7 @@ import LoadingOrError from "../../components/LoadingOrError";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { parseISO } from "date-fns/esm";
 
-function TimetableEventAction({ classId }) {
+function TimetableEventAction() {
   const [isCreated, setIsCreated] = useState(false);
   const [changed, setChanged] = useState(false);
 
@@ -55,7 +55,7 @@ function TimetableEventAction({ classId }) {
 
   const dispatch = useDispatch();
 
-  const { id } = useParams();
+  const { id, classId } = useParams();
   const { users, status: userStatus } = useGetData(
     "users",
     getUsers,
@@ -146,15 +146,15 @@ function TimetableEventAction({ classId }) {
   return (
     <Paper elevation={0} sx={{ my: 5, mx: "auto", maxWidth: "1000px" }}>
       <Typography variant="h3" component="h1">
-        <CoPresentIcon fontSize="large" /> Cover teacher/lesson
+        <CoPresentIcon fontSize="large" /> {id ? "Editing" : "Cover lesson"}
       </Typography>
       <form onSubmit={onSubmit}>
         <DateTimePicker
-          id="startDateTime"
-          name="startDateTime"
+          id="datetime"
+          name="datetime"
           label="First lesson:"
-          value={parseISO(formData.startDateTime)}
-          onChange={(e) => onPickerChange(e, "startDateTime")}
+          value={parseISO(formData.datetime)}
+          onChange={(e) => onPickerChange(e, "datetime")}
           size="medium"
           sx={{ my: 1, width: "100%" }}
         />
@@ -178,7 +178,7 @@ function TimetableEventAction({ classId }) {
         />
         <CustomSelect
           id="extraUser"
-          label="Select students"
+          label="Select extra students"
           selectedItems={studentsOptions
             .filter((u) => formData.lectors.includes(u._id))
             .map((u) => {

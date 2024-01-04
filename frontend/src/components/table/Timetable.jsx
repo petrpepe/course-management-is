@@ -40,7 +40,7 @@ function Timetable({ classes, userIds }) {
         );
     }
     const lessonIds = timetables.map((t) => t.lesson);
-    const lectorIds = [...new Set(timetables.map((t) => t.lector))];
+    const lectorIds = [...new Set(timetables.map((t) => t.lectors))];
 
     return (
       <Paper elevation={0}>

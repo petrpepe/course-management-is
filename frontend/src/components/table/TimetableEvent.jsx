@@ -65,7 +65,7 @@ function TimetableEvent({
       const lesson = lessons.filter((l) => l._id === t.lesson)[0];
       event.lessonTitle = lesson && lesson.title;
       event.lectors = users
-        .filter((u) => t.lector.includes(u._id))
+        .filter((u) => t.lectors.includes(u._id))
         .map((u) => u.email)
         .join(", ");
       userAttendance = attendances.filter((a) => a.timetableId === t._id)[0];
@@ -80,10 +80,12 @@ function TimetableEvent({
       return (
         <ListItem
           key={t._id}
-          sx={{ width: "100%", display: "block" }}
+          sx={{ width: "100%", display: "block", px: 2 }}
           secondaryAction={
             user.roles.includes("admin") && (
-              <IconButton component={ReactLink} to={"/timetableEvent/" + t._id}>
+              <IconButton
+                component={ReactLink}
+                to={"/timetableEvent/" + classId + "/" + t._id}>
                 <EditIcon />
               </IconButton>
             )

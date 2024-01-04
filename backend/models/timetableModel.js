@@ -12,7 +12,7 @@ const timetableSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Lesson",
   },
-  lector: [
+  lectors: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

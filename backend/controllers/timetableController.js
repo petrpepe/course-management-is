@@ -19,7 +19,7 @@ const getTimetables = asyncHandler(async (req, res) => {
     arg = {
       $or: [
         { classId: { $in: ids } },
-        { lector: { $in: ids } },
+        { lectors: { $in: ids } },
         { lesson: { $in: ids } },
         { _id: { $in: ids } },
       ],
@@ -74,7 +74,7 @@ const updateTimetable = asyncHandler(async (req, res) => {
     req.body,
     {
       new: true,
-    },
+    }
   );
 
   res.status(200).json(updatedTimetable);
@@ -96,7 +96,7 @@ const deleteTimetable = asyncHandler(async (req, res) => {
   await Attendance.updateMany(
     { timetableId: timetable._id },
     { $pull: { timetableId: timetable._id } },
-    { multi: true },
+    { multi: true }
   );
 
   await timetable.deleteOne();

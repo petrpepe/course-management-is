@@ -70,7 +70,7 @@ const setClass = asyncHandler(async (req, res) => {
       datetime: classVar.startDateTime,
       classId: classVar._id,
       lesson: lessons.filter((l) => l.lessonNum === i)[0]._id,
-      lector: classVar.lectors,
+      lectors: classVar.lectors,
     };
     const datetime = new Date(classVar.startDateTime);
     timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i);
@@ -108,7 +108,7 @@ const updateClass = asyncHandler(async (req, res) => {
         datetime: updatedClass.startDateTime,
         classId: updatedClass._id,
         lesson: lessons.filter((l) => l.lessonNum === i)._id,
-        lector: updatedClass.lectors,
+        lectors: updatedClass.lectors,
       };
       const datetime = new Date(updatedClass.startDateTime);
       timetable.datetime = datetime.setDate(datetime.getDate() + 7 * i);

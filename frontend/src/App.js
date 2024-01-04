@@ -231,7 +231,7 @@ function App() {
                   }
                 />
                 <Route
-                  path="/timetableEvent/:id?"
+                  path="/timetableEvent/:classId/:id?"
                   element={
                     <ProtectedRoute perm="timetablesManagement">
                       <TimetableEventAction />
