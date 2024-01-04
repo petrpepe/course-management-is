@@ -65,6 +65,7 @@ function Timetable({ classes, userIds }) {
                 }
                 lectorIds={lectorIds}
                 lessonIds={lessonIds}
+                classId={classes.filter((c) => c._id === ts.classId)[0]._id}
               />
             </List>
           </Box>

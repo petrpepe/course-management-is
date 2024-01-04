@@ -33,6 +33,7 @@ import Paper from "@mui/material/Paper";
 import { useMemo, useState } from "react";
 import Profile from "./pages/users/Profile";
 import Attendances from "./pages/Attendances";
+import TimetableEventAction from "./pages/classes/TimetableEventAction";
 
 export const ProtectedRoute = ({ perm, children }) => {
   const { user } = useSelector((state) => state.auth);
@@ -226,6 +227,14 @@ function App() {
                   element={
                     <ProtectedRoute perm="timetablesGet">
                       <TimetablePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/timetableEvent/:id?"
+                  element={
+                    <ProtectedRoute perm="timetablesManagement">
+                      <TimetableEventAction />
                     </ProtectedRoute>
                   }
                 />

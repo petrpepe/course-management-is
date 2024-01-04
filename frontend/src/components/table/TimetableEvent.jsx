@@ -18,8 +18,16 @@ import { format, parseISO, isFuture } from "date-fns/esm";
 import LoadingOrError from "../LoadingOrError";
 import { getLocale } from "../../utils";
 import { useSelector } from "react-redux";
+import EditIcon from "@mui/icons-material/Edit";
+import IconButton from "@mui/material/IconButton";
 
-function TimetableEvent({ timetables, lessonIds, lectorIds, classTitle }) {
+function TimetableEvent({
+  timetables,
+  lessonIds,
+  lectorIds,
+  classTitle,
+  classId,
+}) {
   const { user } = useSelector((state) => state.auth);
   const { lessons, status: lessonStatus } = useGetData(
     "lessons",
@@ -70,8 +78,19 @@ function TimetableEvent({ timetables, lessonIds, lectorIds, classTitle }) {
       }
 
       return (
-        <ListItem key={t._id} sx={{ width: "100%", display: "block" }}>
-          <ListItemButton component={ReactLink} to={"/classes/call/" + t._id}>
+        <ListItem
+          key={t._id}
+          sx={{ width: "100%", display: "block" }}
+          secondaryAction={
+            user.roles.includes("admin") && (
+              <IconButton component={ReactLink} to={"/timetableEvent/" + t._id}>
+                <EditIcon />
+              </IconButton>
+            )
+          }>
+          <ListItemButton
+            component={ReactLink}
+            to={"/classes/call/" + t._id + "/" + classId}>
             <ListItemText
               primary={classTitle + ": " + event.lessonTitle}
               secondary={event.lectors}
