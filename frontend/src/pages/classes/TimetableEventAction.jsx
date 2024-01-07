@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CoPresentIcon from "@mui/icons-material/CoPresent";
 import {
   getClasses,
@@ -143,11 +143,14 @@ function TimetableEventAction() {
   }
 
   if (userStatus === Status.Success && enrollmentStatus === Status.Success) {
-    studentsOptions = users.filter((u) =>
-      enrollments
-        .filter((e) => e.classId === classId)[0]
-        .students.includes(u._id)
-    );
+    studentsOptions =
+      enrollments.length > 0
+        ? users.filter((u) =>
+            enrollments
+              .filter((e) => e.classId === classId)[0]
+              .students.includes(u._id)
+          )
+        : [];
   }
 
   return (
@@ -176,7 +179,7 @@ function TimetableEventAction() {
                   _id: l._id,
                   title: l.title,
                 };
-              }) || []
+              })[0]
           }
           items={lessons.map((l) => {
             return { _id: l._id, title: l.title };

@@ -53,7 +53,12 @@ function LessonAction() {
   );
 
   useEffect(() => {
-    if (id && lessonStatus === Status.Success)
+    if (
+      id &&
+      lessonStatus === Status.Success &&
+      (lessons.filter((l) => l._id === id)[0].content ||
+        lessons.filter((l) => l._id === id)[0].content === "")
+    )
       setFormData(lessons.filter((l) => l._id === id)[0]);
   }, [id, lessonStatus, lessons]);
 
@@ -168,13 +173,11 @@ function LessonAction() {
           setFormData={setFormData}
           multiple={false}
           selectedItems={
-            courses.filter((c) => c._id === formData.course).length > 0
-              ? courses
-                  .filter((c) => c._id === formData.course)
-                  .map((c) => {
-                    return { _id: c._id, title: c.title };
-                  })[0]
-              : null
+            courses
+              .filter((c) => c._id === formData.course)
+              .map((c) => {
+                return { _id: c._id, title: c.title };
+              })[0]
           }
         />
         <TextField

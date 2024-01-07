@@ -19,8 +19,8 @@ function CustomSelect({
   const [selected, setSelected] = React.useState(selectedItems);
 
   React.useEffect(() => {
-    setSelected(multiple ? selectedItems : selectedItems[0]);
-  }, [selectedItems]);
+    setSelected(selectedItems);
+  }, [selectedItems, multiple]);
 
   const onSelectChange = (e, value) => {
     setSelected(value);
