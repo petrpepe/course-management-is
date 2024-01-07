@@ -15,7 +15,8 @@ function CustomSelect({
   selectChange,
   changed,
 }) {
-  if (selectedItems.length === 0 && multiple === false) selectedItems = "";
+  if (selectedItems && selectedItems.length === 0 && multiple === false)
+    selectedItems = "";
   const [selected, setSelected] = React.useState(selectedItems);
 
   React.useEffect(() => {
