@@ -15,7 +15,7 @@ import Box from "@mui/material/Box";
 
 function LessonsList({ courseId }) {
   const { lessons, status } = useGetData("lessons", getLessons, resetLessons, {
-    courseId,
+    ids: courseId,
   });
 
   if (status === Status.Loading) {
