@@ -12,6 +12,10 @@ const mongoose = require("mongoose");
 const getCourses = asyncHandler(async (req, res) => {
   let arg = {};
 
+  if (req.user.provider && req.user.provider.length > 0) {
+    arg = { owner: req.user.provider };
+  }
+
   if (req.query.id) {
     const ids = Array.isArray(req.query.id)
       ? req.query.id.map((id) => new mongoose.Types.ObjectId(id))

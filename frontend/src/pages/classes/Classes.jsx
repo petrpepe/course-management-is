@@ -81,33 +81,36 @@ function Classes() {
       {classStatus === Status.Loading || courseStatus === Status.Loading ? (
         <CircularProgress />
       ) : sortedClasses.length > 0 ? (
-        courses.map((c) => (
-          <Box
-            sx={{ border: 1, px: 2, pb: 2, pt: 1, m: 2, borderRadius: 1 }}
-            key={c._id}>
-            <Button
-              component={ReactLink}
-              to={"/courses/" + c._id}
-              sx={{ mb: 1 }}>
-              {c.title}
-            </Button>
-            <Grid container spacing={3} justifyContent="space-evenly">
-              {sortedClasses
-                .filter((cl) => cl.course === c._id)
-                .map((classVar) => (
-                  <Grid key={classVar._id}>
-                    <CustomCard
-                      data={classVar}
-                      link="/classes/"
-                      deleteAction={deleteClass}
-                      deletePerm="classDelete"
-                      editPerm="classUpdate"
-                    />
-                  </Grid>
-                ))}
-            </Grid>
-          </Box>
-        ))
+        courses.map(
+          (c) =>
+            sortedClasses.filter((cl) => cl.course === c._id).length > 0 && (
+              <Box
+                sx={{ border: 1, px: 2, pb: 2, pt: 1, m: 2, borderRadius: 1 }}
+                key={c._id}>
+                <Button
+                  component={ReactLink}
+                  to={"/courses/" + c._id}
+                  sx={{ mb: 1 }}>
+                  {c.title}
+                </Button>
+                <Grid container spacing={3} justifyContent="space-evenly">
+                  {sortedClasses
+                    .filter((cl) => cl.course === c._id)
+                    .map((classVar) => (
+                      <Grid key={classVar._id}>
+                        <CustomCard
+                          data={classVar}
+                          link="/classes/"
+                          deleteAction={deleteClass}
+                          deletePerm="classDelete"
+                          editPerm="classUpdate"
+                        />
+                      </Grid>
+                    ))}
+                </Grid>
+              </Box>
+            )
+        )
       ) : (
         <Typography variant="h4" component="h2">
           You are not enrolled in any classes
